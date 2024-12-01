@@ -119,7 +119,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
               <a href="patient-record.php" class="back-nav">
                 <i class="fas fa-arrow-left "></i> Back to Patients' Table
               </a>
-            </div>
+            </div> 
           </div>
           <div class="page-inner">
             <div class="row">

@@ -32,7 +32,7 @@ if (isset($_POST['changed_password'])) {
         $encryptpass = password_hash($pass, PASSWORD_DEFAULT);
 
         if ($user->changePassword($email, $encryptpass)) {
-            $type = "success";
+            $type = "success"; 
             $jsScript = "
                 document.body.classList.add('active');
                 Swal.fire({

@@ -27,7 +27,7 @@
   <!-- CSS Files -->
   <link rel="stylesheet" href="../css/bootstrap.min.css" />
   <link rel="stylesheet" href="../css/plugins.min.css" />
-  <link rel="stylesheet" href="../css/kaiadmin.min.css" />
+  <link rel="stylesheet" href="../css/kaiadmin.min.css" /> 
   <link rel="stylesheet" href="../css/client.css">
 
   <!-- ICONS -->
@@ -83,7 +83,7 @@
           <!-- Modal Structure -->
           <div class="row">
             <div class="col-12">
-              <a href="clientindex.php" class="back-nav">
+              <a href="<?php echo $redirectPage; ?>" class="back-nav">
                 <i class="fas fa-arrow-left"></i> Back to Appointment
               </a>
             </div>

@@ -16,7 +16,7 @@
         .pdf-view {
             display: flex;
             justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
+            align-items: center; /* Center vertically */ 
             height: 100vh; /* Full height of the viewport */
             width: 100vw; /* Full width of the viewport */
         }

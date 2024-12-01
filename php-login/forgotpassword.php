@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
         if ($user->emailverify($email)) {
             if ($user->updateCode($email, $otp)) {
                 $emailSender = new sentOTP();
-                $emailResult = $emailSender->sendOtp($email, $otp);
+                $emailResult = $emailSender->sendOtp($email, $otp); 
 
                 if ($emailResult['success']) {
                     $_SESSION['emaill'] = $email; 
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
                             if (result.isConfirmed) {
                                 window.location.href = 'verify.php'; 
                             }
-                        });
+                        }); 
                     ";
                 } else {
                     $_SESSION['message'] = "An error occurred while sending the OTP.";
@@ -63,6 +63,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
     }
 }
 ?>
+<script>
+    // After the form submission is completed
+    window.onload = function() {
+        // Check if there's a query parameter for the message (success/error)
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        const message = urlParams.get('message');
+        
+        if (success === 'true') {
+            Swal.fire({
+                title: 'Success!',
+                text: message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } else if (success === 'false') {
+            Swal.fire({
+                title: 'Error!',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    }
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>

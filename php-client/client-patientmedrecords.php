@@ -220,7 +220,7 @@ $patient_type = $_SESSION['patuser_type'];
                                             <td><?= htmlspecialchars($record->medicalrec_comment) ?></td>
                                             <td><?= htmlspecialchars($record->medicalrec_dateadded . ' ' . $record->medicalrec_timeadded) ?></td>
                                             <td>
-                                                <div class="form-button-action">
+                                                <div class="form-button-action"> 
                                                 <button 
                                                     type="button"
                                                     data-bs-toggle="tooltip"

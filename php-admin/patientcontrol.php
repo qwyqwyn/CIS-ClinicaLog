@@ -27,23 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $region = $_POST['region'];
         $province = $_POST['province']; 
         $municipality = $_POST['municipality'];
-        $barangay = $_POST['barangay'];
+        $barangay = $_POST['barangay']; 
         $prkstrtadd = $_POST['street'];
         $conname = $_POST['emergencyContactName'];
         $relationship = $_POST['relationship'];
         $emergency_connum = $_POST['emergencyContactNumber'];
         $admin_id = $_POST['admin_id'];
 
+        $profile = ''; 
 
-        $profile = ''; // Default to empty if no profile picture uploaded
-
-        // Handle Profile Upload
         if (isset($_FILES['addprofile']) && $_FILES['addprofile']['error'] === UPLOAD_ERR_OK) {
             $profile = $_FILES['addprofile'];
             $profile_original_name = basename($profile['name']);
             $profile_tmp = $profile['tmp_name'];
 
-            // Validate file type
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mime = finfo_file($finfo, $profile_tmp);
             $allowed_mimes = ['image/jpeg', 'image/png'];
@@ -54,12 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $uploadDir = 'uploads/';
                 $profile_destination = $uploadDir . $profile_name;
 
-                // Move uploaded file
                 if (move_uploaded_file($profile_tmp, $profile_destination)) {
-                    $profile = $profile_name; // Set profile name to save to the database
+                    $profile = $profile_name; 
                 } else {
                     $_SESSION['error'] = 'Failed to upload profile picture.';
-                    header('Location: add-student.php'); // Redirect to the add student page
+                    header('Location: add-student.php'); 
                     exit();
                 }
             } else {
@@ -70,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             finfo_close($finfo);
         }
 
-        // Validate email and proceed with insertion
+
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            // Call the addStudentPatient method and store the response
+           
             $response = $patient->addStudentPatient(
                 $admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, 'Student', 
                 date('Y-m-d H:i:s'), password_hash($idnum, PASSWORD_DEFAULT), 'Active', 0, 

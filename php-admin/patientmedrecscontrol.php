@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 default:
                     $redirectUrl = 'patient-record.php';
                     break;
-            }
+            } 
             header("Location: $redirectUrl");
             exit(); 
         }

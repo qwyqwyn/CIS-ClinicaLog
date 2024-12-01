@@ -4,8 +4,8 @@ include('../database/config.php');
 include '../php/patient.php';
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header('Location: login.php'); 
-    exit;
+  header('Location: ../php-login/index.php'); 
+  exit; 
 }
 
 $db = new Database();
@@ -136,7 +136,7 @@ $age = $dobDateTime->diff(new DateTime())->y;
         <div class="card">
         <div class="profile-image">
             <div class="card-header">
-            <img id="profilePic" src="<?php echo $profilePic; ?>" alt="profile picture" />  
+            <img id="profilePic" src="/php-admin/uploads/<?php echo $profilePic; ?>" alt="profile picture" />  
                 <div class="row" >                
                     <span style="
                         display: inline-block;

@@ -15,7 +15,7 @@ class sentOTP {
         $this->mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $this->mail->SMTPAuth = true;  // Enable SMTP authentication
         $this->mail->Username = 'casiagwynethmarie@gmail.com';  // SMTP username from environment variable
-        $this->mail->Password = 'jhcf bipv lbbd pizm';  // SMTP password from environment variable
+        $this->mail->Password = 'cxij octp stsb hoxn';  // SMTP password from environment variable
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  // Enable TLS encryption, `ssl` also accepted
         $this->mail->Port = 587;  // TCP port to connect to
         $this->mail->setFrom('casiagwynethmarie@gmail.com', 'OTP Sender');
@@ -34,5 +34,7 @@ class sentOTP {
             return ['success' => false, 'message' => 'Mailer Error: ' . $this->mail->ErrorInfo];
         }
     }
+
+    
 }
-?>
+?> 

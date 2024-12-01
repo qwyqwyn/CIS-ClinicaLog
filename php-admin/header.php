@@ -229,7 +229,7 @@ $userData = $user->getUserData($user_idnum);
                     class="dropdown-toggle profile-pic"
                     data-bs-toggle="dropdown"
                     href="#"
-                    aria-expanded="false"
+                    aria-expanded="false" 
                   >
                     <div class="avatar-sm">
                       <img

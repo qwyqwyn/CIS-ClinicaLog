@@ -331,9 +331,25 @@
         transac_status ENUM('Pending', 'Progress', 'Done') NOT NULL,
         FOREIGN KEY (transac_patientid) REFERENCES patients(patient_id)
     )";
-
+ 
     if (mysqli_query($conn, $sql_transaction)) {
         echo "Table 'transaction' created successfully<br>";
+    } else {
+        echo "Error creating table 'transaction': " . mysqli_error($conn) . "<br>";
+    }
+
+    //Create the 'notification' table
+    $sql_notification = "CREATE TABLE IF NOT EXISTS  adminnotifs (
+        notif_id INT AUTO_INCREMENT PRIMARY KEY,
+        notif_patid INT NOT NULL,                
+        notif_message TEXT NOT NULL,           
+        notif_status ENUM('unread', 'read') DEFAULT 'unread',  
+        notif_date_added DATETIME DEFAULT CURRENT_TIMESTAMP, 
+        FOREIGN KEY (notif_patid) REFERENCES patients(patient_id)
+    );";
+ 
+    if (mysqli_query($conn, $sql_notification)) {
+        echo "Table 'notification' created successfully<br>";
     } else {
         echo "Error creating table 'transaction': " . mysqli_error($conn) . "<br>";
     }

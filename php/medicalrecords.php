@@ -199,45 +199,57 @@ class MedRecManager {
     }
     
     public function insertMedicalRecordbyPatient($patientid, $filenames, $files, $comment, $dateadded, $timeadded) {
-        try {    
-
+        try {
+            $this->db->beginTransaction();
             
             $sql = "INSERT INTO medicalrec (medicalrec_patientid, medicalrec_filename, medicalrec_file, medicalrec_comment, medicalrec_dateadded, medicalrec_timeadded) 
                     VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $this->db->prepare($sql);
-
+    
             foreach ($filenames as $index => $filename) {
                 $file = $files[$index]; 
-                
+    
                 if ($stmt->execute([$patientid, $filename, $file, $comment, $dateadded, $timeadded])) {
                     $medicalrec_id = $this->db->lastInsertId();
                     $newRecord = new MedicalRecords($medicalrec_id, $patientid, $filename, $file, $comment, $dateadded, $timeadded);
                     $this->medicalrecs->add($newRecord);
+                    
+                    $notifMessage = "Inserted New Medical Record $filename";
+                    $sqlNotif = "INSERT INTO adminnotifs (notif_patid, notif_message, notif_status, notif_date_added) 
+                                 VALUES (?, ?, 'unread', NOW())";
+                    $stmtNotif = $this->db->prepare($sqlNotif);
+                    $stmtNotif->execute([$patientid, $notifMessage]);
                 } else {
+                    
+                    $this->db->rollBack();
                     return [
                         'status' => 'error',
-                        'message' => 'Failed to insert one or more medical records.'
+                        'message' => 'Failed to insert one or more medical records.' 
                     ];
                 }
             }
 
+            $this->db->commit();
+    
             return [
                 'status' => 'success',
-                'message' => 'All medical records inserted successfully.'
+                'message' => 'All medical records and notifications inserted successfully.'
             ];
     
         } catch (PDOException $e) {
+
+            $this->db->rollBack();
             return [ 
                 'status' => 'error',
                 'message' => 'Error: ' . $e->getMessage()
             ];
         }
     }
+    
 
     public function updateMedicalRecordbyPatient($medicalrec_id, $patientid, $filename, $comment) {
         try {
-
-            
+    
             if ($this->medicalrecs->MedRecExists($patientid, $filename)) {
                 $existingRecord = $this->medicalrecs->findMedicalRecordById($medicalrec_id);
                 if ($existingRecord && 
@@ -249,16 +261,25 @@ class MedRecManager {
                     ];
                 }
             }
-
+    
             $sql = "UPDATE medicalrec 
                     SET medicalrec_filename = ?,  medicalrec_comment = ?
                     WHERE medicalrec_id = ? AND medicalrec_patientid = ?";
             $stmt = $this->db->prepare($sql);
     
-            if ($stmt->execute([$filename, $comment, $medicalrec_id, $patientid ])) {
+            if ($stmt->execute([$filename, $comment, $medicalrec_id, $patientid])) {
+    
+                $notifMessage = "Updated Medical Record $filename";  
+
+                $sqlNotif = "INSERT INTO adminnotifs (notif_patid, notif_message, notif_status, notif_date_added) 
+                             VALUES (?, ?, 'unread', NOW())";
+                $stmtNotif = $this->db->prepare($sqlNotif);
+
+                $stmtNotif->execute([$patientid, $notifMessage]);
+
                 return [
                     'status' => 'success',
-                    'message' => 'Medical record updated successfully.',
+                    'message' => 'Medical record updated successfully and notification created.',
                     'medicalrec_id' => $medicalrec_id
                 ];
             } else {
@@ -275,6 +296,7 @@ class MedRecManager {
             ];
         }
     }
+    
     
     
 

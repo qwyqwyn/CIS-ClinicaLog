@@ -7,3 +7,4 @@ session_destroy();
 header("Location: ../php-login/index.php");
 exit;
 ?>
+ 

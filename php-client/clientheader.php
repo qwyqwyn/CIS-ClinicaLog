@@ -4,8 +4,8 @@ include('../database/config.php');
 include '../php/patient.php';
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header('Location: login.php'); 
-    exit;
+  header('Location: ../php-login/index.php'); 
+  exit; 
 }
 
 $db = new Database();
@@ -16,12 +16,20 @@ $patient_type = $_SESSION['patuser_type'];
 
 $patient = new PatientManager($conn);
 $patientData = $patient->getPatientData($patient_id); 
- 
-?>
- 
- 
 
-
+if ($patient_type === 'Student') {
+  $redirectPage = 'patstudents.php';
+} elseif ($patient_type === 'Staff') {
+  $redirectPage = 'patstaff.php';
+} elseif ($patient_type === 'Faculty') {
+  $redirectPage = 'patfaculty.php';
+} elseif ($patient_type === 'Extension') {
+  $redirectPage = 'patextension.php';
+} else {
+  $redirectPage = 'patstudents.php'; 
+}
+ 
+?> 
 <!DOCTYPE html>
 <html lang="en"> 
 
@@ -40,7 +48,7 @@ $patientData = $patient->getPatientData($patient_id);
   <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
   <script>
     WebFont.load({
-      google: {
+      google: { 
         families: ["Public Sans:300,400,500,600,700"]
       },
       custom: {
@@ -63,22 +71,20 @@ $patientData = $patient->getPatientData($patient_id);
   <link rel="stylesheet" href="../css/plugins.min.css" />
   <link rel="stylesheet" href="../css/kaiadmin.min.css" />
 
-  <!-- ICONS -->
-  <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
 </head>
 
 <body>
   <div class="main-header-logo">
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
-      <a href="clientindex.php" class="logo" style="color: white;">
-        <img
-          src="../assets/img/ClinicaLog.png"
-          alt="navbar brand"
-          class="navbar-brand"
-          height="30" />
-        ClinicaLog
-      </a>
+    <a href="<?php echo $redirectPage; ?>" class="logo">
+      <img
+        src="../assets/img/sidebar-logo.svg"
+        alt="navbar brand"
+        class="navbar-brand"
+        height="60" />
+    </a>
       <div class="nav-toggle">
       </div>
       <button class="topbar-toggler more">
@@ -91,7 +97,7 @@ $patientData = $patient->getPatientData($patient_id);
   <nav
     class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
     <div class="container-fluid">
-      <a href="clientindex.php" class="logo">
+      <a href="<?php echo $redirectPage; ?>" class="logo">
         <img
           src="../assets/img/sidebar-logo.svg"
           alt="navbar brand"
@@ -147,67 +153,26 @@ $patientData = $patient->getPatientData($patient_id);
             aria-haspopup="true"
             aria-expanded="false">
             <i class="fa fa-bell"></i>
-            <span class="notification">4</span>
+            <span class="notification"></span>
           </a>
           <ul
             class="dropdown-menu notif-box animated fadeIn"
             aria-labelledby="notifDropdown">
             <li>
-              <div class="dropdown-title">
-                You have 4 new notification
-              </div>
             </li>
             <li>
               <div class="notif-scroll scrollbar-outer">
                 <div class="notif-center">
-                  <a href="#">
+                  <a href="#" id="notif-link">
                     <div class="notif-icon notif-primary">
-                      <i class="fa fa-user-plus"></i>
+                    <i class="fa fa-exclamation-triangle"></i>
                     </div>
                     <div class="notif-content">
-                      <span class="block"> New user registered </span>
-                      <span class="time">5 minutes ago</span>
+                      <span class="block">Important Notice! Click here to see more.</span>
                     </div>
-                  </a>
-                  <a href="#">
-                    <div class="notif-icon notif-success">
-                      <i class="fa fa-comment"></i>
-                    </div>
-                    <div class="notif-content">
-                      <span class="block">
-                        Rahmad commented on Admin
-                      </span>
-                      <span class="time">12 minutes ago</span>
-                    </div>
-                  </a>
-                  <a href="#">
-                    <div class="notif-img">
-                      <img
-                        src="assets/img/profile2.jpg"
-                        alt="Img Profile" />
-                    </div>
-                    <div class="notif-content">
-                      <span class="block">
-                        Reza send messages to you
-                      </span>
-                      <span class="time">12 minutes ago</span>
-                    </div>
-                  </a>
-                  <a href="#">
-                    <div class="notif-icon notif-danger">
-                      <i class="fa fa-heart"></i>
-                    </div>
-                    <div class="notif-content">
-                      <span class="block"> Farrah liked Admin </span>
-                      <span class="time">17 minutes ago</span>
-                    </div>
-                  </a>
+                  </a> 
                 </div>
               </div>
-            </li>
-            <li>
-              <a class="see-all" href="javascript:void(0);">See all notifications<i class="fa fa-angle-right"></i>
-              </a>
             </li>
           </ul>
         </li>
@@ -240,17 +205,14 @@ $patientData = $patient->getPatientData($patient_id);
                   </div>
                   <div class="u-text">
                     <h4><?php echo ($patientData->patient_fname); ?></h4>
-                    <p class="text-muted"><?php echo ($patientData->patient_email); ?></p>
-                    <a
-                      href="clientviewprofile.php"
-                      class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                    <p class="text-muted"><?php echo ($patientData->patient_email); ?></p> 
                   </div>
-              </li>
+              </li> 
               <li>
                 <a class="dropdown-item" href="clientprofile.php">Account Setting</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="clientindex.php">Logout</a>
-              </li>
+                <a class="dropdown-item" href="" id="logoutLink">Logout</a>
+                </li>
             </div>
           </ul>
         </li>
@@ -289,6 +251,47 @@ $patientData = $patient->getPatientData($patient_id);
 
   <!-- Kaiadmin JS -->
   <script src="../assets/js/kaiadmin.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+  document.getElementById('notif-link').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent the default link action
+    
+// Trigger SweetAlert
+Swal.fire({
+  title: 'Welcome to Clinicalog!',
+  text: "Please make sure the information you provide is accurate and up-to-date. This helps us serve you better and ensures that everything runs smoothly.\n\nIf anything changes, kindly update your details.\n\nYour cooperation is greatly appreciated.",
+  icon: 'info',
+  footer: 'From USeP Campus Clinic Tagum-Unit', 
+  confirmButtonText: 'Got it, thanks!'
+});
+
+
+  });
+</script>
+<script>
+    document.getElementById("logoutLink").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the default link action
+
+        Swal.fire({
+            title: "Are you sure you want to logout?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, logout",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the logout script
+                window.location.href = "logout.php";
+            }
+        });
+    });
+</script>
+
+
 </body>
 
 </html>

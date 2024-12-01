@@ -260,7 +260,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
                                                     <button 
                                                         type="button" 
                                                         class="btn btn-link btn-primary btn-lg removeAccess" 
-                                                        data-id="<?= $record->medicalrec_id ?>"
+                                                        data-id="<?= $record->medicalrec_id ?>" 
                                                         data-filename="<?= $record->medicalrec_filename?>", 
                                                         data-admin="<?= htmlspecialchars($user_idnum, ENT_QUOTES, 'UTF-8'); ?>",
                                                     >
