@@ -73,7 +73,7 @@ $userData = $user->getUserData($user_idnum);
 <body> 
     <div class="main-header-logo">
             <!-- Logo Header -->
-            <div class="logo-header" data-background-color="dark">
+            <div class="logo-header" data-background-color="dark"> 
               <a href="index.php" class="logo">
                 <img
                   src="../assets/img/kaiadmin/logo_light.svg"
@@ -84,7 +84,7 @@ $userData = $user->getUserData($user_idnum);
               </a>
               <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
-                  <i class="gg-menu-right"></i>
+                  <i class="gg-menu-right"></i>  
                 </button>
                 <button class="btn btn-toggle sidenav-toggler">
                   <i class="gg-menu-left"></i>
@@ -233,8 +233,8 @@ $userData = $user->getUserData($user_idnum);
                   >
                     <div class="avatar-sm">
                       <img
-                        src='/php-admin/uploads/<?php echo htmlspecialchars($userData['user_profile']); ?>'
-                        alt='Profile Picture'
+                      src='/php-admin/uploads/<?php echo !empty($userData['user_profile']) ? htmlspecialchars($userData['user_profile']) : 'default-image.jpg'; ?>'
+                      alt='Profile Picture'
                         class="avatar-img rounded-circle"
                       />
                     </div>
@@ -251,8 +251,8 @@ $userData = $user->getUserData($user_idnum);
                       <li>
                         <div class="user-box">
                           <div class="avatar-lg">
-                            <img
-                              src='/php-admin/uploads/<?php echo htmlspecialchars($userData['user_profile']); ?>'
+                          <img
+                              src='/php-admin/uploads/<?php echo !empty($userData['user_profile']) ? htmlspecialchars($userData['user_profile']) : 'default-image.jpg'; ?>'
                               alt="image profile"
                               class="avatar-img rounded"
                             />
@@ -261,7 +261,7 @@ $userData = $user->getUserData($user_idnum);
                             <h4><?php echo htmlspecialchars($userData['user_fname']); ?></h4>
                             <p class="text-muted"><?php echo htmlspecialchars($userData['user_email']); ?></p>
                             <a
-                              href=""
+                              href="viewprofile.php"
                               class="btn btn-xs btn-secondary btn-sm"
                               >View Profile</a
                             >
@@ -270,10 +270,7 @@ $userData = $user->getUserData($user_idnum);
                       </li>
                       <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">My Profile</a>
-                        <a class="dropdown-item" href="#">My Balance</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Account Setting</a>
+                        <a class="dropdown-item" href="setting.php">Account Setting</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" id="logoutLink">Logout</a>
                       </li>

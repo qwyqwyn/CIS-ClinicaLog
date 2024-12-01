@@ -1,127 +1,103 @@
 <?php
 session_start();
 include('../database/config.php');
-include '../php/patient.php';
+include('../php/user.php');
+include('../php/dashboard.php');
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-  header('Location: ../php-login/index.php'); 
-  exit; 
+    header('Location: ../php-login/index.php'); 
+    exit;
 }
 
 $db = new Database();
 $conn = $db->getConnection();
 
-$patient_id = $_SESSION['patuser_id'];
-$patient_type = $_SESSION['patuser_type'];
+$user = new User($conn); 
+$user_idnum = $_SESSION['user_idnum'];
 
-$patient = new PatientManager($conn);
-$patientData = $patient->getPatientData($patient_id); 
+$dashboard = new Dashboard($conn); 
+$userData = $user->getUserData($user_idnum);  
 
-if ($patient_type === 'Student') {
-  $redirectPage = 'patstudents.php';
-} elseif ($patient_type === 'Staff') {
-  $redirectPage = 'patstaff.php';
-} elseif ($patient_type === 'Faculty') {
-  $redirectPage = 'patfaculty.php';
-} elseif ($patient_type === 'Extension') {
-  $redirectPage = 'patextension.php';
-} else {
-  $redirectPage = 'patstudents.php'; 
-}
+?>
+ 
+<!DOCTYPE html> 
+<html lang="en">  
+<head> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>CIS:Clinicalog</title> 
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
+    <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
 
-?> 
+    <!-- Fonts and icons -->
+    <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({ 
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [ 
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["../css/fonts.min.css"], 
+        },
+        active: function () {
+            
+          sessionStorage.fonts = true;
+        }, 
+      });
+    </script>
+ 
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/plugins.min.css" /> 
+    <link rel="stylesheet" href="../css/kaiadmin.min.css" /> 
 
-<!DOCTYPE html>
-<html lang="en">
+    <!-- ICONS -->
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>User Profile</title>
-  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-  <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon" />
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.4/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+    .sidebar {
+      transition: background 0.3s ease;
+      /* Initial background */
+      background: linear-gradient(to bottom, #DB6079, #DA6F65, #E29AB4);
+    }
 
+    .logo-header {
+      transition: background 0.3s ease;
+    }
 
-  <!-- Fonts and icons -->
-  <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
-  <script>
-    WebFont.load({
-      google: {
-        families: ["Public Sans:300,400,500,600,700"]
-      },
-      custom: {
-        families: ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-        urls: ["../css/fonts.min.css"],
-      },
-      active: function () {
-        sessionStorage.fonts = true;
-      }, 
-    });
-  </script>
-
-  <!-- CSS Files -->
-  <link rel="stylesheet" href="../css/bootstrap.min.css" />
-  <link rel="stylesheet" href="../css/plugins.min.css" />
-  <link rel="stylesheet" href="../css/kaiadmin.min.css" />
-  <link rel="stylesheet" href="../css/client.css">
-
-  <!-- ICONS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pQnI6Z1ypA1QPTDdTnYkkpN0sE+0ZK3SAs+69IXS7SgSR/RG6upgjB8cSBaHh0FYv3cwUqq3Kv1BrV3iwGsnZw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <style>
     .profile-image {
-      
+      display: flex;
+
+      flex-direction: column;
+      margin-bottom: 20px;
     }
 
     .profile-image img {
       border-radius: 50%;
       width: 150px;
       height: 150px;
-      margin-bottom: 10px;  
+      margin-bottom: 10px;
     }
 
-    @media (max-width: 576px) {
-      .profile-image img {
-        width: 120px;
-        height: 120px;
-      }
+    .upload-btn {
+      margin-top: 10px;
     }
-
-    .invalid {
-      border-color: red !important;
-    }
-
-
-    .table-responsive {
-      max-height: 300px; 
-      overflow-y: auto;
-    }
-
-    small.text-success { color: green; }
-    small.text-warning { color: orange; }
-    small.text-danger { color: red; }
-
   </style>
 </head>
-
 <body>
-  <div class="wrapper">
-    <div class="main-panel" id="clientpanel">
-      <!-- Header -->
-      <div class="main-header" id="client_header"></div>
-      <!-- Main Content -->
-      <div class="container" id="content">
-        <div class="page-inner">
-        <div class="page-inner">
-          <!-- Modal Structure -->
-          <div class="row">
-            <div class="col-12">
-              <a href="<?php echo $redirectPage; ?>" class="back-nav">
-                <i class="fas fa-arrow-left"></i> Back to Home
-              </a>
-            </div>
-          </div>
-          <div class="page-inner">
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar"></div>
+        <!-- End Sidebar -->
+        <div class="main-panel">
+            <!-- Header --> 
+            <div class="main-header" id="header"></div>
+            <!-- Main Content -->
+            <div class="container" id="content">
+            <div class="page-inner">
           <div class="page-inner">
           <div class="row">
           <div class="col-md-12">
@@ -132,12 +108,12 @@ if ($patient_type === 'Student') {
                   </div>
                   <div class="card-body">
                       <form id="profileForm" method="POST" enctype="multipart/form-data">
-                          <input type="hidden" name="patient_id" class="form-control" 
-                              value="<?php echo htmlspecialchars($patient_id, ENT_QUOTES, 'UTF-8'); ?>" />
+                          <input type="hidden" name="user_idnum" class="form-control" 
+                              value="<?php echo htmlspecialchars($userData['user_idnum']); ?>" />
 
                           <div class="profile-image mb-3">
                               <img id="profilePic" 
-                                  src='/php-admin/uploads/<?php echo !empty($patientData->patient_profile) ? $patientData->patient_profile : 'default-image.jpg'; ?>'
+                                  src='/php-admin/uploads/<?php echo !empty($userData['user_profile']) ? $userData['user_profile'] : 'default-image.jpg'; ?>'
                                   alt="Profile Picture" />
                           </div>
 
@@ -153,11 +129,11 @@ if ($patient_type === 'Student') {
                           <div class="row">
                               <div class="col-md-3 mb-3">
                                   <label for="username" class="form-label">Username</label>
-                                  <input type="text" class="form-control" id="username" name="username" value="<?php echo ($patientData->patient_fname); ?> <?php echo ($patientData->patient_mname); ?> <?php echo ($patientData->patient_lname); ?>" disabled />
+                                  <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($userData['user_fname']); ?> <?php echo htmlspecialchars($userData['user_mname']); ?> <?php echo htmlspecialchars($userData['user_lname']); ?>" disabled />
                               </div>
                               <div class="col-md-3 mb-3">
                                   <label for="email" class="form-label">Email Address</label>
-                                  <input type="email" class="form-control" id="emaill" name="emaill" value="<?php echo ($patientData->patient_email); ?>" disabled />
+                                  <input type="email" class="form-control" id="emaill" name="emaill" value="<?php echo htmlspecialchars($userData['user_email']); ?>" disabled />
                               </div>
                               <div class="col-md-3 mb-3"> 
                               </div>
@@ -172,7 +148,7 @@ if ($patient_type === 'Student') {
                       </div>
                       <div class="card-body">
                       <form method="POST" id="otpForm">
-                              <input type="hidden" name="email" id="email" value="<?php echo ($patientData->patient_email); ?>" />
+                              <input type="hidden" name="email" id="email" value="<?php echo htmlspecialchars($userData['user_email']); ?>" />
                               <div id="confirmChangePassword">
                                   <p>Do you want to change your password?</p>
                                   <button type="submit" class="btn btn-primary" id="sendOtpBtn">Yes, Change Password</button>
@@ -186,7 +162,7 @@ if ($patient_type === 'Student') {
                                 </div>
                               </form>
                               <form method="POST" id="changePasswordForm">
-                              <input type="hidden" id="userEmail" name="email" value="<?php echo ($patientData->patient_email); ?>">
+                              <input type="hidden" id="userEmail" name="email" value="<?php echo htmlspecialchars($userData['user_email']); ?>" />
                                     <div id="newPasswordSection" style="display: none;">
                                         <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -218,61 +194,82 @@ if ($patient_type === 'Student') {
           </div>
           </div>
         </div>
+            </div>
+
+          </div>
+            </div> 
         </div>
-      </div>
-        </div>
-      </div>
-<!-- Core JS Files -->
-<script src="../assets/js/core/jquery-3.7.1.min.js"></script>
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
+    </div>
 
-  <!-- Core JS Files -->
-  <script src="../assets/js/core/jquery-3.7.1.min.js"></script>
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
+    
+    
 
-  <!-- jQuery Scrollbar -->
-  <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="../assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
 
-  <!-- Chart JS -->
-  <script src="../assets/js/plugin/chart.js/chart.min.js"></script>
+    <!-- jQuery Scrollbar -->
+    <script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+ 
+    <!-- Chart JS -->
+    <script src="../assets/js/plugin/chart.js/chart.min.js"></script>
 
-  <!-- jQuery Sparkline -->
-  <script src="../assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+    <!-- jQuery Sparkline -->
+    <script src="../assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
 
-  <!-- Chart Circle -->
-  <script src="../assets/js/plugin/chart-circle/circles.min.js"></script>
+    <!-- Chart Circle -->
+    <script src="../assets/js/plugin/chart-circle/circles.min.js"></script>
 
-  <!-- Datatables -->
-  <script src="../assets/js/plugin/datatables/datatables.min.js"></script>
+    <!-- Datatables -->
+    <script src="../assets/js/plugin/datatables/datatables.min.js"></script>
 
-  <!-- Bootstrap Notify -->
-  <script src="../assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <!-- Bootstrap Notify -->
+    <script src="../assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
-  <!-- jQuery Vector Maps -->
-  <script src="../assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-  <script src="../assets/js/plugin/jsvectormap/world.js"></script>
+    <!-- jQuery Vector Maps -->
+    <script src="../assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="../assets/js/plugin/jsvectormap/world.js"></script>
 
-  <!-- Sweet Alert -->
-  <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.4/dist/sweetalert2.all.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 
-  <!-- Kaiadmin JS -->
-  <script src="../assets/js/kaiadmin.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Kaiadmin JS -->
+    <script src="../assets/js/kaiadmin.min.js"></script>
 
-<!-- Include SweetAlert library -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-      <script>
-        $(document).ready(function () {
-      
-          $("#client_header").load("clientheader.php", function (response, status, xhr) {
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+    $(document).ready(function() {
+       
+        $("#sidebar").load("sidebar.php", function(response, status, xhr) {
             if (status == "error") {
-              console.log("Error loading header: " + xhr.status + " " + xhr.statusText);
+                console.log("Error loading sidebar: " + xhr.status + " " + xhr.statusText);
+            } else {
+                
+                var currentPage = window.location.pathname.split('/').pop(); 
+
+                $('.nav-item').removeClass('active');
+
+                $('.nav-item').each(function() {
+                    var href = $(this).find('a').attr('href');
+                    if (href.indexOf(currentPage) !== -1) {
+                        $(this).addClass('active');
+                    }
+                });
             }
-          });
+        });
+
+        $("#header").load("header.php", function(response, status, xhr) {
+            if (status == "error") {
+                console.log("Error loading header: " + xhr.status + " " + xhr.statusText);
+            }
+        });
+    });
+</script>
+
+<script>
+        $(document).ready(function () {
 
           $("#changePasswordForm").on("submit", function (event) {
             event.preventDefault(); 
@@ -321,7 +318,7 @@ if ($patient_type === 'Student') {
         var formData = new FormData(this);
 
         $.ajax({
-            url: 'clientupdate.php',
+            url: 'settingsupprofile.php',
             type: 'POST',
             data: formData,
             contentType: false, 
@@ -387,7 +384,7 @@ if ($patient_type === 'Student') {
 
       const formData = new FormData(form);
 
-      fetch('sent-otp.php', { 
+      fetch('settingsentotp.php', { 
         method: 'POST',
         body: formData
       })
@@ -463,7 +460,7 @@ if ($patient_type === 'Student') {
       const formData = new FormData(form);
       formData.append('otp', otp); 
 
-      fetch('verifyclient.php', { 
+      fetch('settingverify.php', { 
         method: 'POST',
         body: formData
       })
@@ -582,7 +579,7 @@ if ($patient_type === 'Student') {
           formData.append("newPassword", newPassword);
           formData.append("email", email);
 
-          fetch('changepassclient.php', {
+          fetch('settingchangepass.php', {
             method: 'POST',
             body: formData
           })
@@ -618,5 +615,4 @@ if ($patient_type === 'Student') {
   </script>
 
 </body>
-
 </html>

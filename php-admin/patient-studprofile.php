@@ -160,7 +160,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
         </div>
             <div class="col-md-8">  
             <div class="card">
-              <div class="card-header">
+              <div class="card-header"> 
                 <div class="d-flex align-items-center">
                   <h4 class="card-title">Personal Details</h4>
                 </div>
@@ -182,7 +182,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
                         <label for="dob" class="form-label">Date of Birth</label>
 
                     </div>
-                </div>
+                </div> 
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <h5 style=" margin: 0;">
@@ -376,11 +376,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             $('#street').text(data.address.address_prkstrtadd || '');
             $('#email').text(data.patient.patient_email || '');
             $('#contactNumber').text(data.patient.patient_connum || '');
-            $('#emergencyContactName').text(data.emergencyContact.emcon_conname || '');
-            $('#relationship').text(data.emergencyContact.emcon_relationship || '');
-            $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || '');
+            $('#emergencyContactName').text(data.emergencyContact.emcon_conname || 'None');
+            $('#relationship').text(data.emergencyContact.emcon_relationship || 'None');
+            $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || 'None');
             $('#Status').text(data.patient.patient_status || '');
-            $('#profilePic').attr('src', `uploads/${data.patient.patient_profile}` || 'default-image.jpg');
+            $('#profilePic').attr('src', data.patient.patient_profile ? `uploads/${data.patient.patient_profile}` : 'default-image.jpg');
         }
 
         $('#downloadBtn').on('click', function () {

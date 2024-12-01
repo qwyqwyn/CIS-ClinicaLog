@@ -128,7 +128,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
               <h3 class="fw-bold mb-3">Patient's Profle</h3>
             </div>
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-4"> 
                 <div class="card">
                   <div class="profile-image">
                     <div class="card-header">
@@ -374,11 +374,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
         $('#street').text(data.address.address_prkstrtadd || '');
         $('#email').text(data.patient.patient_email || '');
         $('#contactNumber').text(data.patient.patient_connum || '');
-        $('#emergencyContactName').text(data.emergencyContact.emcon_conname || '');
-        $('#relationship').text(data.emergencyContact.emcon_relationship || '');
-        $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || '');
+        $('#emergencyContactName').text(data.emergencyContact.emcon_conname || 'None');
+        $('#relationship').text(data.emergencyContact.emcon_relationship || 'None');
+        $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || 'None');
         $('#Status').text(data.patient.patient_status || '');
-        $('#profilePic').attr('src', `uploads/${data.patient.patient_profile}` || 'default-image.jpg');
+        $('#profilePic').attr('src', data.patient.patient_profile ? `uploads/${data.patient.patient_profile}` : 'default-image.jpg');
       }
       populatePatientForm(patientData);
     });

@@ -143,7 +143,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
                           Staff
                         </span>
                       </div>
-                    </div>
+                    </div> 
                   </div>
                   <div class="row" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
                     <h5 style="color: #59535A; margin: 0;">#<span id="staffID"></span></h5>
@@ -372,11 +372,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
         $('#street').text(data.address.address_prkstrtadd || '');
         $('#email').text(data.patient.patient_email || '');
         $('#contactNumber').text(data.patient.patient_connum || '');
-        $('#emergencyContactName').text(data.emergencyContact.emcon_conname || '');
-        $('#relationship').text(data.emergencyContact.emcon_relationship || '');
-        $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || '');
+        $('#emergencyContactName').text(data.emergencyContact.emcon_conname || 'None');
+        $('#relationship').text(data.emergencyContact.emcon_relationship || 'None');
+        $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || 'None');
         $('#Status').text(data.patient.patient_status || '');
-        $('#profilePic').attr('src', `uploads/${data.patient.patient_profile}` || 'default-image.jpg');
+        $('#profilePic').attr('src', data.patient.patient_profile ? `uploads/${data.patient.patient_profile}` : 'default-image.jpg');
 
       }
 

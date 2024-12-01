@@ -184,7 +184,7 @@ if ($patient_type === 'Student') {
             aria-expanded="false">
             <div class="avatar-sm">
               <img
-              src='/php-admin/uploads/<?php echo ($patientData->patient_profile); ?>'
+              src='/php-admin/uploads/<?php echo !empty($patientData->patient_profile) ? $patientData->patient_profile : 'default-image.jpg'; ?>'
               alt="..."
                 class="avatar-img rounded-circle" />
             </div>
@@ -198,10 +198,12 @@ if ($patient_type === 'Student') {
               <li>
                 <div class="user-box">
                   <div class="avatar-lg">
-                    <img
-                    src='/php-admin/uploads/<?php echo ($patientData->patient_profile); ?>'
-                    alt="image profile"
-                      class="avatar-img rounded" />
+                  <img
+                      src='/php-admin/uploads/<?php echo !empty($patientData->patient_profile) ? $patientData->patient_profile : 'default-image.jpg'; ?>'
+                      alt="image profile"
+                      class="avatar-img rounded"
+                    />
+
                   </div>
                   <div class="u-text">
                     <h4><?php echo ($patientData->patient_fname); ?></h4>

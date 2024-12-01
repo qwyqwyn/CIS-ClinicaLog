@@ -117,7 +117,7 @@ $userData = $user->getUserData($user_idnum);
                             </h5>
                             <button
                               type="button"
-                              class="close"
+                              class="close" 
                               data-bs-dismiss="modal"  
                               aria-label="Close" 
                             >
@@ -354,45 +354,56 @@ $userData = $user->getUserData($user_idnum);
                             </tr>
                         </tfoot> 
                         <tbody>
-                        <?php
-                          $nodes = $user->getAllUsers();
-                          foreach ($nodes as $node) {
-                              $fullName = "{$node->user_lname}, {$node->user_fname} {$node->user_mname}";
-                              $statusColor = ($node->user_status === 'Active') ?  '#77dd77' : '#ff6961';
-                              $statusText = ucfirst($node->user_status); 
-                              
-                              echo "<tr data-id='{$node->user_idnum}' data-lname='{$node->user_lname}' data-fname='{$node->user_fname}' data-mname='{$node->user_mname}' data-email='{$node->user_email}' data-position='{$node->user_position}' data-role='{$node->user_role}' data-dateadded='{$node->user_dateadded}' data-status='{$node->user_status}'> 
-                                  <td><img src='uploads/{$node->user_profile}' alt='Profile Picture' style='width: 50px; height: 50px; border-radius: 50%;'></td>
-                                  <td>{$node->user_idnum}</td>
-                                  <td>{$fullName}</td>
-                                  <td>{$node->user_email}</td>
-                                  <td>{$node->user_position}</td>
-                                  <td>{$node->user_role}</td>
-                                  <td>{$node->user_dateadded}</td>
-                                  <td>
-                                      <span style='
-                                          display: inline-block; 
-                                          padding: 5px 10px;
-                                          border-radius: 50px;
-                                          background-color: {$statusColor};
-                                          color: white; 
-                                          text-align: center;
-                                          min-width: 60px;'>
-                                          {$statusText}
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class='form-button-action'>
-                                          <button type='button' class='btn btn-link btn-primary btn-lg editButton'>
-                                              <i class='fa fa-edit'></i>
-                                          </button>
-                                      </div>
-                                  </td>
-                              </tr>";
-                          }
-                          ?>
+                            <?php
+                               
+                                $nodes = $user->getAllUsers();
+                                foreach ($nodes as $node) {
+                                    // Skip the user if their ID matches the excluded ID
+                                    if ($node->user_idnum === $user_idnum) {
+                                        continue;  // Skip this iteration and move to the next node
+                                    }
 
+                                    $fullName = "{$node->user_lname}, {$node->user_fname} {$node->user_mname}";
+                                    $statusColor = ($node->user_status === 'Active') ?  '#77dd77' : '#ff6961';
+                                    $statusText = ucfirst($node->user_status); 
+                                    $profilePic = !empty($node->user_profile) ? "uploads/{$node->user_profile}" : 'uploads/default-image.jpg';
+
+                                    echo "<tr data-id='{$node->user_idnum}' data-lname='{$node->user_lname}' data-fname='{$node->user_fname}' data-mname='{$node->user_mname}' data-email='{$node->user_email}' data-position='{$node->user_position}' data-role='{$node->user_role}' data-dateadded='{$node->user_dateadded}' data-status='{$node->user_status}'> 
+                                            <td>
+                                                <img src='" . htmlspecialchars($profilePic) . "' 
+                                                    alt='Profile Picture' 
+                                                    style='width: 50px; height: 50px; border-radius: 50%;'>
+                                            </td>
+                                            <td>{$node->user_idnum}</td>
+                                            <td>{$fullName}</td>
+                                            <td>{$node->user_email}</td>
+                                            <td>{$node->user_position}</td>
+                                            <td>{$node->user_role}</td>
+                                            <td>{$node->user_dateadded}</td>
+                                            <td>
+                                                <span style='
+                                                    display: inline-block; 
+                                                    padding: 5px 10px;
+                                                    border-radius: 50px;
+                                                    background-color: {$statusColor};
+                                                    color: white; 
+                                                    text-align: center;
+                                                    min-width: 60px;'>
+                                                    {$statusText}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class='form-button-action'>
+                                                    <button type='button' class='btn btn-link btn-primary btn-lg editButton'>
+                                                        <i class='fa fa-edit'></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                          </tr>";
+                                }
+                            ?>
                         </tbody>
+
                     </table>
                   </div>
                   </div>

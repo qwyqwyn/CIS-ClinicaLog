@@ -14,7 +14,7 @@ $conn = $db->getConnection();
 
 $user = new User($conn); 
 $user_idnum = $_SESSION['user_idnum'];
-
+ 
 $dashboard = new Dashboard($conn); 
 
 ?>

@@ -5024,17 +5024,17 @@ div.table-responsive > div.dataTables_wrapper > div.row {
 
 .select2-container--default .select2-selection--single {
   background-color: #ffffff;
-  border: 1px solid #aaa;
+  border: 1px solid gray;
   border-radius: 4px; }
   .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #444;
+    color: gray;
     line-height: 28px; }
   .select2-container--default .select2-selection--single .select2-selection__clear {
     cursor: pointer;
     float: right;
     font-weight: bold; }
   .select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #999; }
+    color: gray; }
   .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 26px;
     position: absolute;
@@ -5184,7 +5184,7 @@ div.table-responsive > div.dataTables_wrapper > div.row {
   .select2-container--classic .select2-selection--single:focus {
     border: 1px solid #5897fb; }
   .select2-container--classic .select2-selection--single .select2-selection__rendered {
-    color: #444;
+    color: gray;
     line-height: 28px; }
   .select2-container--classic .select2-selection--single .select2-selection__clear {
     cursor: pointer;
@@ -5487,7 +5487,7 @@ div.table-responsive > div.dataTables_wrapper > div.row {
         top: 50%;
         width: 0; }
     .select2-container--bootstrap .select2-selection--single .select2-selection__rendered {
-      color: #555;
+      color: gray;
       padding: 0; }
     .select2-container--bootstrap .select2-selection--single .select2-selection__placeholder {
       color: #999; }

@@ -1,0 +1,57 @@
+/* Modal Style */
+#statusOptions {
+    display: none;
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .statusOption {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 25px;
+    margin: 5px;
+    text-align: center;
+  }
+  
+  /* For screens 425px and below */
+  @media (max-width: 425px) {
+    #statusOptions {
+      width: 30% !important;
+      left: 40% !important;
+      transform: translateX(-50%);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  
+    .statusOption {
+      width: 100%;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 25px;
+      margin: 5px;
+      text-align: center;
+    }
+  }
+  @media (max-width: 768px) {
+    #statusOptions {
+      width: 20%;
+      left: 60%;
+      transform: translateX(-20%);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  
+    .statusOption {
+      width: 100%;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 25px;
+      margin: 5px;
+      text-align: center;
+    }
+  }

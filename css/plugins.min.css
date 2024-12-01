@@ -7064,7 +7064,7 @@ div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:last-child 
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #444;
+    color: gray;
     line-height: 28px
 }
 

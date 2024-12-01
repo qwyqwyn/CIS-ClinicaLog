@@ -20,11 +20,12 @@ $patientData = $patient->getPatientData($patient_id);
 // Fetch and prepare data once
 $studentData = $patient->getStudentData($patient_id);
 
-$profilePic = $studentData['patient']['patient_profile'];
+$profilePic = !empty($studentData['patient']['patient_profile']) ? $studentData['patient']['patient_profile'] : 'default-image.jpg';
 $studentID = $studentData['student']['student_idnum'];
 $lastName = $studentData['patient']['patient_lname'];
 $firstName = $studentData['patient']['patient_fname'];
 $middleName = $studentData['patient']['patient_mname'];
+$program = $studentData['student']['student_program'];
 $major = $studentData['student']['student_major'];
 $year = $studentData['student']['student_year'];
 $dob = $studentData['patient']['patient_dob'];
@@ -156,6 +157,7 @@ $age = $dobDateTime->diff(new DateTime())->y;
                 <h5 style="margin: 0;">
                     <span id="lastName"><?php echo $lastName; ?></span><span>, </span><span id="firstName"><?php echo $firstName; ?></span> <span id="middleName"><?php echo $middleName; ?></span>
                 </h5>
+                <h5 style="color: #59535A; margin: 0;"><span id="program"><?php echo $program; ?></span></h5>
                 <h5 style="color: #59535A; margin: 0;">Major in <?php echo $major; ?></h5>
                 <h5 style="color: #59535A; margin: 0;">Year: <?php echo $year; ?></h5>
                 <p style="color: #888888; margin-top: 5px;">Status: <?php echo $status; ?></p>

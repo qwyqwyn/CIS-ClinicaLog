@@ -90,7 +90,7 @@ $age = $dobDateTime->diff(new DateTime())->y;
         <div class="page-inner">
         <div class="page-inner">
             <div class="row">
-              <h3 class="fw-bold mb-3">Patient's Profile</h3>
+              <h3 class="fw-bold mb-3">Patient's Profile</h3> 
             </div>
             <div class="row">
         <div class="col-md-4">

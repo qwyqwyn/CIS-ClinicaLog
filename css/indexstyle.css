@@ -12,87 +12,151 @@ body {
     font-family: 'Raleway', sans-serif;
     background-color: #f3f3f3;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
 }
 
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 20px; /* Ensures spacing around content */
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
 #logo {
-    width: 180px;
-    height: 70px;
+    width: 200px; 
+    height: auto; /* Maintains aspect ratio */
     flex-shrink: 0;
+    margin-left: -40px;
 }
 
 #name {
     color: #FFF;
-    text-align: center;
-    font-family: Raleway;
-    font-size: 90px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 100px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: 0.8;
+    margin: 0;
+    margin-bottom: 10%;
+    margin-top: 10%;
 }
 
-#line1,
-#line2 {
+.line1,
+.line2 {
     display: block;
-    line-height: 1.1;
-}
-
-#line1 {
-    font-size: 24px;
-}
-
-#line2 {
-    font-size: 24px;
+    font-size: 80px;
+    line-height: 0;
 }
 
 .button {
-    background-color: #e6618f; /* Pink color */
+    background-color: #DA6F64;
     color: white;
-    width: 338px;
-    height: 74px;
+    width: 240px; 
+    height: 50px; 
     border: none;
-    border-radius: 37px; /* Half of height for fully rounded corners */
-    font-size: 30px;
+    border-radius: 25px; /* Smooth rounded corners */
+    font-size: 20px; 
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    flex-shrink: 0; /* Prevent shrinking */
-    margin-left: 25%;
 }
 
 .button .arrow {
     margin-left: 10px;
-    font-size: 30px;
+    font-size: 20px;
 }
 
-@media (max-width: 480px) {
+/* Large Screens (Wider than 768px) */
+@media (max-width: 2650px) {
     #logo {
-        width: 120px;
-        height: 50px;
+        width: 200px;
+        height: auto;
     }
 
     #name {
-        font-size: 40px;
+        font-size: 100px;
     }
 
     .line1, .line2 {
-        font-size: 18px;
+        font-size: 80px;
     }
 
     .button {
-        width: 240px;
-        height: 54px;
-        font-size: 20px;
-        margin-left: 0; /* Center the button */
+        width: 200px;
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
+/* Medium Screens (Tablets and Smaller Desktops) */
+@media (max-width: 768px) {
+    body {
+        background-image: url("../assets/img/background-medium.png"); /* Optimized background for medium screens */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    #logo {
+        width: 150px; /* Reduced size for smaller screens */
+        height: auto;
+    }
+
+    #name {
+        font-size: 80px; /* Adjusted font size for better fit */
+    }
+
+    .line1, .line2 {
+        font-size: 48px;
+    }
+
+    .button {
+        width: 200px;
+        height: 45px;
+        font-size: 18px;
+    }
+}
+ 
+/* Small Screens (Phones) */
+@media (max-width: 480px) {
+    body {
+        background-image: url("../assets/img/background-small.png"); /* Optimized background for small screens */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    #logo {
+        width: 120px; /* Further reduced size */
+        height: auto;
+        margin-left: -17px;
+    }
+
+    #name {
+        font-size: 42px; /* Smaller font size for mobile */
+    }
+
+    .line1, .line2 {
+        font-size: 32px; /* Adjusted font size */
+    }
+
+    .button {
+        width: 180px;
+        height: 40px;
+        font-size: 16px;
     }
 
     .button .arrow {
-        font-size: 20px;
+        font-size: 16px;
     }
 }

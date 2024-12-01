@@ -16,7 +16,6 @@ $conn = $db->getConnection();
 
 $transac = new TransacManager($conn);
 
-
 $user_idnum = $_SESSION['user_idnum']; 
 
 $patientId = isset($_GET['id']) ? $_GET['id'] : null;
@@ -65,6 +64,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/plugins.min.css" />
     <link rel="stylesheet" href="../css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="../css/transaction.css" />
 
     <!-- ICONS -->
     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
@@ -329,12 +329,12 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
                                                                 data-status="<?php echo $transaction->transac_status; ?>"
                                                                 data-adminid="<?= htmlspecialchars($user_idnum, ENT_QUOTES, 'UTF-8'); ?>"
                                                                 class="<?php echo $statusColor; ?>">
-                                                                <td>
+                                                                <td> 
                                                                     <div style="display: flex; align-items: center;">
-                                                                        <img src="uploads/<?php echo ($transaction->transac_patientprofile); ?>" 
-                                                                            alt="Profile Image" 
-                                                                            style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
-                                                                        
+                                                                    <img src="uploads/<?php echo !empty($transaction->transac_patientprofile) ? $transaction->transac_patientprofile : 'default-image.jpg'; ?>" 
+                                                                                alt="Profile Image" 
+                                                                                style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+
                                                                         <div>
                                                                             <div><?php echo ($transaction->transac_patientname); ?></div>
                                                                             <div style="font-size: 12px; color: gray; margin-top: 5px;">
