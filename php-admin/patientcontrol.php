@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $role = $_POST['role'];
         $region = $_POST['region'];
         $province = $_POST['province'];
-        $municipality = $_POST['municipality'];
+        $municipality = $_POST['municipality']; 
         $barangay = $_POST['barangay'];
         $prkstrtadd = $_POST['street'];
         $conname = $_POST['emergencyContactName'];

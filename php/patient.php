@@ -439,7 +439,7 @@ class PatientManager{
     
             // Check if the patient already exists
             if ($this->patients->patientExists($email)) {
-                return ['status' => 'error', 'message' => 'Patient already exists.'];
+                return ['status' => 'error', 'message' => 'Patient email already exists.'];
             }
     
             // Insert the patient
@@ -618,6 +618,10 @@ class PatientManager{
     }
     
     public function addStudentPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code, $idnum, $program, $major, $year, $section, $region, $province, $municipality, $barangay, $prkstrtadd, $conname, $relationship, $emergency_connum) {
+        if ($this->students->studentExists($idnum)) {
+            return ['status' => 'error', 'message' => 'Student ID Number already exists.'];
+        }
+
         $insertPatientResponse = $this->insertPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code);
         
         if ($insertPatientResponse['status'] !== 'success') {
@@ -658,6 +662,11 @@ class PatientManager{
         $region, $province, $municipality, $barangay, $prkstrtadd, $conname, 
         $relationship, $emergency_connum
     ) {
+
+        if ($this->faculties->facultyExists($idnum)) {
+            return ['status' => 'error', 'message' => 'Faculty ID Number already exists.'];
+        }
+
         $insertPatientResponse = $this->insertPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code);
         
        
@@ -699,6 +708,10 @@ class PatientManager{
         $region, $province, $municipality, $barangay, $prkstrtadd, $conname, 
         $relationship, $emergency_connum
     ) {
+        if ($this->staffs->staffExists($idnum)) {
+            return ['status' => 'error', 'message' => 'Staff ID Number already exists.'];
+        }
+
         $insertPatientResponse = $this->insertPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code);
         
         if ($insertPatientResponse['status'] !== 'success') {
@@ -738,6 +751,10 @@ class PatientManager{
         $region, $province, $municipality, $barangay, $prkstrtadd, $conname, 
         $relationship, $emergency_connum
     ) {
+        if ($this->extensions->ExtensionExists($idnum)) {
+            return ['status' => 'error', 'message' => 'Extension ID Number already exists.'];
+        }
+
         $insertPatientResponse = $this->insertPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code);
         
         if ($insertPatientResponse['status'] !== 'success') {

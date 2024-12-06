@@ -37,7 +37,7 @@ class Database {
     // Method to fetch all results as an associative array
     public function fetchAll($sql, $params = []) {
         $stmt = $this->query($sql, $params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
     public function prepare($query) {

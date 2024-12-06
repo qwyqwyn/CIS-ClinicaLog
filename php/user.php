@@ -294,9 +294,9 @@ class User {
             $stmt->bindValue(12, $code); 
 
             if ($stmt->execute()) {
-                $user_id = $this->conn->lastInsertedId();
+                //$user_id = $this->conn->lastInsertedId();
 
-                $this->linkedList->addNode($user_id,$user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $password, $code);
+                //$this->linkedList->addNode($user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $password, $code);
                 $_SESSION['status'] = 'success';
                 $_SESSION['message'] = 'User registered successfully!';
                 header('Location: staffuser.php');

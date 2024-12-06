@@ -238,7 +238,7 @@ $user_idnum = $_SESSION['user_idnum'];
 
                   <div class="row">
                     <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary" id="addstaffpatient" name="addstaffpatient">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="addfacultypatient" name="addfacultypatient">Submit</button>
                         <button type="button" class="btn btn-primary ms-3" id="canceladdpatient">Back</button>
                     </div>
                   </div>
@@ -591,7 +591,7 @@ function confirmCancelPatient() {
         }
         form.classList.add('was-validated');
       }, false);
-    })();
+    })(); 
 
 
 </script>

@@ -37,8 +37,14 @@ $address = "{$studentData['address']['address_prkstrtadd']},
     {$studentData['address']['address_region']}";
 $email = $studentData['patient']['patient_email'];
 $contactNumber = $studentData['patient']['patient_connum'];
-$emergencyContactName = $studentData['emergencyContact']['emcon_conname'];
-$emergencyContactNumber = $studentData['emergencyContact']['emcon_connum'];
+$emergencyContactName = !empty($studentData['emergencyContact']['emcon_conname']) 
+    ? $studentData['emergencyContact']['emcon_conname'] 
+    : 'None';
+
+$emergencyContactNumber = !empty($studentData['emergencyContact']['emcon_connum']) 
+    ? $studentData['emergencyContact']['emcon_connum'] 
+    : 'None';
+
 $status = $studentData['patient']['patient_status'];
 
 // Calculate age
