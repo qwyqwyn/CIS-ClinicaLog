@@ -438,7 +438,7 @@ class PatientManager{
             $setStmt->execute();
     
             // Check if the patient already exists
-            if ($this->patients->patientExists($email)) {
+            if ($this->patients->PatientEmailExists($email)) {
                 return ['status' => 'error', 'message' => 'Patient email already exists.'];
             }
     
@@ -492,8 +492,8 @@ class PatientManager{
     
     
     public function insertStudent($idnum, $patientid, $program, $major, $year, $section) {
-        if ($this->students->studentExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Student already exists.'];
+        if ($this->students->PatientEmailExists($idnum)) {
+            return ['status' => 'error', 'message' => 'Student ID Number already exists.'];
         }
     
         $sql = "INSERT INTO patstudents (student_idnum, student_patientid, student_program, student_major, student_year, student_section)
@@ -514,7 +514,7 @@ class PatientManager{
     
     public function insertFaculty($patientid, $idnum, $college, $depart, $role) {    
         if ($this->faculties->facultyExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Faculty already exists.'];
+            return ['status' => 'error', 'message' => 'Faculty ID Number already exists.'];
         }
     
         $sql = "INSERT INTO patfaculties (faculty_patientid, faculty_idnum, faculty_college, faculty_depart, faculty_role)
@@ -542,7 +542,7 @@ class PatientManager{
     
     public function insertStaff($patientid, $idnum, $office, $role) {
         if ($this->staffs->staffExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Staff already exists.'];
+            return ['status' => 'error', 'message' => 'Staff ID Number already exists.'];
         }
     
         $sql = "INSERT INTO patstaffs (staff_patientid, staff_idnum, staff_office, staff_role)
@@ -565,7 +565,7 @@ class PatientManager{
     
     public function insertExtension($idnum, $patientid, $role) {
         if ($this->extensions->ExtensionExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Extension already exists.'];
+            return ['status' => 'error', 'message' => 'Extension ID Number already exists.'];
         }
     
         $insertSql = "INSERT INTO patextensions (exten_patientid, exten_idnum, exten_role)
