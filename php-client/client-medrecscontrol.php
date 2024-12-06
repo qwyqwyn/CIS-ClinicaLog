@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect based on patient type
             switch ($patienttype) {
                 case 'Student':
-                    $redirectUrl = 'patstudent.php';
+                    $redirectUrl = 'patstudents.php';
                     break;
                 case 'Faculty':
                     $redirectUrl = 'patfaculty.php';
