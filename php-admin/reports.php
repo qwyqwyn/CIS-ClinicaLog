@@ -170,12 +170,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                                     <div class="d-flex align-items-center">
                                                         <h4 class="card-title">Medical Certificate Issuance</h4>
                                                         <div class="card-tools ms-auto"> <!-- Add ms-auto to align the button to the right -->
-                                                            <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                                                <span class="btn-label">
-                                                                    <i class="fa fa-pencil"></i>
-                                                                </span>
-                                                                Export
-                                                            </a>
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,12 +263,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                         <div class="d-flex align-items-center">
                                             <h4 class="card-title">Medical Consultation and Treatment</h4>
                                             <div class="card-tools ms-auto"> <!-- Add ms-auto to align the button to the right -->
-                                                <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                                    <span class="btn-label">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </span>
-                                                    Export
-                                                </a>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -367,12 +357,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                         <div class="d-flex align-items-center">
                                             <h4 class="card-title">Dental Check Up & Treatment</h4>
                                             <div class="card-tools ms-auto"> <!-- Add ms-auto to align the button to the right -->
-                                                <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                                    <span class="btn-label">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </span>
-                                                    Export
-                                                </a>
+                                               
                                             </div>
                                         </div>
                                     </div>

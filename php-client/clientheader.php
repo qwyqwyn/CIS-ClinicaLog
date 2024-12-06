@@ -265,7 +265,7 @@ Swal.fire({
   title: 'Welcome to Clinicalog!',
   text: "Please make sure the information you provide is accurate and up-to-date. This helps us serve you better and ensures that everything runs smoothly.\n\nIf anything changes, kindly update your details.\n\nYour cooperation is greatly appreciated.",
   icon: 'info',
-  footer: 'From USeP Campus Clinic Tagum-Unit', 
+  footer: 'From USeP Campus Clinic, Tagum-Mabini Campus Tagum Unit', 
   confirmButtonText: 'Got it, thanks!'
 });
 

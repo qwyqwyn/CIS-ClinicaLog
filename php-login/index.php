@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_P
     $userData = $user->userExists($email, $password);
  
 if ($userData) {  
-    session_regenerate_id(true); 
+    session_regenerate_id(true);  
     $_SESSION['logged_in'] = true;  
     $_SESSION['user_idnum'] = $userData->user_idnum;  
     $_SESSION['user_status'] = $userData->user_status;
@@ -38,7 +38,7 @@ if ($userData) {
             header('Location: ../php-admin/superadindex.php'); 
             exit;
         } elseif ($_SESSION['user_role'] === 'Admin') { 
-            header('Location: ../php-admin/adminindex.php');  
+            header('Location: ../php-admin/adminindex.php');   
             exit;
         }
     } else {   
@@ -58,14 +58,14 @@ if ($userData) {
             $type = $_SESSION['patuser_type'] = $patientData->patient_patienttype;
             
             switch ($type) {
-                case 'Student': 
+                case 'Student':  
                     header('Location: ../php-client/patstudents.php'); 
                     break;
                 case 'Faculty':
                     header('Location: ../php-client/patfaculty.php'); 
                     break;
                 case 'Staff':
-                    header('Location: ../php-client/patstaff.php'); 
+                    header('Location: ../php-client/patstaff.php');  
                     break;
                 case 'Extension':
                     header('Location: ../php-client/patextension.php'); 
@@ -74,7 +74,7 @@ if ($userData) {
             echo json_encode(['status' => 'success']);
             exit;
         } else {
-            $_SESSION['error_message'] = "Account can't be used."; 
+            $_SESSION['error_message'] = "Account can't be used.";  
             header('Location: ' . $_SERVER['PHP_SELF']);
             exit;
         }
@@ -108,7 +108,7 @@ unset($_SESSION['error_message']);
     <div class="wrapper">
         <div class="login-wrapper">
             <form id="login-form" action="" method="post" autocomplete="off">
-                <p id="welcome">Welcome Admin!</p>
+                <p id="welcome">Welcome!</p>
                 <p id="login2">Login to Continue</p>
                 
                 <?php if ($error_message): ?> 
@@ -129,7 +129,7 @@ unset($_SESSION['error_message']);
                         <img src="../assets/img/password.png" alt="password icon">
                         <input type="password" name="password" id="password" class="form-input" placeholder="Enter your Password" required>
                       <input type="checkbox" id="show-password"> 
-                    </div>
+                    </div> 
 
                     <div class="forgotpassword"> 
                         <span id="forgot">Forgot Password?</span>

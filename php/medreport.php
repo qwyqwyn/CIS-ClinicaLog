@@ -1,59 +1,75 @@
 <?php
-class MedstockNode {
+class Medstock {
+    // Class properties to hold medstock details.
     public $medstock_id;
     public $item;
     public $unit;
+
+    // Property to store expiration date.
     public $expiry_date;
     public $medicine_balance_month;
     public $medstock_added;
+
+    // Properties for tracking stock balances and usage.
     public $total_start_balance;
     public $total_prescribed;
     public $total_issued;
-    public $end_balance;
-    public $next;
 
+    // Property to track end balance of the stock.
+    public $end_balance;
+
+    // Constructor to initialize a new Medstock object.
     public function __construct($medstock_id, $item, $unit, $expiry_date) {
         $this->medstock_id = $medstock_id;
         $this->item = $item;
         $this->unit = $unit;
+
+        // Assign expiration date during object creation.
         $this->expiry_date = $expiry_date;
-        $this->next = null;
     }
 }
 
+class MedicineManager {
+    private $conn; // Database connection.
+    private $medstocks = []; // Array to store Medstock objects.
 
-class MedicineManager{
-    private $conn;
-    private $head;
-
-    public function __construct($conn) {  
+    // Initialize MedicineManager with a database connection.
+    public function __construct($conn) {
         $this->conn = $conn;
-        $this->head = null;
     }
 
+    // Calculate total prescribed quantity within a date range.
     public function calculateTotalPrescribed($medstock_id, $quarterStart, $quarterEnd) {
         $query = "SELECT COALESCE(SUM(pm.pm_medqty), 0) AS total_prescribed
                   FROM prescribemed pm
                   JOIN consultations c ON pm.pm_consultid = c.consult_id
                   WHERE pm.pm_medstockid = ?
                   AND c.consult_date BETWEEN ? AND ?";
-        
+
+        // Prepare the query to prevent SQL injection.
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$medstock_id, $quarterStart, $quarterEnd]);
+
+        // Fetch and return the total prescribed quantity.
         return $stmt->fetchColumn();
     }
 
+    // Calculate total issued quantity within a date range.
     public function calculateTotalIssued($medstock_id, $quarterStart, $quarterEnd) {
         $query = "SELECT COALESCE(SUM(mi.mi_medqty), 0) AS total_issued
                   FROM medissued mi
                   WHERE mi.mi_medstockid = ? 
                   AND mi.mi_date BETWEEN ? AND ?";
-        
+
+        // Prepare and execute the query with parameters.
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$medstock_id, $quarterStart, $quarterEnd]);
+
+        // Return the total issued quantity.
         return $stmt->fetchColumn();
     }
 
+    // Calculate medicine balance before a given date.
     public function calculateMedicineBalanceMonth($medstock_id, $cutoffDate) {
         $query = "SELECT COALESCE(
                         (SELECT ms_qty.medstock_qty 
@@ -67,12 +83,16 @@ class MedicineManager{
                                      FROM medissued mi
                                      WHERE mi.mi_medstockid = ? AND mi.mi_date < ?), 0), 
                         0) AS medicine_balance_month";
-        
+
+        // Prepare the statement for safe execution.
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$medstock_id, $cutoffDate, $medstock_id, $cutoffDate, $medstock_id, $cutoffDate]);
+
+        // Return the calculated balance.
         return $stmt->fetchColumn();
     }
 
+    // Calculate stock added within a specified date range.
     public function calculateMedstockAdded($medstock_id, $startDate, $endDate) {
         $query = "SELECT COALESCE(
                         (SELECT ms2.medstock_qty 
@@ -80,58 +100,60 @@ class MedicineManager{
                          WHERE ms2.medstock_id = ? 
                          AND ms2.medstock_dateadded BETWEEN ? AND ?), 
                         0) AS medstock_added";
-        
+
+        // Prepare the query to avoid SQL injection issues.
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$medstock_id, $startDate, $endDate]);
+
+        // Return the amount of stock added.
         return $stmt->fetchColumn();
     }
 
-    public function addMedstockToList($medstock_id, $item, $unit, $expiry_date, $selectedDate, $quarterStart, $quarterEnd) {
-        // Calculate each column value
+    // Add a medstock entry with calculated stock details.
+    public function addMedstock($medstock_id, $item, $unit, $expiry_date, $selectedDate, $quarterStart, $quarterEnd) {
+        // Calculate stock balances and usage.
         $medicine_balance_month = $this->calculateMedicineBalanceMonth($medstock_id, $selectedDate);
         $medstock_added = $this->calculateMedstockAdded($medstock_id, $quarterStart, $quarterEnd);
         $total_start_balance = $medicine_balance_month + $medstock_added;
+
+        // Calculate prescriptions and issued amounts.
         $total_prescribed = $this->calculateTotalPrescribed($medstock_id, $quarterStart, $quarterEnd);
         $total_issued = $this->calculateTotalIssued($medstock_id, $quarterStart, $quarterEnd);
-    
-        // Calculate end_balance as total_start_balance minus (total_prescribed + total_issued)
         $end_balance = $total_start_balance - ($total_prescribed + $total_issued);
-    
-        // Create new node with calculated values
-        $newNode = new MedstockNode($medstock_id, $item, $unit, $expiry_date);
-        $newNode->medicine_balance_month = $medicine_balance_month;
-        $newNode->medstock_added = $medstock_added;
-        $newNode->total_start_balance = $total_start_balance;
-        $newNode->total_prescribed = $total_prescribed;
-        $newNode->total_issued = $total_issued;
-        $newNode->end_balance = $end_balance;
-    
-        // Insert into linked list
-        if ($this->head === null) {
-            $this->head = $newNode;
-        } else {
-            $current = $this->head;
-            while ($current->next !== null) {
-                $current = $current->next;
-            }
-            $current->next = $newNode;
-        }
+
+        // Create a Medstock object and set its attributes.
+        $medstock = new Medstock($medstock_id, $item, $unit, $expiry_date);
+        $medstock->medicine_balance_month = $medicine_balance_month;
+        $medstock->medstock_added = $medstock_added;
+        $medstock->total_start_balance = $total_start_balance;
+
+        // Set remaining calculated properties.
+        $medstock->total_prescribed = $total_prescribed;
+        $medstock->total_issued = $total_issued;
+        $medstock->end_balance = $end_balance;
+
+        // Store the Medstock object for later retrieval.
+        $this->medstocks[] = $medstock;
     }
 
+    // Fetch medstock data from the database and populate the list.
     public function fetchAndStoreMedstocks($selectedDate, $quarterStart, $quarterEnd) {
         $query = "SELECT ms.medstock_id, CONCAT(m.medicine_name, ' ', ms.medstock_dosage) AS item, ms.medstock_unit, ms.medstock_expirationdt AS expiry_date
                   FROM medstock ms
                   JOIN medicine m ON ms.medicine_id = m.medicine_id
                   WHERE ms.medstock_dateadded < ? 
                   OR (ms.medstock_dateadded BETWEEN ? AND ?)";
+
+        // Prepare the query and execute with date parameters.
         $stmt = $this->conn->prepare($query);
         $stmt->execute([$selectedDate, $quarterStart, $quarterEnd]);
 
+        // Loop through the results and add each medstock.
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->addMedstockToList(
-                $row['medstock_id'], 
-                $row['item'], 
-                $row['medstock_unit'], 
+            $this->addMedstock(
+                $row['medstock_id'],
+                $row['item'],
+                $row['medstock_unit'],
                 $row['expiry_date'],
                 $selectedDate,
                 $quarterStart,
@@ -140,28 +162,27 @@ class MedicineManager{
         }
     }
 
+    // Retrieve medstocks as an array for external use.
     public function getAllMedstocksAsArray() {
-        $data = [];
-        $current = $this->head;
+        $data = []; // Initialize an empty array to store medstock data.
 
-        while ($current !== null) {
+        // Loop through each stored medstock and format the output.
+        foreach ($this->medstocks as $medstock) {
             $data[] = [
-                'medstock_id' => $current->medstock_id,
-                'item' => $current->item,
-                'unit' => $current->unit,
-                'expiry_date' => $current->expiry_date,
-                'medicine_balance_month' => $current->medicine_balance_month,
-                'medstock_added' => $current->medstock_added,
-                'total_start_balance' => $current->total_start_balance,
-                'total_prescribed' => $current->total_prescribed,
-                'total_issued' => $current->total_issued,
-                'end_balance' => $current->end_balance
+                'medstock_id' => $medstock->medstock_id,
+                'item' => $medstock->item,
+                'unit' => $medstock->unit,
+                'expiry_date' => $medstock->expiry_date,
+                'medicine_balance_month' => $medstock->medicine_balance_month,
+                'medstock_added' => $medstock->medstock_added,
+                'total_start_balance' => $medstock->total_start_balance,
+                'total_prescribed' => $medstock->total_prescribed,
+                'total_issued' => $medstock->total_issued,
+                'end_balance' => $medstock->end_balance
             ];
-            $current = $current->next;
         }
-        return $data;
+
+        return $data; // Return the collected data array.
     }
-
 }
-
 ?>

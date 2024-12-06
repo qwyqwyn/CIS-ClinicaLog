@@ -196,7 +196,7 @@ class PatientLinkedList {
     public function PatientExists($email) {
         $current = $this->head;
         while ($current !== null) {
-            if ($current->patient_email  === $email) { 
+            if ($current->patient_email  == $email) { 
                 return true; 
             }
             $current = $current->next;
@@ -207,13 +207,15 @@ class PatientLinkedList {
     public function PatientEmailExists($email) {
         $current = $this->head;
         while ($current !== null) {
-            if ($current->patient_email === $email) { 
-                return $current; 
+            if ($current->item->patient_email === $email) { // Access the Patient object through the `item` property
+                return $current->item; // Return the Patient object
             }
             $current = $current->next;
         }
-        return false; 
+        return null; // Return null instead of false
     }
+    
+    
     
 
     public function StudentExists($id) {
@@ -260,9 +262,6 @@ class PatientLinkedList {
         return false; 
     }
 
-    
-
-    
 }
 
 class PatientManager{
@@ -771,6 +770,54 @@ class PatientManager{
         ];
     
     }
+
+    public function emailVerify($email) {
+        return $this->patients->PatientEmailExists($email) !== null;
+    } 
+
+    public function verifyOtp($email, $otp) {
+        $node = $this->patients->PatientEmailExists($email); // Retrieves the Patient object
+        return $node !== false && $node->patient_code == $otp;
+    }
+    
+
+    public function updateCode($email, $otp) {
+        $sql_update_statement = "UPDATE patients SET patient_code = ? WHERE patient_email = ?";
+        $stmt = $this->db->prepare($sql_update_statement);
+
+        if ($stmt) {
+            $stmt->bindParam(1, $otp);
+            $stmt->bindParam(2, $email);
+
+            return $stmt->execute();
+        } else {
+            die("Error preparing statement: " . $this->db->errorInfo()[2]);
+        }
+    }
+
+    public function changePassword($email, $newPassword) {
+        $code = 0;
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $node = $this->patients->PatientEmailExists($email);
+
+        if ($node) {
+            $sql_update_statement = "UPDATE patients SET patient_password = ?, patient_code = ? WHERE patient_email = ?";
+            $stmt = $this->db->prepare($sql_update_statement);
+
+            if ($stmt) {
+                $stmt->bindParam(1, $hashedPassword);
+                $stmt->bindParam(2, $code);
+                $stmt->bindParam(3, $email);
+
+                return $stmt->execute();
+            } else {
+                die("Error preparing statement: " . $this->db->errorInfo()[2]);
+            }
+        } else {
+            return false;
+        }
+    }
+
 
     public function updatePatient($admin_id, $patient_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $newPassword, $status) {
         try {
@@ -1404,20 +1451,7 @@ public function getExtensionData($patient_id) {
     ];
 }
 
-
-
-    
-    
-     
-
-    
-    
 }
-
-
-
-
-
 
 
 ?>

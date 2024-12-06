@@ -2,13 +2,16 @@
 session_start();
 include '../database/config.php'; 
 include '../php/user.php';
+include '../php/patient.php';
+
 
 unset($_SESSION['error_message']);
 
 $database = new Database();
 $db = $database->getConnection();
 $user = new User($db);
- 
+$patient = new PatientManager($db); 
+
 $jsScript = '';
 $message = ''; 
 $type = '';
@@ -22,8 +25,8 @@ if (isset($_POST['changed_password'])) {
         $_SESSION['message_type'] = "error";
     }
  
-    elseif (!preg_match('/^(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/', $pass)) {
-        $_SESSION['message'] = "Password must be at least 8 characters long and contain at least one special character.";
+    elseif (!preg_match('/^(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{6,}$/', $pass)) {
+        $_SESSION['message'] = "Password must be at least 6 characters long and contain at least one special character.";
         $_SESSION['message_type'] = "error";
     }
    
@@ -32,6 +35,23 @@ if (isset($_POST['changed_password'])) {
         $encryptpass = password_hash($pass, PASSWORD_DEFAULT);
 
         if ($user->changePassword($email, $encryptpass)) {
+            $type = "success"; 
+            $jsScript = "
+                document.body.classList.add('active');
+                Swal.fire({
+                    title: 'Password Updated!',
+                    text: 'Click continue to login.',
+                    icon: 'success',
+                    confirmButtonText: 'Continue',
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'index.php'; 
+                    }
+                });
+            ";
+        }
+        if ($patient->changePassword($email, $encryptpass)) {
             $type = "success"; 
             $jsScript = "
                 document.body.classList.add('active');

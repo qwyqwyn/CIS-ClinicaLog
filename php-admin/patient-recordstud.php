@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="wrapper">
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar"></div>
-        <!-- End Sidebar -->
+        <!-- End Sidebar --> 
 
         <div class="main-panel">
             <!-- Header -->

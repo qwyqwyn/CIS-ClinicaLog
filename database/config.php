@@ -20,7 +20,7 @@ class Database {
         } catch (PDOException $e) {
             die("Connection failed: " . $e->getMessage());
         }
-    }
+    } 
 
     // Method to get the PDO connection
     public function getConnection() {
@@ -39,6 +39,7 @@ class Database {
         $stmt = $this->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function prepare($query) {
         return $this->pdo->prepare($query);
     }

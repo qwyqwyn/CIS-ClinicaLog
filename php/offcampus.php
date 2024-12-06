@@ -97,7 +97,7 @@ class OffCampusManager {
                 $row['mi_id'],
                 $row['mi_medstockid'],
                 $row['medicine_name'],
-                $row['mi_medqty'],
+                $row['mi_medqty'], 
                 $row['mi_date']
             );
 

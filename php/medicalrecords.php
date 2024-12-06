@@ -172,7 +172,7 @@ class MedRecManager {
 
             foreach ($filenames as $index => $filename) {
                 $file = $files[$index]; 
-                
+
                 if ($stmt->execute([$patientid, $filename, $file, $comment, $dateadded, $timeadded])) {
                     $medicalrec_id = $this->db->lastInsertId();
                     $newRecord = new MedicalRecords($medicalrec_id, $patientid, $filename, $file, $comment, $dateadded, $timeadded);
@@ -283,7 +283,7 @@ class MedRecManager {
                     'medicalrec_id' => $medicalrec_id
                 ];
             } else {
-                return [
+                return [ 
                     'status' => 'error',
                     'message' => 'Failed to update medical record.'
                 ];
@@ -373,7 +373,7 @@ class MedRecManager {
     
                 $this->db->commit();
                 return ['success' => true, 'message' => 'Medical record deleted and log entry created successfully.'];
-            } else {
+            } else { 
                 $this->db->rollBack();
                 return ['success' => false, 'message' => 'Failed to delete the medical record.'];
             }

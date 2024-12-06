@@ -162,7 +162,7 @@ $userData = $user->getUserData($user_idnum);
                                 </div>
                               </form>
                               <form method="POST" id="changePasswordForm">
-                              <input type="hidden" id="userEmail" name="email" value="<?php echo htmlspecialchars($userData['user_email']); ?>" />
+                              <input type="hidden" id="userEmail" name="emaill" value="<?php echo htmlspecialchars($userData['user_email']); ?>" />
                                     <div id="newPasswordSection" style="display: none;">
                                         <div class="row">
                                         <div class="col-md-6 mb-3">

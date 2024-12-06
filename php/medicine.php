@@ -165,7 +165,7 @@ class MedicineManager {
                 ms.medstock_timeadded,
                 ms.medstock_expirationdt,
                 ms.medstock_disable
-            FROM 
+            FROM  
                 medstock ms
             LEFT JOIN 
                 prescribemed p ON ms.medstock_id = p.pm_medstockid
@@ -216,7 +216,7 @@ class MedicineManager {
         } else {
             echo "Error inserting medicine.<br>";
             return false;
-        }
+        } 
     }
 
     public function insertMedstock($admin_id, $medicine_id, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {

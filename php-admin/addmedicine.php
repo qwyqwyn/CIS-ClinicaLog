@@ -84,7 +84,6 @@ $user_idnum = $_SESSION['user_idnum'];
                            $items = $medicine->getMedicinesWithStockCount();
 
                             foreach ($items as $item) {
-                                // Determine if disabled based on the medicine_disable field
                                 echo "<tr data-id='{$item['medicine_id']}' 
                                         data-name='{$item['medicine_name']}' 
                                         data-category='{$item['medicine_category']}' 

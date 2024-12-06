@@ -117,7 +117,7 @@ $userData = $user->getUserData($user_idnum);
                         data-bs-target="#addMedModal"
                       >
                         <i class="fa fa-plus"></i>
-                        Add Medicine 
+                        Add Medicine Stock
                       </button>
                     </div>
                   </div>
@@ -155,7 +155,7 @@ $userData = $user->getUserData($user_idnum);
                                 <div class="col-sm-12">
                                   <div class="form-group form-group-default">
                                     <!-- Medicine Name Dropdown -->
-                                    <div>
+                                    <div> 
                                     <label for="medicineName">Medicine Name</label>
                                     <select id="addname" name="addname" class="form-control">
                                         <option value="" disabled selected hidden>fill medicine name</option>
@@ -366,7 +366,7 @@ $userData = $user->getUserData($user_idnum);
                                   $qtycolor = "#ff6961"; // Pastel red for out of stock
                               } else {
                                   $statusqtyMessage = $node->medstock_qty;
-                                  $qtycolor = "#000000"; // No special class for in stock
+                                  $qtycolor = "#000000"; // No color font 
                               }
 
                               // Check if the medicine is expired

@@ -14,14 +14,14 @@ $conn = $db->getConnection();
 
 $user = new User($conn); 
 $user_idnum = $_SESSION['user_idnum'];
- 
+
 $dashboard = new Dashboard($conn); 
 
 ?>
  
 <!DOCTYPE html> 
 <html lang="en">  
-<head> 
+<head>  
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CIS:Clinicalog</title> 
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
@@ -130,7 +130,7 @@ $dashboard = new Dashboard($conn);
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Active Staff Users</p>
-                          <h4 class="card-title"><?php echo $dashboard->countActiveadminusers();; ?></h4>
+                          <h4 class="card-title"><?php echo $dashboard->countActiveadminusers(); ?></h4>
                         </div>
                       </div>
                     </div>
@@ -172,7 +172,7 @@ $dashboard = new Dashboard($conn);
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Transactions</p>
-                          <h4 class="card-title"><?php echo $dashboard->countAvailableMedstocks(); ?></h4>
+                          <h4 class="card-title"><?php echo $dashboard->countTransactions(); ?></h4>
                         </div>
                       </div>
                     </div>
@@ -195,38 +195,44 @@ $dashboard = new Dashboard($conn);
                     </div>
                     <div id="myChart"></div>
                     <?php
-                        // Fetch the data
-                        $monthlyCounts = $dashboard->countAllConsultationsPerMonth();
+// Initialize an array to store data for Chart.js
+$chartData = [
+    'labels' => [],
+    'Faculties' => [],
+    'Students' => [],
+    'Staffs' => [],
+    'Extensions' => []
+];
 
-                        // Generate a list of all months in the range (e.g., last 12 months)
-                        $allMonths = [];
-                        $currentDate = new DateTime();
-                        for ($i = 11; $i >= 0; $i--) {
-                            $month = $currentDate->modify("-1 month")->format("Y-m");
-                            $allMonths[] = $month;
-                        }
+// Generate a list of the last 12 months in ascending order
+$allMonths = [];
+$currentDate = new DateTime();
+$currentDate->modify("-11 months"); // Start from 11 months ago
+for ($i = 0; $i < 12; $i++) {
+    $month = $currentDate->format("Y-m");
+    $allMonths[] = $month;
+    $currentDate->modify("+1 month");
+}
 
-                        // Initialize an array to store data for Chart.js
-                        $chartData = [
-                            'labels' => [],
-                            'Faculties' => [],
-                            'Students' => [],
-                            'Staffs' => [],
-                            'Extensions' => []
-                        ];
 
-                        // Populate chart data with monthly counts
-                        foreach ($allMonths as $month) {
-                            $chartData['labels'][] = $month;
-                            $chartData['Faculties'][] = $monthlyCounts[$month]['Faculties'] ?? 0;
-                            $chartData['Students'][] = $monthlyCounts[$month]['Students'] ?? 0;
-                            $chartData['Staffs'][] = $monthlyCounts[$month]['Staffs'] ?? 0;
-                            $chartData['Extensions'][] = $monthlyCounts[$month]['Extensions'] ?? 0;
-                        }
+// Populate chart data with monthly counts
+foreach ($allMonths as $month) {
+    // Extract start and end dates for the month
+    $start_date = $month . '-01';
+    $end_date = (new DateTime($start_date))->modify('last day of this month')->format('Y-m-d');
 
-                        // Pass the chart data as JSON to the frontend
-                        echo '<script>var chartData = ' . json_encode($chartData) . ';</script>';
-                      ?>
+    $chartData['labels'][] = $month;
+    $chartData['Faculties'][] = array_sum($dashboard->countFacultyConsultationsPerMonth($start_date, $end_date));
+    $chartData['Students'][] = array_sum($dashboard->countStudentConsultationsPerMonth($start_date, $end_date));
+    $chartData['Staffs'][] = array_sum($dashboard->countStaffConsultationsPerMonth($start_date, $end_date));
+    $chartData['Extensions'][] = array_sum($dashboard->countExtensionConsultationsPerMonth($start_date, $end_date));
+}
+
+// Pass the chart data as JSON to the frontend
+echo '<script>var chartData = ' . json_encode($chartData) . ';</script>';
+?>
+
+
 
                   </div>
                 </div>
@@ -442,7 +448,7 @@ $dashboard = new Dashboard($conn);
             display: false,
           },
         }],
-        xAxes: [{ 
+        xAxes: [{
           gridLines: {
             zeroLineColor: "transparent",
           },
@@ -503,6 +509,7 @@ $dashboard = new Dashboard($conn);
     legendItems[i].addEventListener("click", legendClickCallback, false);
   }
 </script>
+
 
 
 </body>

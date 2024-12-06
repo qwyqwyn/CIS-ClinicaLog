@@ -99,44 +99,41 @@ class TransacManager{
     }
 
     public function loadTransactions() {
-        $query = "
-SELECT 
-    t.transac_id, 
-    t.transac_patientid, 
-    CONCAT(p.patient_fname, ' ', p.patient_lname) AS transac_patientname,
-    p.patient_profile, 
-    p.patient_patienttype, 
-    t.transac_purpose, 
-    t.transac_date, 
-    t.transac_in, 
-    t.transac_out, 
-    t.transac_spent, 
-    t.transac_status,
-    CASE
-        WHEN p.patient_patienttype = 'Student' THEN s.student_idnum
-        WHEN p.patient_patienttype = 'Faculty' THEN f.faculty_idnum
-        WHEN p.patient_patienttype = 'Staff' THEN st.staff_idnum
-        WHEN p.patient_patienttype = 'Extension' THEN e.exten_idnum
-        ELSE NULL
-    END AS transac_patientidnum
-FROM 
-    transactions AS t
-INNER JOIN 
-    patients AS p ON t.transac_patientid = p.patient_id
-LEFT JOIN 
-    patstudents AS s ON p.patient_id = s.student_patientid
-LEFT JOIN 
-    patfaculties AS f ON p.patient_id = f.faculty_patientid
-LEFT JOIN 
-    patstaffs AS st ON p.patient_id = st.staff_patientid
-LEFT JOIN 
-    patextensions AS e ON p.patient_id = e.exten_patientid
-ORDER BY 
-    FIELD(t.transac_status, 'Pending', 'Progress', 'Done') ASC,  -- Ensure Pending is first
-    t.transac_date ASC;  -- Sort by transaction date within each status
-
-
-
+    $query = "
+        SELECT 
+            t.transac_id, 
+            t.transac_patientid, 
+            CONCAT(p.patient_fname, ' ', p.patient_lname) AS transac_patientname,
+            p.patient_profile, 
+            p.patient_patienttype, 
+            t.transac_purpose, 
+            t.transac_date, 
+            t.transac_in, 
+            t.transac_out, 
+            t.transac_spent, 
+            t.transac_status,
+            CASE
+                WHEN p.patient_patienttype = 'Student' THEN s.student_idnum
+                WHEN p.patient_patienttype = 'Faculty' THEN f.faculty_idnum
+                WHEN p.patient_patienttype = 'Staff' THEN st.staff_idnum
+                WHEN p.patient_patienttype = 'Extension' THEN e.exten_idnum
+                ELSE NULL
+            END AS transac_patientidnum
+        FROM 
+            transactions AS t
+        INNER JOIN 
+            patients AS p ON t.transac_patientid = p.patient_id
+        LEFT JOIN 
+            patstudents AS s ON p.patient_id = s.student_patientid
+        LEFT JOIN 
+            patfaculties AS f ON p.patient_id = f.faculty_patientid
+        LEFT JOIN 
+            patstaffs AS st ON p.patient_id = st.staff_patientid
+        LEFT JOIN 
+            patextensions AS e ON p.patient_id = e.exten_patientid
+        ORDER BY 
+            FIELD(t.transac_status, 'Pending', 'Progress', 'Done') ASC,  -- Ensure Pending is first
+            t.transac_date ASC;  -- Sort by transaction date within each status
         ";
         
         $stmt = $this->db->prepare($query);

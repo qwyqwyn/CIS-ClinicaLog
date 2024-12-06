@@ -55,7 +55,7 @@
         $admin_role = 'Super Admin'; 
         $admin_status = 'Active'; 
         $admin_dateadded = date('Y-m-d');
-        $admin_profile = '35e3a37ab3e5a98b04b63f4b4c3697fd.jpg';  
+        $admin_profile = '35e3a37ab3e5a98b04b63f4b4c3697fd.jpg';   
         $admin_password = password_hash('admin123', PASSWORD_BCRYPT); 
         $admin_code = 0;  
 
@@ -87,11 +87,10 @@
     // Create the 'admin logs'
     $sql_adminlog = "CREATE TABLE IF NOT EXISTS systemlog (
         syslog_id INT AUTO_INCREMENT PRIMARY KEY,
-        syslog_userid VARCHAR(50),
-        syslog_date DATE,
-        syslog_time TIME,
-        syslog_action VARCHAR(255),
-        FOREIGN KEY (syslog_userid) REFERENCES adminusers(user_idnum) 
+        syslog_userid CHAR NOT NULL,
+        syslog_date DATE NOT NULL,
+        syslog_time TIME NOT NULL,
+        syslog_action VARCHAR(255) NOT NULL
     )";
 
     if(mysqli_query($conn, $sql_adminlog)){
@@ -100,7 +99,7 @@
         echo "Error creating table 'medicine': " . mysqli_error($conn) . "<br>";
     }
 
-    // Create the 'medicine' table
+    // Create the 'medicine' table 
     $sql_medicine = "CREATE TABLE medicine (
         medicine_id INT AUTO_INCREMENT PRIMARY KEY,
         medicine_name VARCHAR(100) NOT NULL UNIQUE, 
@@ -160,7 +159,7 @@
     // Create the 'students' table
     $sql_students = "CREATE TABLE IF NOT EXISTS patstudents (
         student_id INT AUTO_INCREMENT PRIMARY KEY,
-        student_idnum INT NOT NULL UNIQUE, 
+        student_idnum CHAR NOT NULL UNIQUE, 
         student_patientid INT NOT NULL,
         student_program VARCHAR(100) NOT NULL,
         student_major VARCHAR(100),
@@ -178,7 +177,7 @@
     $sql_personnel = "CREATE TABLE IF NOT EXISTS patfaculties (
         faculty_id INT AUTO_INCREMENT PRIMARY KEY,
         faculty_patientid INT NOT NULL,
-        faculty_idnum INT NOT NULL UNIQUE,
+        faculty_idnum CHAR NOT NULL UNIQUE,
         faculty_college VARCHAR(100) NOT NULL,
         faculty_depart VARCHAR(100) NOT NULL,
         faculty_role VARCHAR(100) NOT NULL,
@@ -194,7 +193,7 @@
     $sql_personnel = "CREATE TABLE IF NOT EXISTS patstaffs (
         staff_id INT AUTO_INCREMENT PRIMARY KEY,
         staff_patientid INT NOT NULL,
-        staff_idnum INT NOT NULL UNIQUE,
+        staff_idnum CHAR NOT NULL UNIQUE,
         staff_office VARCHAR(100) NOT NULL,
         staff_role VARCHAR(100) NOT NULL,
         FOREIGN KEY (staff_patientid) REFERENCES patients(patient_id)
@@ -209,7 +208,7 @@
     $sql_personnel = "CREATE TABLE IF NOT EXISTS patextensions (
         exten_id INT AUTO_INCREMENT PRIMARY KEY,
         exten_patientid INT NOT NULL,
-        exten_idnum INT NOT NULL UNIQUE,
+        exten_idnum CHAR NOT NULL UNIQUE,
         exten_role VARCHAR(100) NOT NULL,
         FOREIGN KEY (exten_patientid) REFERENCES patients(patient_id)
     )";
@@ -311,7 +310,7 @@
         mi_medqty INT NOT NULL,
         mi_date DATE,
         FOREIGN KEY (mi_medstockid) REFERENCES medstock(medstock_id)
-    )";
+    )"; 
     
     if (mysqli_query($conn, $sql_medissued)) {
         echo "Table 'medissued' created successfully<br>";

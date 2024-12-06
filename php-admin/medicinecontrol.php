@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $medicine_qty = $_POST['editquantity']; 
         $medicine_dosage = $_POST['editDS']; 
         $medicine_expirationdt = $_POST['editED']; 
-        $medicine_disable = $_POST['editDisable'];
+        $medicine_disable = $_POST['editDisable']; 
         $admin_id = $_POST['admin_id'];
 
     

@@ -322,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             let table = $("#add-row").DataTable();
                             table.clear();  
                             response.medstocks.forEach(function(medstock) {
-                                table.row.add([
+                                table.row.add([ 
                                     medstock.medicine_balance_month,
                                     medstock.medstock_added,
                                     medstock.total_start_balance,

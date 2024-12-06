@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($stmt->execute()) {
                     $response['status'] = 'success';
                     $response['message'] = 'Profile updated successfully!';
-                } else {
+                } else { 
                     $response['message'] = 'Failed to update profile in the database. Please try again.';
                 }
             } else {

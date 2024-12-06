@@ -5,6 +5,7 @@ session_start();
 include '../database/config.php'; 
 include '../vendor/autoload.php'; 
 include '../php/user.php';
+include '../php/patient.php';
 include '../php/sentOTP.php'; 
 
 
@@ -13,7 +14,9 @@ unset($_SESSION['message_type']);
 
 $database = new Database();
 $db = $database->getConnection();
-$user = new User($db);
+$adminuser = new User($db);
+$patient = new PatientManager($db);
+
 
 $jsScript = '';
 
@@ -23,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $otp = random_int(100000, 999999);  
 
-        if ($user->emailverify($email)) {
-            if ($user->updateCode($email, $otp)) {
+        if ($adminuser->emailverify($email)) {
+            if ($adminuser->updateCode($email, $otp)) {
                 $emailSender = new sentOTP();
                 $emailResult = $emailSender->sendOtp($email, $otp); 
 
@@ -36,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
                         Swal.fire({
                             title: 'OTP Sent!',
                             text: 'Code has been sent to your email.',
-                            icon: 'success',
+                            icon: 'success', 
                             confirmButtonText: 'Continue',
                             allowOutsideClick: false
                         }).then((result) => {
@@ -53,7 +56,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
                 $_SESSION['message'] = "Error updating OTP.";
                 $_SESSION['message_type'] = "error";
             }
-        } else {
+        }
+        if ($patient->emailverify($email)) {
+            if ($patient->updateCode($email, $otp)) {
+                $emailSender = new sentOTP();
+                $emailResult = $emailSender->sendOtp($email, $otp); 
+
+                if ($emailResult['success']) {
+                    $_SESSION['emaill'] = $email; 
+                    $type = "success";
+                    $jsScript = "
+                        document.body.classList.add('active');
+                        Swal.fire({
+                            title: 'OTP Sent!',
+                            text: 'Code has been sent to your email.',
+                            icon: 'success', 
+                            confirmButtonText: 'Continue',
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'verify.php'; 
+                            }
+                        }); 
+                    ";
+                } else {
+                    $_SESSION['message'] = "An error occurred while sending the OTP.";
+                    $_SESSION['message_type'] = "error";
+                }
+            } else {
+                $_SESSION['message'] = "Error updating OTP.";
+                $_SESSION['message_type'] = "error";
+            }
+        }
+         else {
             $_SESSION['message'] = "Wrong email input. Please try again.";
             $_SESSION['message_type'] = "error";
         }

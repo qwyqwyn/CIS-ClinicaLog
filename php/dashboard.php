@@ -104,13 +104,13 @@ class Dashboard {
         $this->staffs = new DashboardLinkedList();
         $this->extens = new DashboardLinkedList();
         $this->countActivePatients();
-        $this->countAllConsultationsPerMonth();
         $this->countActiveadminusers();
         $this->countAvailableMedstocks();
         $this->getAlmostExpiredMedstocks();
         $this->countTransactions();
     }
 
+    //working 
     public function countActivePatients() {
         try {
             // Prepare the SQL query to count active patients
@@ -131,74 +131,80 @@ class Dashboard {
         }
     }
     
-
-    public function countAllConsultationsPerMonth() {
+    public function countStudentConsultationsPerMonth($start_date = null, $end_date = null) {
+        return $this->countConsultationsByTypePerMonth('student', $start_date, $end_date);
+    }
+    
+    public function countFacultyConsultationsPerMonth($start_date = null, $end_date = null) {
+        return $this->countConsultationsByTypePerMonth('faculty', $start_date, $end_date);
+    }
+    
+    public function countStaffConsultationsPerMonth($start_date = null, $end_date = null) {
+        return $this->countConsultationsByTypePerMonth('staff', $start_date, $end_date);
+    }
+    
+    public function countExtensionConsultationsPerMonth($start_date = null, $end_date = null) {
+        return $this->countConsultationsByTypePerMonth('extension', $start_date, $end_date);
+    }
+ 
+    private function countConsultationsByTypePerMonth($type, $start_date = null, $end_date = null) {
         try {
-            // SQL query to count consultations classified by patient type
+            // SQL query for consultations filtered by patient type
             $query = "
-                SELECT 
+                SELECT  
                     YEAR(c.consult_date) AS year,
                     MONTH(c.consult_date) AS month,
-                    'Faculties' AS type,
                     COUNT(*) AS count
                 FROM consultations c
-                INNER JOIN patfaculties pf ON c.consult_patientid = pf.faculty_id
+                INNER JOIN patients p ON c.consult_patientid = p.patient_id
+                WHERE p.patient_patienttype = :type
+                " . ($start_date && $end_date ? "AND c.consult_date BETWEEN :start_date AND :end_date" : "") . "
                 GROUP BY YEAR(c.consult_date), MONTH(c.consult_date)
-                UNION
-                SELECT 
-                    YEAR(c.consult_date) AS year,
-                    MONTH(c.consult_date) AS month,
-                    'Students' AS type,
-                    COUNT(*) AS count
-                FROM consultations c
-                INNER JOIN patstudents ps ON c.consult_patientid = ps.student_id
-                GROUP BY YEAR(c.consult_date), MONTH(c.consult_date)
-                UNION
-                SELECT 
-                    YEAR(c.consult_date) AS year,
-                    MONTH(c.consult_date) AS month,
-                    'Staffs' AS type,
-                    COUNT(*) AS count
-                FROM consultations c
-                INNER JOIN patstaffs pst ON c.consult_patientid = pst.staff_id
-                GROUP BY YEAR(c.consult_date), MONTH(c.consult_date)
-                UNION
-                SELECT 
-                    YEAR(c.consult_date) AS year,
-                    MONTH(c.consult_date) AS month,
-                    'Extensions' AS type,
-                    COUNT(*) AS count
-                FROM consultations c
-                INNER JOIN patextensions pe ON c.consult_patientid = pe.exten_id
-                GROUP BY YEAR(c.consult_date), MONTH(c.consult_date);
+                ORDER BY YEAR(c.consult_date), MONTH(c.consult_date);
             ";
     
             $stmt = $this->db->prepare($query);
+    
+            // Bind parameters
+            $stmt->bindParam(':type', $type);
+            if ($start_date && $end_date) {
+                $stmt->bindParam(':start_date', $start_date);
+                $stmt->bindParam(':end_date', $end_date);
+            }
+    
             $stmt->execute();
     
-            // Process results into a structured array
+            // Process results
             $monthlyCounts = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $yearMonth = $row['year'] . '-' . str_pad($row['month'], 2, '0', STR_PAD_LEFT);
-                $type = $row['type'];
-                $count = $row['count'];
+                $monthlyCounts[$yearMonth] = $row['count'];
+            }
     
+            // Fill missing months
+            $allMonths = [];
+            $start = new DateTime($start_date ?: 'first day of January this year');
+            $end = new DateTime($end_date ?: 'last day of December this year');
+            $interval = new DateInterval('P1M'); // 1 month interval
+    
+            while ($start <= $end) {
+                $yearMonth = $start->format('Y-m');
                 if (!isset($monthlyCounts[$yearMonth])) {
-                    $monthlyCounts[$yearMonth] = [];
+                    $monthlyCounts[$yearMonth] = 0;
                 }
-                $monthlyCounts[$yearMonth][$type] = $count;
+                $start->add($interval);
             }
     
             return $monthlyCounts;
-        } catch (PDOException $e) {
+        } catch (PDOException $e) { 
             echo "Error: " . $e->getMessage();
             return [];
         }
     }
     
     
-    
 
+    //working
     public function countActiveadminusers() {
         try {
             // Prepare the SQL query to count active staff users with role 'Admin'
@@ -218,16 +224,16 @@ class Dashboard {
             return 0;
         }
     }
-    
 
+    //working
     public function countAvailableMedstocks() {
         try {
             // Prepare the SQL query to count medstocks that are available (not disabled, not expired, and in stock)
-            $query = "SELECT COUNT(*) AS available_medstock_count
-                      FROM medstock
-                      WHERE medstock_disable = 0
-                      AND medstock_expirationdt >= CURDATE()
-                      AND medstock_qty > 0";
+            $query = "SELECT SUM(medstock_qty) AS total_available_qty
+                  FROM medstock
+                  WHERE medstock_disable = 0
+                  AND medstock_expirationdt >= CURDATE()
+                  AND medstock_qty > 0";
     
             // Execute the query
             $stmt = $this->db->prepare($query);
@@ -236,14 +242,15 @@ class Dashboard {
             // Fetch the result
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
-            return $row['available_medstock_count'];
+            return $row['total_available_qty'];
         } catch (PDOException $e) {
             // Handle any errors
             echo "Error: " . $e->getMessage();
             return 0;
         }
-    }    
+    }   
 
+    //working
     public function getAlmostExpiredMedstocks($daysThreshold = 30) {
         try {
             // Prepare the SQL query to get medstock details that are almost expired
@@ -259,7 +266,7 @@ class Dashboard {
             ";
     
             // Prepare and execute the statement with the threshold parameter
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->db->prepare($query); 
             $stmt->bindParam(':daysThreshold', $daysThreshold, PDO::PARAM_INT);
             $stmt->execute();
     
@@ -274,12 +281,13 @@ class Dashboard {
         }
     }    
 
+    //working
     public function countTransactions() {
         try {
             // Prepare the SQL query to count the total number of transactions
-            $query = "SELECT COUNT(*) AS total_transactions FROM transactions";
+            $query = "SELECT COUNT(*) AS total_transactions FROM transactions where transac_status = 'Done' ";
     
-            // Execute the query
+            // Execute the query 
             $stmt = $this->db->prepare($query);
             $stmt->execute();
     

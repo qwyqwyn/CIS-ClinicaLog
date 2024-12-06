@@ -8,11 +8,14 @@ session_start();
 include '../database/config.php';
 include '../vendor/autoload.php';
 include '../php/user.php';
+include '../php/patient.php';
 include '../php/sentOTP.php';
 
 $database = new Database();
 $db = $database->getConnection();
 $user = new User($db);
+$patient = new PatientManager($db); 
+
 
 $jsScript = '';
 
@@ -37,11 +40,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             window.location.href = 'changepass.php'; 
                         }
                     });
-                ";
+                "; 
+            }if ($patient->verifyOtp($email, $otp)) {
+                $_SESSION['emaill'] = $email;
+                $jsScript = "
+                    document.body.classList.add('active');
+                    Swal.fire({
+                        title: 'Verified Successfully!',
+                        text: 'Please press continue to change password',
+                        icon: 'success',
+                        confirmButtonText: 'Continue',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'changepass.php'; 
+                        }
+                    });
+                "; 
             } else {
                 $_SESSION['message'] = "Invalid OTP. Please try again.";
                 $_SESSION['message_type'] = "error";
             }
+            
         } else {
             $_SESSION['message'] = "Please enter the OTP.";
             $_SESSION['message_type'] = "error";
@@ -67,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     $_SESSION['message'] = "Error updating OTP.";
-                    $_SESSION['message_type'] = "error";
+                    $_SESSION['message_type'] = "error"; 
                 }
             } else {
                 $_SESSION['message'] = "Email not found. Please try again.";
