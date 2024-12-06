@@ -58,7 +58,7 @@ if (isset($_POST['changed_password'])) {
                 Swal.fire({
                     title: 'Password Updated!',
                     text: 'Click continue to login.',
-                    icon: 'success',
+                    icon: 'success', 
                     confirmButtonText: 'Continue',
                     allowOutsideClick: false
                 }).then((result) => {

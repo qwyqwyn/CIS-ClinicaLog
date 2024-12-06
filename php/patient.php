@@ -811,10 +811,10 @@ class PatientManager{
             die("Error preparing statement: " . $this->db->errorInfo()[2]);
         }
     }
-
+ 
     public function changePassword($email, $newPassword) {
         $code = 0;
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        //$hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $node = $this->patients->PatientEmailExists($email);
 
         if ($node) {
@@ -822,7 +822,7 @@ class PatientManager{
             $stmt = $this->db->prepare($sql_update_statement);
 
             if ($stmt) {
-                $stmt->bindParam(1, $hashedPassword);
+                $stmt->bindParam(1, $newPassword);
                 $stmt->bindParam(2, $code);
                 $stmt->bindParam(3, $email);
 

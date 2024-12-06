@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["emaill"])) {
                             confirmButtonText: 'Continue',
                             allowOutsideClick: false
                         }).then((result) => {
-                            if (result.isConfirmed) {
+                            if (result.isConfirmed) { 
                                 window.location.href = 'verify.php'; 
                             }
                         }); 
