@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Redirect based on patient type
                     switch ($patienttype) {
                         case 'Student':
-                            $redirectUrl = 'patstudent.php';
+                            $redirectUrl = 'patstudents.php';
                             break;
                         case 'Faculty': 
                             $redirectUrl = 'patfaculty.php';
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect based on patient type
             switch ($patienttype) {
                 case 'Student':
-                    $redirectUrl = 'patstudent.php';
+                    $redirectUrl = 'patstudents.php';
                     break;
                 case 'Faculty':
                     $redirectUrl = 'patfaculty.php';
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Redirect based on patient type
             switch ($patienttype) {
                 case 'Student':
-                    $redirectUrl = 'patstudent.php';
+                    $redirectUrl = 'patstudents.php';
                     break;
                 case 'Faculty':
                     $redirectUrl = 'patfaculty.php';
@@ -172,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function getRedirectUrl($patienttype) {
         switch ($patienttype) {
             case 'Student':
-                return 'patstudent.php';
+                return 'patstudents.php';
             case 'Faculty':
                 return 'patfaculty.php';
             case 'Staff':
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             switch ($patienttype) {
                 case 'Student':
-                    $redirectUrl = 'patstudent.php';
+                    $redirectUrl = 'patstudents.php';
                     break;
                 case 'Faculty':
                     $redirectUrl = 'patfaculty.php';
@@ -232,7 +232,7 @@ else {
 
     switch ($patienttype) {
         case 'Student':
-            $redirectUrl = 'patstudent.php';
+            $redirectUrl = 'patstudents.php';
             break;
         case 'Faculty':
             $redirectUrl = 'patfaculty.php';
