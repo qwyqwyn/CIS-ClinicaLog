@@ -20,7 +20,7 @@ $user_idnum = $_SESSION['user_idnum'];
 <html lang="en">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CIS:Clinicalog</title> 
+    <title>Transaction Report</title> 
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
 
@@ -114,7 +114,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                                 <span class="btn-label"><i class="fa fa-pencil"></i></span>
                                                 Export
                                                 </a>
-                                            </div>
+                                            </div> 
                                             </div>
                                         </div>
                                         <div class="card-container" style="display: flex; flex-direction: column; gap: 20px;">
@@ -125,7 +125,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                             </div>
                                         </div>
                                         </div>
-                                    </div>                   
+                                    </div>                    
                                     </div>
                                 
                                 <h1></h1>
@@ -140,17 +140,19 @@ $user_idnum = $_SESSION['user_idnum'];
                                             <div class="card-head-row">
                                             <div class="card-title">Total for All Transactions</div>
                                             <div class="card-tools">
-                                                <a
-                                                href="#"
-                                                class="btn btn-label-success btn-round btn-sm me-2"
-                                                >
-                                                <span class="btn-label">
-                                                    <i class="fa fa-pencil"></i>
-                                                </span>
-                                                Export
-                                                </a>
+                                                    <a
+                                                        href="#"
+                                                        class="btn btn-label-success btn-round btn-sm me-2"
+                                                        onclick="reportToExportAllTable()">
+                                                    >
+                                                        <span class="btn-label">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </span>
+                                                        Export
+                                                    </a>
+                                                </div>
                                             </div>
-                                            </div>
+                                            <div id="loadingMessage" style="display: none;">Loading, please wait...</div>
                                         </div>
                                         <div class="card-body">
                                             <div class="chart-container" style="min-height: 375px">
@@ -521,6 +523,6 @@ $user_idnum = $_SESSION['user_idnum'];
             });
         });
     </script>
-    
+
 </body> 
 </html>

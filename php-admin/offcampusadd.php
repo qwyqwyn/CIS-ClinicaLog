@@ -43,7 +43,7 @@ if (isset($_POST['prescribemed'])) {
         SELECT medstock.medstock_id, medicine.medicine_name 
         FROM medstock 
         JOIN medicine ON medstock.medicine_id = medicine.medicine_id 
-        WHERE medicine.medicine_name LIKE ?"; 
+        WHERE medicine.medicine_name LIKE ? AND medstock_disable = 0"; 
 
     $stmt = $conn->prepare($medQuery);
     $stmt->execute([$searchMed]); 
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
 <html lang="en">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CIS:Clinicalog</title>
+    <title>Mabini Unit Medicine Issuance</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                           </div> 
                           <div class="modal-body">
                             <p class="small">
-                              Issue a Medicine for Off-Campus Distribution
+                              Issue a Medicine for Mabini Unit Distribution
                             </p>
                              <!-- Start Add Modal Form-->
                              <form class="form" action="offcampuscontrol.php" method="POST" enctype="multipart/form-data">
@@ -251,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                             <div class="modal-header border-0">
                                 <h5 class="modal-title">
                                     <span class="fw-mediumbold">Edit</span>
-                                    <span class="fw-light"> Consultation </span>
+                                    <span class="fw-light"> Issuance </span>
                                 </h5>
                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="edit-exit">
                                     <span aria-hidden="true">&times;</span>
@@ -274,7 +274,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
 
                                             $edit_medicine = $conn->real_escape_string($edit_medicine);
 
-                                            $sql = "SELECT medstock_id, medicine_name FROM medstock WHERE medicine_name LIKE '%$edit_medicine%' OR medstock_id LIKE '%$edit_medicine%' LIMIT 10";
+                                            $sql = "SELECT medstock_id, medicine_name FROM medstock WHERE medicine_name LIKE '%$edit_medicine%' OR medstock_id LIKE '%$edit_medicine%' LIMIT 10 
+                                            AND medstock_disable = 0";
                                             $result = $conn->query($sql);
 
                                             if ($result->num_rows > 0) {
@@ -362,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                         <div class="card card-equal-height">
                             <div class="card-header">
                                 <div class="d-flex align-items-center">
-                                    <h4 class="card-title">Off-Campus Issuance List</h4>
+                                    <h4 class="card-title">Mabini Issuance List</h4>
                                     <button
                                         class="btn btn-primary btn-round ms-auto"
                                         data-bs-toggle="modal"

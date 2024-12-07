@@ -547,16 +547,41 @@ class ConsultationManager {
     }
      
     public function getAvailableQuantity($medstock_id) {
-        $stmt = $this->db->prepare("SELECT m.medstock_qty - 
-                                      (IFNULL(SUM(pm.pm_medqty), 0) + IFNULL(SUM(mi.mi_medqty), 0)) AS available_stock
-                                      FROM medstock m
-                                      LEFT JOIN prescribemed pm ON pm.pm_medstockid = m.medstock_id
-                                      LEFT JOIN medissued mi ON mi.mi_medstockid = m.medstock_id
-                                      WHERE m.medstock_id = ?
-                                      GROUP BY m.medstock_id");
-        $stmt->execute([$medstock_id]);
-        return (int) $stmt->fetchColumn();
+        $stmt = $this->db->prepare("
+            SELECT 
+                ms.medstock_qty - 
+                    (COALESCE(SUM(p.pm_medqty), 0) + COALESCE(SUM(mi.mi_medqty), 0)) AS current_qty
+            FROM  
+                medstock ms
+            LEFT JOIN 
+                (SELECT pm_medstockid, SUM(pm_medqty) AS pm_medqty
+                FROM prescribemed
+                GROUP BY pm_medstockid) p 
+                ON ms.medstock_id = p.pm_medstockid
+            LEFT JOIN 
+                (SELECT mi_medstockid, SUM(mi_medqty) AS mi_medqty
+                FROM medissued
+                GROUP BY mi_medstockid) mi 
+                ON ms.medstock_id = mi.mi_medstockid
+            WHERE 
+                ms.medstock_id = :medstock_id 
+            GROUP BY 
+                ms.medstock_id, ms.medstock_qty
+        ");
+    
+        // Bind the medstock_id parameter
+        $stmt->bindParam(':medstock_id', $medstock_id, PDO::PARAM_STR);
+    
+        // Execute the statement
+        $stmt->execute();
+    
+        // Fetch the result and return it, or return 0 if no result is found
+        $current_qty = $stmt->fetchColumn();
+        
+        // If no result found, return 0 as the default
+        return $current_qty !== false ? (int) $current_qty : 0;
     }
+    
     
 
 

@@ -20,7 +20,7 @@ $user_idnum = $_SESSION['user_idnum'];
 <html lang="en">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CIS:Clinicalog</title> 
+    <title>Transaction Report</title> 
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
  

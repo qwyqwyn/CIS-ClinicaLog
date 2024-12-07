@@ -81,7 +81,7 @@ try {
             COUNT(*) AS total_count
         FROM 
             transactions t
-        INNER JOIN 
+        INNER JOIN  
             patients p ON t.transac_patientid = p.patient_id
         WHERE 
             t.transac_purpose = 'Dental Check Up & Treatment' 

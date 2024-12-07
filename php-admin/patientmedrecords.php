@@ -310,7 +310,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.removeAccess', function (e) {
-    e.preventDefault();
+    e.preventDefault(); 
 
     var row = $(this).closest('tr');  // Get the closest table row
     var medrecId = $(this).data('id');  // Get the medical record ID
