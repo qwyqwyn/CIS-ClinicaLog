@@ -30,7 +30,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
 <html lang="en">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CIS:Clinicalog</title>
+    <title>Transactions</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -748,7 +748,7 @@ $(".viewButton").click(function() {
         dataType: "json",
         success: function(response) {
             if (response.status === 'success') {
-                // Redirect based on patient type
+                // Redirect based on patient type 
                 if (patientType === 'Faculty') {
                     window.location.href = "patient-facultyprofile.php";
                 } else if (patientType === 'Student') {
@@ -757,7 +757,7 @@ $(".viewButton").click(function() {
                     window.location.href = "patient-staffprofile.php";
                 } else if (patientType === 'Extension') {
                     window.location.href = "patient-extensionprofile.php";
-                } else {
+                } else { 
                     alert("Invalid patient type");
                 }
             } else {

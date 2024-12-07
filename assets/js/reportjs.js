@@ -320,7 +320,7 @@ function updateDentalCheckupTable(checkupData) {
   });
 }
 
-
+ 
 document.addEventListener('DOMContentLoaded', initializeYearDropdown);
 
 async function exportToExcel() {
@@ -415,4 +415,55 @@ async function exportToExcel() {
     } catch (error) {
         console.error("Error:", error);
     }
+}
+
+function reportToExportAllTable() {
+    var year = document.getElementById("yearSelect").value || new Date().getFullYear();
+    var url = 'reportexportalltable.php?year=' + year;
+
+    function getMonthName(monthNumber) {
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return monthNames[monthNumber - 1];
+    }
+
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (!data || data.length === 0) {
+                alert('No data available for the selected year.');
+                return;
+            }
+
+            const headers = [
+                "Month", 
+                "Dental Check Up (Student)", "Dental Check Up (Faculty)", "Dental Check Up (Staff)", "Dental Check Up (Extension)", "Total Dental",
+                "Consultation (Student)", "Consultation (Faculty)", "Consultation (Staff)", "Consultation (Extension)", "Total Consultation",
+                "Medical Cert (Student)", "Medical Cert (Faculty)", "Medical Cert (Staff)", "Medical Cert (Extension)", "Total Medical Cert",
+                "Grand Total"
+            ];
+
+            let sheetData = [headers];
+            data.forEach(row => {
+                const rowData = [
+                    getMonthName(row.month),
+                    row.dental_student, row.dental_faculty, row.dental_staff, row.dental_extension, row.dental_sum,
+                    row.consult_student, row.consult_faculty, row.consult_staff, row.consult_extension, row.consult_sum,
+                    row.medical_cert_student, row.medical_cert_faculty, row.medical_cert_staff, row.medical_cert_extension, row.medical_cert_sum,
+                    row.total_sum
+                ];
+                sheetData.push(rowData);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(sheetData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Summary");
+            XLSX.writeFile(wb, `Summary_${year}.xlsx`);
+        })
+        .catch(error => {
+            alert('Error fetching data for export: ' + error);
+        });
 }

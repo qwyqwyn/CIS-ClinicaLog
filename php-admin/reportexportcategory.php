@@ -29,7 +29,7 @@ try {
     $countQuery = implode(", ", $countClauses);
     
     // Full SQL query with dynamic program count columns (WITHOUT ROLLUP)
-    $stmt = $conn->prepare("
+    $stmt = $conn->prepare(" 
         SELECT 
             MONTHNAME(t.transac_date) AS month,
             $countQuery,

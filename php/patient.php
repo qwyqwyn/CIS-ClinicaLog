@@ -822,7 +822,7 @@ class PatientManager{
             $stmt = $this->db->prepare($sql_update_statement);
 
             if ($stmt) {
-                $stmt->bindParam(1, $newPassword);
+                $stmt->bindParam(1, $newPassword); 
                 $stmt->bindParam(2, $code);
                 $stmt->bindParam(3, $email);
 

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $diagnosis = htmlspecialchars($_POST['Diagnosis'], ENT_QUOTES);
         $treatment_notes = htmlspecialchars($_POST['presmednotes'], ENT_QUOTES);
         $remark = htmlspecialchars($_POST['Remarks'], ENT_QUOTES);
-        $consult_date = date('Y-m-d');
+        $consult_date = date('Y-m-d'); 
         $adminId = $_POST['admin_id'];
 
     
@@ -227,20 +227,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     if (isset($_POST['medstock_id'], $_POST['requested_qty'])) {
-        $medstock_id = $_POST['medstock_id']; // Ensure this matches JavaScript
-        $requested_qty = (int) $_POST['requested_qty'];
+        $medstock_id = $_POST['medstock_id'];  // Ensure this matches the JavaScript value
+        $requested_qty = (int) $_POST['requested_qty'];  // Cast to integer
     
         // Prepare SQL query
-        $stmt = $conn->prepare("SELECT m.medstock_qty - (IFNULL(SUM(pm.pm_medqty), 0) + IFNULL(SUM(mi.mi_medqty), 0)) AS available_stock
-                                FROM medstock m 
-                                LEFT JOIN prescribemed pm ON pm.pm_medstockid = m.medstock_id 
-                                LEFT JOIN medissued mi ON mi.mi_medstockid = m.medstock_id
-                                WHERE m.medstock_id = ? 
-                                GROUP BY m.medstock_id");
-        $stmt->execute([$medstock_id]);
-        $current_qty = $stmt->fetchColumn(); // Fetch single value directly
+        $stmt = $conn->prepare("
+            SELECT 
+                 ms.medstock_qty - 
+                    (COALESCE(SUM(p.pm_medqty), 0) + COALESCE(SUM(mi.mi_medqty), 0)) AS current_qty
+            FROM  
+                medstock ms
+            LEFT JOIN 
+                (SELECT pm_medstockid, SUM(pm_medqty) AS pm_medqty
+                FROM prescribemed
+                GROUP BY pm_medstockid) p 
+                ON ms.medstock_id = p.pm_medstockid
+            LEFT JOIN 
+                (SELECT mi_medstockid, SUM(mi_medqty) AS mi_medqty
+                FROM medissued
+                GROUP BY mi_medstockid) mi 
+                ON ms.medstock_id = mi.mi_medstockid
+            WHERE 
+                ms.medstock_id = :medstock_id  -- Use a parameterized query for better security
+            GROUP BY 
+                ms.medstock_id, ms.medstock_qty
+        ");
     
-        // Check the quantity
+        // Bind the medstock_id parameter
+        $stmt->bindParam(':medstock_id', $medstock_id, PDO::PARAM_INT);  // Assuming medstock_id is an integer
+        $stmt->execute();
+        
+        // Fetch the current quantity
+        $current_qty = $stmt->fetchColumn();
+    
+        // Check if quantity exists and if requested quantity is available
         if ($current_qty === false) {
             echo json_encode(["status" => "error", "message" => "Medicine not found"]);
         } elseif ($requested_qty > $current_qty) {
@@ -248,7 +268,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(["status" => "success"]);
         }
-        exit;
+    
+        exit;  // Ensure no further code is executed after the response
     }
     
     

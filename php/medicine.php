@@ -16,6 +16,8 @@ class Medicine {
 class Medstock { 
     public $medstock_id;
     public $medicine_id;
+    public $medstock_origqty;
+    public $medstock_unit;
     public $medstock_qty;
     public $medstock_dosage; 
     public $medstock_dateadded;
@@ -23,9 +25,11 @@ class Medstock {
     public $medstock_expirationdt;
     public $medstock_disabled;
 
-    public function __construct($medstock_id, $medicine_id, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {
+    public function __construct($medstock_id, $medicine_id, $medstock_origqty, $unit, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {
         $this->medstock_id = $medstock_id;
         $this->medicine_id = $medicine_id;
+        $this->medstock_origqty = $medstock_origqty;
+        $this->medstock_unit = $unit;
         $this->medstock_qty = $quantity;
         $this->medstock_dosage = $dosage;
         $this->medstock_dateadded = $date_added;
@@ -159,7 +163,10 @@ class MedicineManager {
             SELECT 
                 ms.medstock_id,
                 ms.medicine_id,
-                (ms.medstock_qty - COALESCE(SUM(p.pm_medqty), 0) - COALESCE(SUM(mi.mi_medqty), 0)) AS current_qty,
+                ms.medstock_qty,
+                ms.medstock_unit,
+                ms.medstock_qty - 
+                    (COALESCE(SUM(p.pm_medqty), 0) + COALESCE(SUM(mi.mi_medqty), 0)) AS current_qty,
                 ms.medstock_dosage,
                 ms.medstock_dateadded,
                 ms.medstock_timeadded,
@@ -168,12 +175,18 @@ class MedicineManager {
             FROM  
                 medstock ms
             LEFT JOIN 
-                prescribemed p ON ms.medstock_id = p.pm_medstockid
+                (SELECT pm_medstockid, SUM(pm_medqty) AS pm_medqty
+                FROM prescribemed
+                GROUP BY pm_medstockid) p 
+                ON ms.medstock_id = p.pm_medstockid
             LEFT JOIN 
-                medissued mi ON ms.medstock_id = mi.mi_medstockid
+                (SELECT mi_medstockid, SUM(mi_medqty) AS mi_medqty
+                FROM medissued
+                GROUP BY mi_medstockid) mi 
+                ON ms.medstock_id = mi.mi_medstockid
             GROUP BY 
-                ms.medstock_id
-
+                ms.medstock_id, ms.medicine_id, ms.medstock_unit, ms.medstock_qty, ms.medstock_dosage, 
+                ms.medstock_dateadded, ms.medstock_timeadded, ms.medstock_expirationdt, ms.medstock_disable;
         ";
     
         $stmt = $this->db->query($sql); // Use PDO query method
@@ -181,6 +194,8 @@ class MedicineManager {
             $medstock = new Medstock(
                 $row['medstock_id'],
                 $row['medicine_id'],
+                $row['medstock_qty'],
+                $row['medstock_unit'], 
                 $row['current_qty'],      // This is now the summed quantity
                 $row['medstock_dosage'],
                 $row['medstock_dateadded'],
@@ -219,16 +234,16 @@ class MedicineManager {
         } 
     }
 
-    public function insertMedstock($admin_id, $medicine_id, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {
+    public function insertMedstock($admin_id, $medicine_id, $unit, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
         $setStmt->bindValue(':admin_id', $admin_id);
         $setStmt->execute();
 
-        $sql = "INSERT INTO medstock (medicine_id, medstock_qty, medstock_dosage, medstock_dateadded, medstock_timeadded, medstock_expirationdt, medstock_disable) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO medstock (medicine_id, medstock_unit, medstock_qty, medstock_dosage, medstock_dateadded, medstock_timeadded, medstock_expirationdt, medstock_disable) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         if ($stmt) {
-            $stmt->execute([$medicine_id, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled]);
+            $stmt->execute([$medicine_id, $unit, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled]);
             $medstock_id = $this->db->lastInsertId(); // Get last inserted ID
             $medstock = new Medstock($medstock_id, $medicine_id, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled);
             $this->medstocks->add($medstock);
@@ -305,7 +320,7 @@ class MedicineManager {
             $setStmt->execute();
     
             // Update the medicine record directly
-            $sql = "UPDATE medicine SET medicine_name = ?, medicine_category = ? WHERE medicine_id = ?";
+            $sql = "UPDATE medicine SET medicine_name = ?,  medicine_category = ? WHERE medicine_id = ?";
             $stmt = $this->db->prepare($sql);
     
             if ($stmt->execute([$name, $category, $medicine_id])) {
@@ -323,7 +338,7 @@ class MedicineManager {
     
 
     
-    public function updateMedstock($admin_id, $medstock_id, $medicine_id, $medicine_qty, $medicine_dosage, $medicine_expirationdt, $medicine_disable) {
+    public function updateMedstock($admin_id, $medstock_id, $medicine_id, $medstock_unit,  $medicine_qty, $medicine_dosage, $medicine_expirationdt, $medicine_disable) {
         try {
 
             $setAdminIdQuery = "SET @admin_id = :admin_id";
@@ -331,14 +346,14 @@ class MedicineManager {
             $setStmt->bindValue(':admin_id', $admin_id);
             $setStmt->execute();
             
-            $sql = "UPDATE medstock SET medicine_id = ?, medstock_qty = ?, medstock_dosage = ?, medstock_expirationdt = ?, medstock_disable = ? WHERE medstock_id = ?";
+            $sql = "UPDATE medstock SET medicine_id = ?, medstock_unit = ?,  medstock_qty = ?, medstock_dosage = ?, medstock_expirationdt = ?, medstock_disable = ? WHERE medstock_id = ?";
             $stmt = $this->db->prepare($sql);
             
             if (!$stmt) {
                 throw new Exception("Failed to prepare SQL statement.");
             }
     
-            if ($stmt->execute([$medicine_id, $medicine_qty, $medicine_dosage, $medicine_expirationdt, $medicine_disable, $medstock_id])) {
+            if ($stmt->execute([$medicine_id, $medstock_unit, $medicine_qty, $medicine_dosage, $medicine_expirationdt, $medicine_disable, $medstock_id])) {
                 // Update the linked list
                 $medstock = $this->medstocks->find($medstock_id);
                 if ($medstock) {
@@ -351,7 +366,7 @@ class MedicineManager {
                 return ['status' => 'success', 'message' => 'Medstock updated successfully.'];
             } else {
                 throw new Exception("Failed to execute update statement.");
-            }
+            } 
         } catch (Exception $e) {
             // Return error message
             return ['status' => 'error', 'message' => $e->getMessage()];
