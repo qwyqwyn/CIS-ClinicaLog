@@ -148,7 +148,6 @@ $user_idnum = $_SESSION['user_idnum'];
                       </div>
 
                       <!-- department Dropdown -->
-                       <!-- department Dropdown -->
                       <div class="col-md-4 mb-3">
                         <label for="department" class="form-label">Department</label>
                         <select class="form-select form-control" id="department" name="department" required>
