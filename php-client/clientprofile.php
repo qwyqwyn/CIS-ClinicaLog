@@ -360,7 +360,7 @@ if ($patient_type === 'Student') {
                     confirmButtonText: 'OK'
                 });
             }
-        });
+        }); 
     });
 });
       </script>
