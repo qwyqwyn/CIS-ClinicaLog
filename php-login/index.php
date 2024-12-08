@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_P
     $email = $_POST['email'];  
     $password = $_POST['password'];  
     $defaultadmin = "Administrator";
-    $doctor = "Campus Physician"; 
       
     $userData = $user->userExists($email, $password);
  
@@ -31,11 +30,11 @@ if ($userData) {
     $_SESSION['user_role'] = $userData->user_role;
 
     if ($userData->user_status === 'Active') {  
-        if ($_SESSION['user_position'] === $defaultadmin || $_SESSION['user_position'] === $doctor) {
+        if ($_SESSION['user_position'] === $defaultadmin) {
             header('Location: ../php-admin/index.php');  
             exit;
         } elseif ($_SESSION['user_role'] === 'Super Admin') {
-            header('Location: ../php-admin/superadindex.php'); 
+            header('Location: ../php-admin/index.php'); 
             exit;
         } elseif ($_SESSION['user_role'] === 'Admin') { 
             header('Location: ../php-admin/adminindex.php');   

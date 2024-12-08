@@ -359,7 +359,7 @@
                             <div class="modal-body">
                               <form class="modalButton">
                                 <!-- Button for Student Patient -->
-                                <a href="add-student.php">
+                                <a href="addstudent.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="patientButton">
                                     Student
                                   </button>

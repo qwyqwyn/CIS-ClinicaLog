@@ -42,13 +42,13 @@
                             <div class="modal-body">
                               <form class="modalButton">
                                 <!-- Button for Student Patient -->
-                                <a href="add-student.php">
+                                <a href="addstudent.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="addbutton">
                                     Student
                                   </button>
                                 </a>
                                 <!-- Button for Staff Patient -->
-                                <a href="add-staff.php">
+                                <a href="addstaff.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="addbutton">
                                     Staff
                                   </button>

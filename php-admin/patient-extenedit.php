@@ -362,7 +362,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             document.getElementById('relationship').value = patientData.emergencyContact.emcon_relationship || '';
             document.getElementById('emergencyContactNumber').value = patientData.emergencyContact.emcon_connum || '';
             document.getElementById('Status').value = patientData.patient.patient_status || '';
-            document.getElementById('profilePic').src = `uploads/${patientData.patient.patient_profile}` || 'default-image.jpg';
+            document.getElementById('profilePic').src = `../uploads/${patientData.patient.patient_profile}` || 'default-image.jpg';
     }
 
     function confirmCancelPatient() {

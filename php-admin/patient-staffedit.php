@@ -23,7 +23,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
     $patientId = $_SESSION['id'];
     $patientType = $_SESSION['type'];
     $patientDetails = $patient->getStaffData($patientId);
-} else {
+} else { 
     echo "No patient data found.";
 }
 ?>
@@ -397,7 +397,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             $('#relationship').val(data.emergencyContact.emcon_relationship || '');
             $('#emergencyContactNumber').val(data.emergencyContact.emcon_connum || '');
             $('#Status').val(data.patient.patient_status || '');
-            $('#profilePic').attr('src' , `uploads/${patientData.patient.patient_profile}` || 'default-image.jpg');
+            $('#profilePic').attr('src' , `../uploads/${patientData.patient.patient_profile}` || 'default-image.jpg');
 
         }
 
@@ -435,6 +435,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
                 }
             });
         }
+
         let currentField = '';
         populatePatientForm(patientData);
 

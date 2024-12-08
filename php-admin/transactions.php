@@ -338,7 +338,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
                                                                 class="<?php echo $statusColor; ?>">
                                                                 <td> 
                                                                     <div style="display: flex; align-items: center;">
-                                                                    <img src="uploads/<?php echo !empty($transaction->transac_patientprofile) ? $transaction->transac_patientprofile : 'default-image.jpg'; ?>" 
+                                                                    <img src="../uploads/<?php echo !empty($transaction->transac_patientprofile) ? $transaction->transac_patientprofile : 'default-image.jpg'; ?>" 
                                                                                 alt="Profile Image" 
                                                                                 style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
 
@@ -778,10 +778,6 @@ $(".viewButton").click(function() {
         }
     });
 });
-
-
-
-
 
 </script>
 

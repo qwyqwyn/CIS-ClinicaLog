@@ -43,12 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($mime, $allowed_mimes)) {
                 $profile_hash = md5(uniqid($profile_original_name, true));
                 $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                $uploadDir = 'uploads/';
+                $uploadDir = '../uploads/';
                 $profile_destination = $uploadDir . $profile_name;
 
                 if (move_uploaded_file($profile_tmp, $profile_destination)) {
                     $user_profile = $profile_name;
-                } else {
+                } else { 
                     $_SESSION['status'] = 'error';
                     $_SESSION['message'] = 'Failed to upload profile picture.';
                 }
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($mime, $allowed_mimes)) {
                 $fileHash = md5(uniqid($_FILES['editprofile']['name'], true));
                 $new_profile = $fileHash . '.' . strtolower(pathinfo($_FILES['editprofile']['name'], PATHINFO_EXTENSION));
-                $uploadFileDir = 'uploads/';
+                $uploadFileDir = '../uploads/';
                 $dest_path = $uploadFileDir . $new_profile;
 
                 if (!move_uploaded_file($fileTmpPath, $dest_path)) {

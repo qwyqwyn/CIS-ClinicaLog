@@ -399,7 +399,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             $('#relationship').val(data.emergencyContact.emcon_relationship || '');
             $('#emergencyContactNumber').val(data.emergencyContact.emcon_connum || '');
             $('#Status').val(data.patient.patient_status || '');
-            $('#profilePic').attr('src' , `uploads/${data.patient.patient_profile}` || 'default-image.jpg');
+            $('#profilePic').attr('src' , `../uploads/${data.patient.patient_profile}` || 'default-image.jpg');
         }
 
 

@@ -39,7 +39,7 @@ $userData = $user->getUserData($user_idnum);
         </thead>
         <tbody>
             <tr>
-                <td><img src='/php-admin/uploads/<?php echo htmlspecialchars($userData['user_profile']); ?>' alt='Profile Picture' style='width: 50px; height: 50px; border-radius: 50%;'></td>
+                <td><img src='../uploads/<?php echo htmlspecialchars($userData['user_profile']); ?>' alt='Profile Picture' style='width: 50px; height: 50px; border-radius: 50%;'></td>
                 <td><?php echo htmlspecialchars($userData['user_idnum']); ?></td>
                 <td><?php echo htmlspecialchars($userData['user_lname']) . ', ' . htmlspecialchars($userData['user_fname']) . ' ' . htmlspecialchars($userData['user_mname']); ?></td>
                 <td><?php echo htmlspecialchars($userData['user_email']); ?></td>

@@ -116,7 +116,7 @@ $userData = $user->getUserData($user_idnum);
                     <div class="card">
                     <div class="profile-image">
                         <div class="card-header">
-                        <img id="profilePic" src="/php-admin/uploads/<?php echo htmlspecialchars($userData['user_profile']); ?>" alt="" />  
+                        <img id="profilePic" src="../uploads/<?php echo htmlspecialchars($userData['user_profile']); ?>" alt="" />  
                             <div class="row" >                
                                 <span style="
                                     display: inline-block;

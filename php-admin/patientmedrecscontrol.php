@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             for ($i = 0; $i < count($hashedFiles); $i++) {
                 $originalTmpPath = $files['tmp_name'][$i];
                 $hashedName = $hashedFiles[$i];
-                $destination = 'uploadmedrecs/' . $hashedName;
+                $destination = '/uploadrecs/uploadmedrecs/' . $hashedName;
     
                 if (move_uploaded_file($originalTmpPath, $destination)) {
 

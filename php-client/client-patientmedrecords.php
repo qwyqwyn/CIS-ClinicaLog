@@ -231,7 +231,7 @@ $patient_type = $_SESSION['patuser_type'];
                                                 >
                                                     <i class="fa fa-eye"></i>
                                                 </button>
-                                                    <button
+                                                    <button 
                                                         type="button" 
                                                         data-bs-toggle="tooltip"
                                                         class="btn btn-link btn-primary btn-lg editButton"

@@ -138,7 +138,7 @@ $age = $dobDateTime->diff(new DateTime())->y;
         <div class="card">
         <div class="profile-image">
             <div class="card-header">
-            <img id="profilePic" src="/php-admin/uploads/<?php echo $profilePic; ?>" alt="" />   
+            <img id="profilePic" src="../uploads/<?php echo $profilePic; ?>" alt="" />   
                 <div class="row" >                
                     <span style="
                         display: inline-block;

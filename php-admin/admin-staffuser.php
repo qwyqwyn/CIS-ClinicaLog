@@ -4,14 +4,14 @@ include('../database/config.php');
 include('../php/user.php');
  
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-  header('Location: ../php-login/index.php'); 
-  exit; 
+    header('Location: ../php-login/index.php'); 
+    exit; 
 }
 
 $db = new Database();
 $conn = $db->getConnection();
 
-$user = new User($conn); 
+$user = new User($conn);  
 $user_idnum = $_SESSION['user_idnum'];
 $userData = $user->getUserData($user_idnum);  
 ?>
@@ -19,8 +19,8 @@ $userData = $user->getUserData($user_idnum);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>CIS:Clinicalog</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+    <title>Clinic Staff User</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
 
@@ -33,8 +33,8 @@ $userData = $user->getUserData($user_idnum);
           families: [
             "Font Awesome 5 Solid",
             "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",
-            "simple-line-icons", 
+            "Font Awesome 5 Brands", 
+            "simple-line-icons",
           ],
           urls: ["../css/fonts.min.css"], 
         },
@@ -78,15 +78,15 @@ $userData = $user->getUserData($user_idnum);
         <div class="sidebar" id="sidebar"></div>
         <!-- End Sidebar -->
         <div class="main-panel">
-            <!-- Header -->
+            <!-- Header --> 
             <div class="main-header" id="header"></div>
             <!-- Main Content -->
-            <div class="container" id="content">
+            <div class="container" id="content"> 
             <div class="page-inner">
             <div class="row">
               <div class="col-md-12"> 
                 <div class="card">
-                  <div class="card-header">
+                  <div class="card-header"> 
                     <div class="d-flex align-items-center">
                       <h4 class="card-title">Add User</h4>
                       <button
@@ -117,9 +117,9 @@ $userData = $user->getUserData($user_idnum);
                             </h5>
                             <button
                               type="button"
-                              class="close"
+                              class="close" 
                               data-bs-dismiss="modal"  
-                              aria-label="Close"
+                              aria-label="Close" 
                             >
                               <span aria-hidden="true">&times;</span>
                             </button>
@@ -127,10 +127,11 @@ $userData = $user->getUserData($user_idnum);
                           <div class="modal-body">
                             <p class="small">
                               Create new user for the system. Make sure to fill all of them.
-                            </p>
+                            </p> 
                              <!-- Start Add Modal Form-->
                              <form class="form" action="usercontrol.php" method="POST" enctype="multipart/form-data">
-                              <div class="row">
+                             <input id="admin_id" name="admin_id" type="hidden" class="form-control" value="<?php echo htmlspecialchars($user_idnum, ENT_QUOTES, 'UTF-8'); ?>"/>
+                             <div class="row">
                                 <div class="col-md-12">
                                   <div class="form-group form-group-default">
                                     <label>ID</label>
@@ -197,8 +198,7 @@ $userData = $user->getUserData($user_idnum);
                               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                               </div>
                             </form>
-                            
-                             <!-- End Add Modal Form-->`
+                             <!-- End Add Modal Form-->
                           </div>
                         </div>
                       </div>
@@ -231,6 +231,7 @@ $userData = $user->getUserData($user_idnum);
                             <!--Start Edit Form-->
                   <!-- Start Edit Form -->
                   <form id="editForm" action="usercontrol.php" method="POST" enctype="multipart/form-data">
+                  <input id="admin_id" name="admin_id" type="hidden" class="form-control" value="<?php echo htmlspecialchars($user_idnum, ENT_QUOTES, 'UTF-8'); ?>"/>
                     <div class="row">
                         <div class="col-md-6">
                             <p class="fw-light">Date Added: <span id="dateadded"></span></p>
@@ -249,9 +250,8 @@ $userData = $user->getUserData($user_idnum);
                         <div class="col-md-12">
                             <div class="form-group form-group-default">
                                 <label>ID</label>
-                                <input id="editid" name="editid" type="text" class="form-control" placeholder="fill ID" readonly/>
+                                <input id="editid" name="editid" type="text" class="form-control" placeholder="fill ID"/>
                                 <input id="editoldid" name="editoldid" type="text" class="form-control" placeholder="fill ID" hidden/>
-
                             </div>
                         </div>
                         <div class="col-md-6 pe-0">
@@ -309,7 +309,7 @@ $userData = $user->getUserData($user_idnum);
                     <!-- Modal Footer -->
                     <div class="modal-footer border-0">
                         <button type="submit" class="btn btn-primary" name="updateuser"> 
-                            Save changes
+                            Save changes 
                         </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             Close
@@ -323,6 +323,8 @@ $userData = $user->getUserData($user_idnum);
                         </div>
                       </div>
                     </div>
+
+
                     <div class="table-responsive">
                     <table id="add-row" class="display table table-striped table-hover">
                         <thead>
@@ -352,45 +354,56 @@ $userData = $user->getUserData($user_idnum);
                             </tr>
                         </tfoot> 
                         <tbody>
-                        <?php
-                          $nodes = $user->getAllUsers();
-                          foreach ($nodes as $node) {
-                              $fullName = "{$node->user_lname}, {$node->user_fname} {$node->user_mname}";
-                              $statusColor = ($node->user_status === 'Active') ?  '#77dd77' : '#ff6961';
-                              $statusText = ucfirst($node->user_status); 
-                              
-                              echo "<tr data-id='{$node->user_idnum}' data-lname='{$node->user_lname}' data-fname='{$node->user_fname}' data-mname='{$node->user_mname}' data-email='{$node->user_email}' data-position='{$node->user_position}' data-role='{$node->user_role}' data-dateadded='{$node->user_dateadded}' data-status='{$node->user_status}'> 
-                                  <td><img src='uploads/{$node->user_profile}' alt='Profile Picture' style='width: 50px; height: 50px; border-radius: 50%;'></td>
-                                  <td>{$node->user_idnum}</td>
-                                  <td>{$fullName}</td>
-                                  <td>{$node->user_email}</td>
-                                  <td>{$node->user_position}</td>
-                                  <td>{$node->user_role}</td>
-                                  <td>{$node->user_dateadded}</td>
-                                  <td>
-                                      <span style='
-                                          display: inline-block;
-                                          padding: 5px 10px;
-                                          border-radius: 50px;
-                                          background-color: {$statusColor};
-                                          color: white; 
-                                          text-align: center;
-                                          min-width: 60px;'>
-                                          {$statusText}
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class='form-button-action'>
-                                          <button type='button' class='btn btn-link btn-primary btn-lg editButton'>
-                                              <i class='fa fa-edit'></i>
-                                          </button>
-                                      </div>
-                                  </td>
-                              </tr>";
-                          }
-                          ?>
+                            <?php
+                               
+                                $nodes = $user->getAllUsers();
+                                foreach ($nodes as $node) {
+                                    // Skip the user if their ID matches the excluded ID
+                                    if ($node->user_idnum === $user_idnum) {
+                                        continue;  // Skip this iteration and move to the next node
+                                    }
 
+                                    $fullName = "{$node->user_lname}, {$node->user_fname} {$node->user_mname}";
+                                    $statusColor = ($node->user_status === 'Active') ?  '#77dd77' : '#ff6961';
+                                    $statusText = ucfirst($node->user_status); 
+                                    $profilePic = !empty($node->user_profile) ? "uploads/{$node->user_profile}" : 'uploads/default-image.jpg';
+
+                                    echo "<tr data-id='{$node->user_idnum}' data-lname='{$node->user_lname}' data-fname='{$node->user_fname}' data-mname='{$node->user_mname}' data-email='{$node->user_email}' data-position='{$node->user_position}' data-role='{$node->user_role}' data-dateadded='{$node->user_dateadded}' data-status='{$node->user_status}'> 
+                                            <td>
+                                                <img src='" . htmlspecialchars($profilePic) . "' 
+                                                    alt='Profile Picture' 
+                                                    style='width: 50px; height: 50px; border-radius: 50%;'>
+                                            </td>
+                                            <td>{$node->user_idnum}</td>
+                                            <td>{$fullName}</td>
+                                            <td>{$node->user_email}</td>
+                                            <td>{$node->user_position}</td>
+                                            <td>{$node->user_role}</td>
+                                            <td>{$node->user_dateadded}</td>
+                                            <td>
+                                                <span style='
+                                                    display: inline-block; 
+                                                    padding: 5px 10px;
+                                                    border-radius: 50px;
+                                                    background-color: {$statusColor};
+                                                    color: white; 
+                                                    text-align: center;
+                                                    min-width: 60px;'>
+                                                    {$statusText}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class='form-button-action'>
+                                                    <button type='button' class='btn btn-link btn-primary btn-lg editButton'>
+                                                        <i class='fa fa-edit'></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                          </tr>";
+                                }
+                            ?>
                         </tbody>
+
                     </table>
                   </div>
                   </div>
@@ -402,10 +415,6 @@ $userData = $user->getUserData($user_idnum);
       </div>
     </div>
 
-    
-    
-
-    
     <!--   Core JS Files   -->
     <script src="../assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/core/popper.min.js"></script>
@@ -537,7 +546,7 @@ $userData = $user->getUserData($user_idnum);
                                 confirm: {
                                     className: "btn btn-success",
                                 },
-                            },
+                            }, 
                         });
                     } else {
                         swal({
@@ -586,7 +595,6 @@ $userData = $user->getUserData($user_idnum);
                     title: status.charAt(0).toUpperCase() + status.slice(1) + '!',
                     text: message
                 }).then(() => {
-                    // Clear the session messages after displaying
                     <?php 
                     unset($_SESSION['status']);
                     unset($_SESSION['message']);
@@ -653,7 +661,7 @@ $userData = $user->getUserData($user_idnum);
     <script>
     $(document).ready(function() {
        
-        $("#sidebar").load("supersidebar.php", function(response, status, xhr) {
+        $("#sidebar").load("sidebar.php", function(response, status, xhr) {
             if (status == "error") {
                 console.log("Error loading sidebar: " + xhr.status + " " + xhr.statusText);
             } else {
@@ -667,7 +675,7 @@ $userData = $user->getUserData($user_idnum);
                     if (href.indexOf(currentPage) !== -1) {
                         $(this).addClass('active');
                     }
-                }); 
+                });
             }
         });
 

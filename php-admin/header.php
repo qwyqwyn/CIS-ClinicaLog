@@ -288,7 +288,7 @@ function getNotifClass($status) {
                   >
                     <div class="avatar-sm">
                       <img
-                      src='/php-admin/uploads/<?php echo !empty($userData['user_profile']) ? htmlspecialchars($userData['user_profile']) : 'default-image.jpg'; ?>'
+                      src='../uploads/<?php echo !empty($userData['user_profile']) ? htmlspecialchars($userData['user_profile']) : 'default-image.jpg'; ?>'
                       alt='Profile Picture'
                         class="avatar-img rounded-circle"
                       />
@@ -307,7 +307,7 @@ function getNotifClass($status) {
                         <div class="user-box">
                           <div class="avatar-lg">
                           <img
-                              src='/php-admin/uploads/<?php echo !empty($userData['user_profile']) ? htmlspecialchars($userData['user_profile']) : 'default-image.jpg'; ?>'
+                              src='../uploads/<?php echo !empty($userData['user_profile']) ? htmlspecialchars($userData['user_profile']) : 'default-image.jpg'; ?>'
                               alt="image profile"
                               class="avatar-img rounded"
                             />
@@ -315,7 +315,7 @@ function getNotifClass($status) {
                           <div class="u-text">
                             <h4><?php echo htmlspecialchars($userData['user_fname']); ?></h4>
                             <p class="text-muted"><?php echo htmlspecialchars($userData['user_email']); ?></p>
-                            <a
+                            <a 
                               href="viewprofile.php"
                               class="btn btn-xs btn-secondary btn-sm"
                               >View Profile</a

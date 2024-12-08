@@ -366,7 +366,7 @@ $userData = $user->getUserData($user_idnum);
                                     $fullName = "{$node->user_lname}, {$node->user_fname} {$node->user_mname}";
                                     $statusColor = ($node->user_status === 'Active') ?  '#77dd77' : '#ff6961';
                                     $statusText = ucfirst($node->user_status); 
-                                    $profilePic = !empty($node->user_profile) ? "uploads/{$node->user_profile}" : 'uploads/default-image.jpg';
+                                    $profilePic = !empty($node->user_profile) ? "../uploads/{$node->user_profile}" : '../uploads/default-image.jpg';
 
                                     echo "<tr data-id='{$node->user_idnum}' data-lname='{$node->user_lname}' data-fname='{$node->user_fname}' data-mname='{$node->user_mname}' data-email='{$node->user_email}' data-position='{$node->user_position}' data-role='{$node->user_role}' data-dateadded='{$node->user_dateadded}' data-status='{$node->user_status}'> 
                                             <td>

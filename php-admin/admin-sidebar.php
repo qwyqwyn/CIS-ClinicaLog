@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,9 +18,9 @@
           families: [
             "Font Awesome 5 Solid",
             "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",  
+            "Font Awesome 5 Brands",
             "simple-line-icons",
-          ],
+          ], 
           urls: ["../css/fonts.min.css"], 
         },
         active: function () {
@@ -26,16 +29,14 @@
       });
     </script>
 
-    <!-- CSS Files -->
+    <!-- CSS Files --> 
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/plugins.min.css" />
     <link rel="stylesheet" href="../css/kaiadmin.min.css" />
 
     <!-- ICONS -->
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
     <style>
-      .sidebar {
+      .sidebar {  
           transition: background 0.3s ease;
           /* Initial background */ 
           background: linear-gradient(to bottom, #DB6079, #DA6F65, #E29AB4);
@@ -55,10 +56,11 @@
   </style>  
 </head>
 <body>
+<div class="sidebar" id="sidebar">
 <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" id="logo-header">
-            <a href="index.html" class="logo">
+            <a href="index.php" class="logo">
               <img
                 src="../assets/img/sidebar-logo.svg"
                 alt="navbar brand"
@@ -69,7 +71,7 @@
             </a>
             <div class="nav-toggle">
               <button class="btn btn-toggle toggle-sidebar">
-                <i class="gg-menu-right"></i> 
+                <i class="gg-menu-right"></i>
               </button>
               <button class="btn btn-toggle sidenav-toggler">
                 <i class="gg-menu-left"></i>
@@ -90,7 +92,7 @@
                 </span>
               </li>
               <li class="nav-item" id="dashboard-item">
-                <a href="superadindex.php">
+                <a href="index.php">
                   <i class="fa fas fas fa-home"></i>
                   <p>Dashboard</p>
                 </a>
@@ -107,26 +109,38 @@
                   <p>Patient Record</p>
                 </a>
               </li>
-              <li class="nav-item" id="appoint-item">
-                <a href="appointments.php">
-                  <i class="fas far fa-calendar-check"></i>
-                  <p>Appointments</p>
+              <li class="nav-item" id="patientrec-item">
+                <a href="addconsultation.php">
+                  <i class=" fas fa-stethoscope"></i>
+                  <p>Consultations</p>
                 </a>
+              </li>
+              <li class="nav-item" id="appoint-item">
+                <a href="transactions.php">
+                  <i class="fas fas fa-receipt"></i>
+                  <p>Transactions</p>
+                </a>
+              </li>
+              <li class="nav-item" id="appoint-item">
+                <a href="offcampusadd.php">
+                  <i class="fas fas fa-arrow-alt-circle-right"></i>
+                  <p>Mabini Unit Issuance</p>
+                </a>  
               </li>
               <li class="nav-item" id="inventory-item">
                 <a href="inventory.php">
                   <i class="fas fas fa-clipboard-list"></i>
-                  <p>Inventory</p> 
+                  <p>Medicine Report</p> 
                 </a>
               </li>
               <li class="nav-item" id="reports-item">
-                <a href="reports.php">
+                <a href="reports.php"> 
                   <i class="fas fas fa-file-medical"></i>
-                  <p>Reports</p>
+                  <p>Transaction Report</p>
                 </a>
               </li>
               <li class="nav-item" id="staffuser-item">
-                <a href="superstaffuser.php">
+                <a href="staffuser.php">
                   <i class="fas fa-users"></i>
                   <p>Clinic Staff User</p>
                 </a>

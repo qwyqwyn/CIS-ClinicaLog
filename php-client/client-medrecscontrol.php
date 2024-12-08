@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hashedName = $hashedFiles[$i];
     
                 // Use the correct absolute path for file upload
-                $destination = $_SERVER['DOCUMENT_ROOT'] . '/php-admin/uploadmedrecs/' . $hashedName;
+                $destination = $_SERVER['DOCUMENT_ROOT'] . '../uploadpdf/uploadmedrecs/' . $hashedName;
     
                 // Move the uploaded file to the destination
                 if (move_uploaded_file($originalTmpPath, $destination)) {

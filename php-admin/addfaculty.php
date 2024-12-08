@@ -305,7 +305,7 @@ $user_idnum = $_SESSION['user_idnum'];
         }).then(() => {
           if (status === 'success') {
             sessionStorage.clear();
-            window.location.href = "add-faculty.php";
+            window.location.href = "addfaculty.php";
           }
           <?php unset($_SESSION['status'], $_SESSION['message']); ?>
         });

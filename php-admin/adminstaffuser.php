@@ -350,7 +350,7 @@ $userData = $user->getUserData($user_idnum);
                               $statusText = ucfirst($node->user_status); 
                               
                               echo "<tr data-id='{$node->user_idnum}' data-lname='{$node->user_lname}' data-fname='{$node->user_fname}' data-mname='{$node->user_mname}' data-email='{$node->user_email}' data-position='{$node->user_position}' data-role='{$node->user_role}' data-dateadded='{$node->user_dateadded}' data-status='{$node->user_status}'> 
-                                  <td><img src='uploads/{$node->user_profile}' alt='Profile Picture' style='width: 50px; height: 50px; border-radius: 50%;'></td>
+                                  <td><img src='../uploads/{$node->user_profile}' alt='Profile Picture' style='width: 50px; height: 50px; border-radius: 50%;'></td>
                                   <td>{$node->user_idnum}</td>
                                   <td>{$fullName}</td>
                                   <td>{$node->user_email}</td>

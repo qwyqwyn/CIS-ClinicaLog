@@ -18,20 +18,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $profile_tmp);
         $allowed_mimes = ['image/jpeg', 'image/png'];
-
+ 
         if (in_array($mime, $allowed_mimes)) {
   
             $profile_hash = md5(uniqid($profile_original_name, true));
             $profile_name = preg_replace('/[^a-zA-Z0-9_-]/', '_', $profile_hash) . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
 
-            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . 'uploads/';
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . './uploads/';
 
             if (!is_writable($uploadDir)) {
                 $response['message'] = 'The upload directory "' . $uploadDir . '" is not writable. Please check directory permissions.';
                 echo json_encode($response);
                 exit();
             }
-
+  
             $profile_destination = $uploadDir . $profile_name;
 
             if (move_uploaded_file($profile_tmp, $profile_destination)) {

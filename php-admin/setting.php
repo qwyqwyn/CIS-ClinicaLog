@@ -113,7 +113,7 @@ $userData = $user->getUserData($user_idnum);
 
                           <div class="profile-image mb-3">
                               <img id="profilePic" 
-                                  src='/php-admin/uploads/<?php echo !empty($userData['user_profile']) ? $userData['user_profile'] : 'default-image.jpg'; ?>'
+                                  src='../uploads/<?php echo !empty($userData['user_profile']) ? $userData['user_profile'] : 'default-image.jpg'; ?>'
                                   alt="Profile Picture" />
                           </div>
 
@@ -318,7 +318,7 @@ $userData = $user->getUserData($user_idnum);
         var formData = new FormData(this);
 
         $.ajax({
-            url: 'settingsupprofile.php',
+            url: 'settingupprofile.php',
             type: 'POST',
             data: formData,
             contentType: false, 
@@ -347,7 +347,7 @@ $userData = $user->getUserData($user_idnum);
                         confirmButtonText: 'OK'
                     });
                 }
-            },
+            }, 
             error: function(xhr, status, error) {
                 console.error(error); 
                 Swal.fire({
@@ -357,7 +357,7 @@ $userData = $user->getUserData($user_idnum);
                     confirmButtonText: 'OK'
                 });
             }
-        });
+        }); 
     });
 });
       </script>

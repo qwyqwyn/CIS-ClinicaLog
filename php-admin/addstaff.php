@@ -295,7 +295,7 @@ $user_idnum = $_SESSION['user_idnum'];
         }).then(() => {
           if (status === 'success') {
             sessionStorage.clear();
-            window.location.href = "add-staff.php";
+            window.location.href = "addstaff.php";
           }
           <?php unset($_SESSION['status'], $_SESSION['message']); ?>
         });

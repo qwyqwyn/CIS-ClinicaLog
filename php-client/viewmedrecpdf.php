@@ -36,9 +36,9 @@
         $hashedFile = urldecode($_GET['file']);  // Decode any URL encoding (e.g., %20 for spaces)
 
         // Define the path where PDF files are stored (using relative URL)
-        $pdf_directory = '/php-admin/uploadmedrecs/';  // Adjust the folder path as needed
+        $pdf_directory = '/uploadpdf/uploadmedrecs/';  // Adjust the folder path as needed
 
-        // Full path to the PDF file
+        // Full path to the PDF file 
         $file_path = $pdf_directory . $hashedFile;
 
         // Check if the file exists in the directory

@@ -137,7 +137,7 @@ if ($patient_type === 'Student') {
 
                           <div class="profile-image mb-3">
                               <img id="profilePic" 
-                                  src='/php-admin/uploads/<?php echo !empty($patientData->patient_profile) ? $patientData->patient_profile : 'default-image.jpg'; ?>'
+                                  src='../uploads/<?php echo !empty($patientData->patient_profile) ? $patientData->patient_profile : 'default-image.jpg'; ?>'
                                   alt="Profile Picture" />
                           </div>
 

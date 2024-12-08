@@ -212,23 +212,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="modal-body">
                               <form class="modalButton">
                                 <!-- Button for Student Patient -->
-                                <a href="add-student.php">
+                                <a href="addstudent.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="addbutton">
                                     Student
                                   </button>
                                 </a> 
                                 <!-- Button for Staff Patient -->
-                                <a href="add-faculty.php">
+                                <a href="addfaculty.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="addbutton">
                                     Faculty
                                   </button>
                                 </a>
-                                <a href="add-staff.php">
+                                <a href="addstaff.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="addbutton">
                                     Staff
                                   </button>
                                 </a>
-                                <a href="add-extension.php">
+                                <a href="addextension.php">
                                   <button type="button" class="btn btn-primary btn-round ms-auto custom-button" id="addbutton">
                                     Extension
                                   </button>

@@ -36,7 +36,7 @@
         $hashedFile = urldecode($_GET['file']);  // Decode any URL encoding (e.g., %20 for spaces)
 
         // Define the path where PDF files are stored
-        $pdf_directory = 'uploadmedrecs/';  // Adjust the folder path as needed
+        $pdf_directory = '../uploadpdf/uploadmedrecs/';  // Adjust the folder path as needed
 
         // Full path to the PDF file 
         $file_path = $pdf_directory . $hashedFile;

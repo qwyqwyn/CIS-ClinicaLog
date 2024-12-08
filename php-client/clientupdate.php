@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $profile_hash = md5(uniqid($profile_original_name, true));
             $profile_name = preg_replace('/[^a-zA-Z0-9_-]/', '_', $profile_hash) . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
 
-            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/php-admin/uploads/';
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . './uploads/';
 
             if (!is_writable($uploadDir)) {
                 $response['message'] = 'The upload directory "' . $uploadDir . '" is not writable. Please check directory permissions.';

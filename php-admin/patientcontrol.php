@@ -48,19 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($mime, $allowed_mimes)) {
                 $profile_hash = md5(uniqid($profile_original_name, true));
                 $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                $uploadDir = 'uploads/';
+                $uploadDir = '../uploads/';
                 $profile_destination = $uploadDir . $profile_name;
 
                 if (move_uploaded_file($profile_tmp, $profile_destination)) {
                     $profile = $profile_name; 
                 } else {
                     $_SESSION['error'] = 'Failed to upload profile picture.';
-                    header('Location: add-student.php'); 
+                    header('Location: addstudent.php'); 
                     exit();
                 }
             } else {
                 $_SESSION['error'] = 'Invalid file type. Only JPEG and PNG files are allowed.';
-                header('Location: add-student.php'); 
+                header('Location: addstudent.php'); 
                 exit();
             }
             finfo_close($finfo);
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message'] = 'Invalid email address.';
         }
 
-        header('Location: add-student.php'); 
+        header('Location: addstudent.php'); 
         exit();
     }
     if (isset($_POST['addfacultypatient'])) {
@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($mime, $allowed_mimes)) {
                 $profile_hash = md5(uniqid($profile_original_name, true));
                 $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                $uploadDir = 'uploads/';
+                $uploadDir = '../uploads/';
                 $profile_destination = $uploadDir . $profile_name;
 
                 // Move uploaded file
@@ -135,12 +135,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $profile = $profile_name; // Set profile name to save to the database
                 } else {
                     $_SESSION['error'] = 'Failed to upload profile picture.';
-                    header('Location: add-faculty.php'); // Redirect to the add student page
+                    header('Location: addfaculty.php'); // Redirect to the add student page
                     exit();
                 }
             } else {
                 $_SESSION['error'] = 'Invalid file type. Only JPEG and PNG files are allowed.';
-                header('Location: add-faculty.php'); 
+                header('Location: addfaculty.php'); 
                 exit();
             }
             finfo_close($finfo);
@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message'] = 'Invalid email address.';
         }
 
-        header('Location: add-faculty.php'); 
+        header('Location: addfaculty.php'); 
         exit();
     }
     if (isset($_POST['addstaffpatient'])) {
@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($mime, $allowed_mimes)) {
                 $profile_hash = md5(uniqid($profile_original_name, true));
                 $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                $uploadDir = 'uploads/';
+                $uploadDir = '../uploads/';
                 $profile_destination = $uploadDir . $profile_name;
 
                 // Move uploaded file
@@ -214,12 +214,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $profile = $profile_name; // Set profile name to save to the database
                 } else {
                     $_SESSION['error'] = 'Failed to upload profile picture.';
-                    header('Location: add-staff.php'); // Redirect to the add student page
+                    header('Location: addstaff.php'); // Redirect to the add student page
                     exit();
                 }
             } else {
                 $_SESSION['error'] = 'Invalid file type. Only JPEG and PNG files are allowed.';
-                header('Location: add-staff.php'); 
+                header('Location: addstaff.php'); 
                 exit();
             }
             finfo_close($finfo);
@@ -241,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message'] = 'Invalid email address.';
         }
 
-        header('Location: add-staff.php'); 
+        header('Location: addstaff.php'); 
         exit();
     }
     if (isset($_POST['addextensionpatient'])) {
@@ -282,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (in_array($mime, $allowed_mimes)) {
                 $profile_hash = md5(uniqid($profile_original_name, true));
                 $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                $uploadDir = 'uploads/';
+                $uploadDir = '../uploads/';
                 $profile_destination = $uploadDir . $profile_name;
 
                 // Move uploaded file
@@ -290,12 +290,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $profile = $profile_name; // Set profile name to save to the database
                 } else {
                     $_SESSION['error'] = 'Failed to upload profile picture.';
-                    header('Location: add-extension.php'); // Redirect to the add student page
+                    header('Location: addextension.php'); // Redirect to the add student page
                     exit();
                 }
             } else {
                 $_SESSION['error'] = 'Invalid file type. Only JPEG and PNG files are allowed.';
-                header('Location: add-extension.php'); 
+                header('Location: addextension.php'); 
                 exit();
             } 
             finfo_close($finfo);
@@ -319,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message'] = 'Invalid email address.';
         }
 
-        header('Location: add-extension.php'); 
+        header('Location: addextension.php'); 
         exit();
     }
     if (isset($_POST['editstudentpatient'])) {
@@ -379,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (in_array($mime, $allowed_mimes)) {
                     $profile_hash = md5(uniqid($profile_original_name, true));
                     $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                    $uploadDir = 'uploads/';
+                    $uploadDir = '../uploads/';
                     $profile_destination = $uploadDir . $profile_name;
 
                     if (move_uploaded_file($profile_tmp, $profile_destination)) {
@@ -459,7 +459,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (in_array($mime, $allowed_mimes)) {
                     $profile_hash = md5(uniqid($profile_original_name, true));
                     $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                    $uploadDir = 'uploads/';
+                    $uploadDir = '../uploads/';
                     $profile_destination = $uploadDir . $profile_name;
 
                     if (move_uploaded_file($profile_tmp, $profile_destination)) {
@@ -538,7 +538,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (in_array($mime, $allowed_mimes)) {
                     $profile_hash = md5(uniqid($profile_original_name, true));
                     $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                    $uploadDir = 'uploads/';
+                    $uploadDir = '../uploads/';
                     $profile_destination = $uploadDir . $profile_name;
 
                     if (move_uploaded_file($profile_tmp, $profile_destination)) {
@@ -613,7 +613,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (in_array($mime, $allowed_mimes)) {
                     $profile_hash = md5(uniqid($profile_original_name, true));
                     $profile_name = $profile_hash . '.' . strtolower(pathinfo($profile_original_name, PATHINFO_EXTENSION));
-                    $uploadDir = 'uploads/';
+                    $uploadDir = '../uploads/';
                     $profile_destination = $uploadDir . $profile_name;
 
                     if (move_uploaded_file($profile_tmp, $profile_destination)) {
