@@ -7,7 +7,7 @@ include('../php/adminlogs.php');
 
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header('Location: ../php-login/index.php'); 
+    header('Location: ../php-login/index.php');  
     exit;
 }
 

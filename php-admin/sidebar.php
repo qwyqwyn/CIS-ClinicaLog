@@ -29,7 +29,7 @@ session_start();
       });
     </script>
 
-    <!-- CSS Files --> 
+    <!-- CSS Files -->  
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/plugins.min.css" />
     <link rel="stylesheet" href="../css/kaiadmin.min.css" />
@@ -143,12 +143,6 @@ session_start();
                 <a href="staffuser.php">
                   <i class="fas fa-users"></i>
                   <p>Clinic Staff User</p>
-                </a>
-              </li>
-              <li class="nav-item" id="reports-item">
-                <a href="adminlogs.php">
-                  <i class="fas fa-file-alt"></i>
-                  <p>Admin Logs</p>
                 </a>
               </li>
             </ul>

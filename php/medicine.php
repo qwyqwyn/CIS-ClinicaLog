@@ -25,6 +25,8 @@ class Medstock {
     public $medstock_expirationdt;
     public $medstock_disabled;
 
+    
+    // Constructor initializes a stock entry with its details
     public function __construct($medstock_id, $medicine_id, $medstock_origqty, $unit, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {
         $this->medstock_id = $medstock_id;
         $this->medicine_id = $medicine_id;
@@ -54,10 +56,12 @@ class MedListNode {
 class MedicineLinkedList {
     public $head;
 
+        // Constructor initializes a node with a data item
     public function __construct() {
         $this->head = null;
     }
 
+    // MedicineLinkedList class
     public function add($item) {
         $newNode = new MedListNode($item);
         if ($this->head === null) {
@@ -71,6 +75,8 @@ class MedicineLinkedList {
         }
     }
 
+    
+    // Retrieves all nodes as an array
     public function getAllNodes() {
         $nodes = [];
         $current = $this->head;
@@ -81,6 +87,7 @@ class MedicineLinkedList {
         return $nodes;
     }
 
+      // Finds an item in the list by its ID
     public function find($id) {
         $current = $this->head;
         while ($current !== null) {
@@ -92,6 +99,7 @@ class MedicineLinkedList {
         return null;
     }
 
+     // Removes an item from the list by its ID
     public function remove($id) {
         if ($this->head === null) return false; 
 
@@ -111,6 +119,7 @@ class MedicineLinkedList {
         return false; 
     }
 
+      // Finds an item in the list by its name
     public function findByName($name) {
         $current = $this->head;
         while ($current !== null) {
@@ -122,6 +131,7 @@ class MedicineLinkedList {
         return null; 
     }
 
+    // Checks if a medicine with the given name exists
     public function medicineExists($name) {
         $current = $this->head;
         while ($current !== null) {
@@ -141,6 +151,7 @@ class MedicineManager {
     public $medicines;
     public $medstocks;
 
+     // Constructor initializes the manager and loads data
     public function __construct($db) {
         $this->db = $db; 
         $this->medicines = new MedicineLinkedList();
@@ -149,6 +160,7 @@ class MedicineManager {
         $this->loadMedstocks();
     }
 
+    // Loads medicines from the database into the linked list
     private function loadMedicines() {
         $sql = "SELECT * FROM medicine";
         $stmt = $this->db->query($sql); // Use PDO query method
@@ -158,6 +170,7 @@ class MedicineManager {
         }
     }
 
+     // Loads stocks from the database into the linked list
     private function loadMedstocks() {
         $sql = "
             SELECT 
@@ -207,7 +220,7 @@ class MedicineManager {
         }
     }
     
-
+    // Inserts a new medicine into the database and linked list
     public function insertMedicine($admin_id, $name, $category) {
         if ($this->medicines->medicineExists($name)) {
             echo "Medicine already exists.<br>";
@@ -233,7 +246,8 @@ class MedicineManager {
             return false;
         } 
     }
-
+    
+    // Inserts a new stock entry into the database and linked list
     public function insertMedstock($admin_id, $medicine_id, $unit, $quantity, $dosage, $date_added, $time_added, $expiration_date, $disabled) {
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
@@ -252,14 +266,17 @@ class MedicineManager {
         }
     }
 
+    // Retrieves all medicines as an array
     public function getAllMedicines() {
         return $this->medicines->getAllNodes();
     }
 
+    // Retrieves all stock entries as an array
     public function getAllMedstocks() {
         return $this->medstocks->getAllNodes();
     }
 
+    // Retrieves all stock entries with their associated medicine names
     public function getAllItems() {
         $medstocks = $this->medstocks->getAllNodes();
         $medicines = $this->medicines->getAllNodes();
@@ -268,7 +285,7 @@ class MedicineManager {
         
         foreach ($medicines as $medicine) {
             $medicineMap[$medicine->medicine_id] = $medicine->medicine_name;
-        } 
+        }
     
         $combinedItems = [];
         foreach ($medstocks as $medstock) {
@@ -278,7 +295,8 @@ class MedicineManager {
     
         return $combinedItems; 
     }
-    
+
+    // Retrieves medicines with their associated stock count
     public function getMedicinesWithStockCount() {
         $medstocks = $this->medstocks->getAllNodes();
         $medicines = $this->medicines->getAllNodes();
@@ -307,7 +325,7 @@ class MedicineManager {
         return $combinedItems; 
     }
     
-
+    // Updates a medicine's details in the database and linked list
     public function updateMedicine($admin_id, $medicine_id, $name, $category) {
         try {
             // Set admin ID for the trigger (if required in session)
@@ -334,7 +352,7 @@ class MedicineManager {
     
     
 
-    
+        // Updates a stock entry's details in the database and linked list
     public function updateMedstock($admin_id, $medstock_id, $medicine_id, $medstock_unit, $medicine_qty, $medicine_dosage, $medicine_expirationdt, $medicine_disable) {
         try {
             // Set the admin ID as a session variable for the stored procedure if needed
@@ -380,8 +398,9 @@ class MedicineManager {
             // Return error message
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
-    }
+    } 
     
+    // Medicine total available stock using stored function 
     public function getMedicineStock($medicine_id) {
         // SQL to call the stored function
         $query = "SELECT get_medicine_stock(:medicine_id) AS remaining_stock";
@@ -398,7 +417,7 @@ class MedicineManager {
     
     
     
-
+    // Deletes a medicine from the database and linked list
     public function deleteMedicine($medicine_id) {
         // Remove from the database
         $sql = "DELETE FROM medicine WHERE medicine_id = ?";

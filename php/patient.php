@@ -1,5 +1,5 @@
 <?php
-
+// Patient class representing patient details
 class Patient {
     public $patient_id;
     public $patient_lname;
@@ -16,7 +16,8 @@ class Patient {
     public $patient_status;
     public $patient_code; 
     public $next; 
-
+    
+        // Constructor to initialize patient object with necessary data
     public function __construct($id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code) {
         $this->patient_id = $id;
         $this->patient_lname = $lname;
@@ -35,7 +36,7 @@ class Patient {
         $this->next = null; // Initialize next pointer to null
     }
 }
-
+// Student class representing student details
 class Student {
     public $student_id;
     public $student_idnum;
@@ -45,7 +46,7 @@ class Student {
     public $student_year;
     public $student_section;
     public $next; // Pointer to the next node
-
+        // Constructor to initialize student object with necessary data
     public function __construct($id, $idnum, $patientid, $program, $major, $year, $section) {
         $this->student_id = $id;
         $this->student_idnum = $idnum;
@@ -57,7 +58,7 @@ class Student {
         $this->next = null; // Initialize next pointer to null
     }
 }
-
+// Faculty class representing faculty details
 class Faculty {
     public $faculty_id;
     public $patient_id;
@@ -66,6 +67,7 @@ class Faculty {
     public $faculty_depart;
     public $faculty_role;
     public $next; // Pointer to the next node
+    // Constructor to initialize faculty object with necessary data
 
     public function __construct($id, $patientid, $idnum, $college, $depart, $role) {
         $this->faculty_id = $id;
@@ -77,6 +79,7 @@ class Faculty {
         $this->next = null; // Initialize next pointer to null
     }
 }
+// Staff class representing staff details
 
 class Staff {
     public $staff_id;
@@ -85,7 +88,7 @@ class Staff {
     public $staff_office;
     public $staff_role;
     public $next; // Pointer to the next node
-
+    // Constructor to initialize staff object with necessary data
     public function __construct($id, $patientid, $idnum, $office, $role) {
         $this->staff_id = $id;
         $this->patient_id = $patientid;
@@ -95,13 +98,15 @@ class Staff {
         $this->next = null; // Initialize next pointer to null
     }
 }
-
+// Extension class representing extension details
 class Extension {
     public $exten_id;
     public $patient_id;
     public $exten_idnum;
     public $exten_role;
     public $next; // Pointer to the next node
+
+        // Constructor to initialize extension object with necessary data
 
     public function __construct($id, $patientid, $idnum, $role) {
         $this->exten_id = $id;
@@ -111,7 +116,7 @@ class Extension {
         $this->next = null; // Initialize next pointer to null
     }
 }
-
+// Address class representing address details
 class Address {
     public $address_id;
     public $patient_id;
@@ -133,7 +138,7 @@ class Address {
         $this->next = null; // Initialize next pointer to null
     }
 }
-
+// EmergencyContact class representing emergency contact details
 class EmergencyContact {
     public $emcon_contactid;
     public $patient_id;
@@ -153,23 +158,27 @@ class EmergencyContact {
 }
 
 
+// PatientNode class represents a node in a linked list for storing patient data
 class PatientNode{
     public $item;
     public $next;
 
+    // Constructor to initialize the node with a patient item
     public function __construct($item) {
         $this->item = $item;
         $this->next = null;
     }
 }
-
+// PatientLinkedList class for managing a linked list of patients
 class PatientLinkedList {
     public $head;
 
+    // Constructor to initialize an empty linked list
     public function __construct() {
         $this->head = null;
     }
 
+    // Adds a patient node to the linked list
     public function add($item) {
         $newNode = new PatientNode($item);
         if ($this->head === null) {
@@ -183,6 +192,7 @@ class PatientLinkedList {
         }
     }
 
+    // Retrieves all patient nodes in the linked list
     public function getAllNodes() {
         $nodes = [];
         $current = $this->head;
@@ -193,10 +203,11 @@ class PatientLinkedList {
         return $nodes;
     }
 
+    // Checks if a patient exists by their email address
     public function PatientExists($email) {
         $current = $this->head;
         while ($current !== null) {
-            if ($current->patient_email  == $email) { 
+            if ($current->patient_email  === $email) { 
                 return true; 
             }
             $current = $current->next;
@@ -204,20 +215,19 @@ class PatientLinkedList {
         return false; 
     }
 
+    // Finds a patient by their email address
     public function PatientEmailExists($email) {
         $current = $this->head;
         while ($current !== null) {
-            if ($current->item->patient_email === $email) { // Access the Patient object through the `item` property
-                return $current->item; // Return the Patient object
+            if ($current->patient_email === $email) { 
+                return $current; 
             }
             $current = $current->next;
         }
-        return null; // Return null instead of false
+        return false; 
     }
     
-    
-    
-
+    // Checks if a student exists by their ID number
     public function StudentExists($id) {
         $current = $this->head;
         while ($current !== null) {
@@ -229,6 +239,7 @@ class PatientLinkedList {
         return false; 
     }
 
+    // Checks if a faculty exists by their ID number
     public function FacultyExists($id) {
         $current = $this->head;
         while ($current !== null) {
@@ -240,6 +251,7 @@ class PatientLinkedList {
         return false; 
     }
 
+    // Checks if a staff exists by their ID number
     public function StaffExists($id) {
         $current = $this->head;
         while ($current !== null) {
@@ -251,6 +263,7 @@ class PatientLinkedList {
         return false; 
     }
 
+    // Checks if an extension exists by their ID number
     public function ExtensionExists($id) {
         $current = $this->head;
         while ($current !== null) {
@@ -261,9 +274,8 @@ class PatientLinkedList {
         }
         return false; 
     }
-
 }
-
+// PatientManager class to manage patients and related entities like students, faculties, staffs,extensions, address, and emergency contact.
 class PatientManager{
     private $db;
     private $patients;
@@ -274,7 +286,7 @@ class PatientManager{
     private $addresses;
     private $emergencycon;
 
-
+    // Constructor to initialize database connection and load all patient-related data into memory
     public function __construct($db) {
         $this->db = $db; 
         $this->patients = new PatientLinkedList();
@@ -284,6 +296,7 @@ class PatientManager{
         $this->extensions = new PatientLinkedList();
         $this->addresses = new PatientLinkedList();
         $this->emergencycon = new PatientLinkedList();
+        // Load all patient-related data from the database
         $this->loadPatients();
         $this->loadFaculties();
         $this->loadStaff();
@@ -293,6 +306,7 @@ class PatientManager{
         $this->loadAddresses();
     }
  
+        // Loads patient data from the database and adds it to the linked list of patients
     private function loadPatients() {
         $sql = "SELECT * FROM patients"; // Adjust the SQL as needed
         $stmt = $this->db->query($sql); // Prepare the SQL query
@@ -308,11 +322,13 @@ class PatientManager{
             $this->patients->add($patient); 
         }
     }
-    
-
+        
+    // Loads student data from the database and adds it to the linked list of students
     private function loadStudents() {
         $sql = "SELECT * FROM patstudents";
         $stmt = $this->db->query($sql);
+
+        // Iterate through the result set and create Student objects
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $student = new Student(
                 $row['student_id'], $row['student_idnum'], $row['student_patientid'], 
@@ -323,9 +339,11 @@ class PatientManager{
         }
     }
 
+    // Loads faculty data from the database and adds it to the linked list of faculties
     private function loadFaculties() {
         $sql = "SELECT * FROM patfaculties";
         $stmt = $this->db->query($sql);
+        // Iterate through the result set and create Faculty objects
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $faculty = new Faculty(
                 $row['faculty_id'], $row['faculty_patientid'], $row['faculty_idnum'], 
@@ -335,9 +353,11 @@ class PatientManager{
         }
     }
 
+    // Loads staff data from the database and adds it to the linked list of staff members
     private function loadStaff() {
         $sql = "SELECT * FROM patstaffs";
         $stmt = $this->db->query($sql);
+        // Iterate through the result set and create Staff objects
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $staff = new Staff(
                 $row['staff_id'], $row['staff_patientid'], $row['staff_idnum'], 
@@ -347,9 +367,11 @@ class PatientManager{
         }
     }
 
+    // Loads extension data from the database and adds it to the linked list of extensions
     private function loadExtensions() {
         $sql = "SELECT * FROM patextensions";
         $stmt = $this->db->query($sql);
+        // Iterate through the result set and create Extension objects
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $extension = new Extension(
                 $row['exten_id'], $row['exten_patientid'], $row['exten_idnum'], 
@@ -358,10 +380,12 @@ class PatientManager{
             $this->extensions->add($extension);
         }
     }
-    
+
+    // Loads address data from the database and adds it to the linked list of addresses
     private function loadAddresses() {
         $sql = "SELECT * FROM pataddresses";
         $stmt = $this->db->query($sql);
+        // Iterate through the result set and create Address objects
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $address = new Address(
                 $row['address_id'], $row['address_patientid'], $row['address_region'], 
@@ -371,10 +395,12 @@ class PatientManager{
             $this->addresses->add($address);
         }
     }
-    
+
+    // Loads emergency contact data from the database and adds it to the linked list of emergency contacts
     private function loadEmergencyContacts() {
         $sql = "SELECT * FROM patemergencycontacts";
         $stmt = $this->db->query($sql);
+        // Iterate through the result set and create EmergencyContact objects
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $emergencyContact = new EmergencyContact(
                 $row['emcon_contactid'], $row['emcon_patientid'], $row['emcon_conname'], 
@@ -383,7 +409,7 @@ class PatientManager{
             $this->emergencycon->add($emergencyContact);
         }
     }
-
+    // Checks if a user exists with the given email and password, and returns the corresponding Patient object if valid
     public function userpatientExists($email, $password) {
         $sql = "SELECT * FROM patients WHERE patient_email = :email";
         $stmt = $this->db->prepare($sql);
@@ -392,6 +418,7 @@ class PatientManager{
     
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
+        // Verify the password and return the patient data if valid
         if ($row && password_verify($password, $row['patient_password'])) {
             return new Patient(
                 $row['patient_id'], $row['patient_lname'], $row['patient_fname'], 
@@ -402,9 +429,11 @@ class PatientManager{
             );
         }
     
-        return false;
+        return false; // Return false if no valid user found
     }
 
+
+    // Retrieves a patient's data by their patient ID and returns a Patient object
     public function getPatientData($patient_id) {
         $sql = "SELECT * FROM patients WHERE patient_id = :patientid";
         $stmt = $this->db->prepare($sql);
@@ -413,6 +442,7 @@ class PatientManager{
     
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
+        // Return a Patient object with the retrieved data
         if ($row) {
             return new Patient(
                 $row['patient_id'], $row['patient_lname'], $row['patient_fname'], 
@@ -423,12 +453,13 @@ class PatientManager{
             );
         }
     
-        return false;
+        return false;  // Return false if no patient found with the given ID
     }
     
 
     
 
+    // Insert a new patient into the database and handle various patient-related operations.
     public function insertPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code) {
         try {
             // Set admin ID for logging
@@ -438,8 +469,8 @@ class PatientManager{
             $setStmt->execute();
     
             // Check if the patient already exists
-            if ($this->patients->PatientEmailExists($email)) {
-                return ['status' => 'error', 'message' => 'Patient email already exists.'];
+            if ($this->patients->patientExists($email)) {
+                return ['status' => 'error', 'message' => 'Patient already exists.'];
             }
     
             // Insert the patient
@@ -448,6 +479,7 @@ class PatientManager{
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $this->db->prepare($sql);
     
+            // Define the parameters to insert the patient
             $params = [
                 $lname, 
                 $fname, 
@@ -464,6 +496,7 @@ class PatientManager{
                 $code
             ];
     
+            // Execute the SQL query
             $stmt->execute($params);
     
             // Get the inserted patient ID
@@ -473,9 +506,11 @@ class PatientManager{
             $patient = new Patient($patient_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code);
             $this->patients->add($patient);
     
+            // Return success status with patient ID
             return ['status' => 'success', 'message' => 'Patient inserted successfully.', 'patient_id' => $patient_id];
     
         } catch (PDOException $e) {
+            // Log the error and return failure status with error details
             error_log("Error inserting patient: " . $e->getMessage());
     
             return [
@@ -491,45 +526,58 @@ class PatientManager{
     
     
     
+    // Insert a new student associated with a patient into the database.
     public function insertStudent($idnum, $patientid, $program, $major, $year, $section) {
-        if ($this->students->PatientEmailExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Student ID Number already exists.'];
+        // Check if the student already exists by their ID number
+        if ($this->students->studentExists($idnum)) {
+            return ['status' => 'error', 'message' => 'Student already exists.'];
         }
     
+        // SQL query to insert student data
         $sql = "INSERT INTO patstudents (student_idnum, student_patientid, student_program, student_major, student_year, student_section)
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Execute the SQL query with student data
             $stmt->execute([$idnum, $patientid, $program === '' ? null : $program, $major === '' ? null : $major, $year === '' ? null : $year, $section === '' ? null : $section]);
+            
+            // Get the inserted student ID
             $student_id = $this->db->lastInsertId();
             return ['status' => 'success', 'message' => 'Student inserted successfully.', 'student_id' => $student_id];
     
         } catch (PDOException $e) {
+            // Log the error and return failure status with error message
             error_log("Error inserting student: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Error inserting student. Please try again later.'];
         }
     }
     
     
+    // Insert a new faculty associated with a patient into the database.
     public function insertFaculty($patientid, $idnum, $college, $depart, $role) {    
+        // Check if the faculty already exists by their ID number
         if ($this->faculties->facultyExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Faculty ID Number already exists.'];
+            return ['status' => 'error', 'message' => 'Faculty already exists.'];
         }
     
+        // SQL query to insert faculty data
         $sql = "INSERT INTO patfaculties (faculty_patientid, faculty_idnum, faculty_college, faculty_depart, faculty_role)
                 VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Execute the SQL query with faculty data
             $stmt->execute([$patientid, $idnum, $college, $depart, $role]);
             $faculty_id = $this->db->lastInsertId();
         
+            // Get the inserted faculty ID
             return [
                 'status' => 'success', 
                 'message' => 'Faculty inserted successfully. Faculty ID: ' . $faculty_id 
             ];
         } catch (PDOException $e) {
+            // Log the error and return failure status with error details
             $errorMessage = "Error inserting faculty: " . $e->getMessage();
             echo $errorMessage . "<br>";
             return [
@@ -540,56 +588,77 @@ class PatientManager{
     }
     
     
+    // Insert a new staff associated with a patient into the database.
     public function insertStaff($patientid, $idnum, $office, $role) {
+        // Check if the staff already exists by their ID number
         if ($this->staffs->staffExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Staff ID Number already exists.'];
+            return ['status' => 'error', 'message' => 'Staff already exists.'];
         }
     
+        // SQL query to insert staff data
         $sql = "INSERT INTO patstaffs (staff_patientid, staff_idnum, staff_office, staff_role)
                 VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         
         try {
+            // Execute the SQL query with staff data
             $stmt->execute([$patientid, $idnum, $office, $role]);
+
+            // Get the inserted staff ID
             $staff_id = $this->db->lastInsertId();
+
+            // Add the new staff member to the linked list
             $staff = new Staff($staff_id, $patientid, $idnum, $office, $role);
             $this->staffs->add($staff);
             return ['status' => 'success', 'message' => 'Staff inserted successfully.', 'staff_id' => $staff_id];
 
         } catch (PDOException $e) {
+            // Log the error and return failure status with error message
             error_log("Error inserting staff: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Error inserting staff. Please try again later.'];
 
         }
     }
     
+    // Insert a new extension associated with a patient into the database.
     public function insertExtension($idnum, $patientid, $role) {
+        // Check if the extension already exists by their ID number
         if ($this->extensions->ExtensionExists($idnum)) {
-            return ['status' => 'error', 'message' => 'Extension ID Number already exists.'];
+            return ['status' => 'error', 'message' => 'Extension already exists.'];
         }
     
+        // SQL query to insert extension data
         $insertSql = "INSERT INTO patextensions (exten_patientid, exten_idnum, exten_role)
                       VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($insertSql);
         
         try {
+            // Execute the SQL query with extension data
             $stmt->execute([$patientid, $idnum,  $role]);
+
+            // Get the inserted extension ID
             $extension_id = $this->db->lastInsertId();
+
+            // Add the new extension to the linked list
             $extension = new Extension($extension_id, $patientid, $idnum, $role);
             $this->extensions->add($extension); 
             return ['status' => 'success', 'message' => 'Extension inserted successfully.', 'staff_id' => $extension_id];
         } catch (PDOException $e) {
+            // Log the error and return failure status with error message
             error_log("Error inserting staff: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Error inserting extension. Please try again later.'];
         }
     }
     
+    // Insert a new address associated with a patient into the database.
     public function insertAddress($patientid, $region, $province, $municipality, $barangay, $prkstrtadd) {
+        // SQL query to insert address data
         $sql = "INSERT INTO pataddresses (address_patientid, address_region, address_province, address_municipality, address_barangay, address_prkstrtadd)
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Execute the query and retrieve the last inserted address ID
             $stmt->execute([$patientid, $region, $province, $municipality, $barangay, $prkstrtadd]);
             $address_id = $this->db->lastInsertId();
             return ['status' => 'success', 'message' => 'Address inserted successfully.', 'address_id' => $address_id];
@@ -600,13 +669,14 @@ class PatientManager{
         }
     }
     
-    
+    // Insert a new emergency contact associated with a patient into the database.
     public function insertEmergencyContact($patientid, $conname, $relationship, $emergency_connum) {
         $sql = "INSERT INTO patemergencycontacts (emcon_patientid, emcon_conname, emcon_relationship, emcon_connum)
                 VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Execute the query and retrieve the last inserted emergency contact ID
             $stmt->execute([$patientid, $conname, $relationship, $emergency_connum]);
             $contact_id = $this->db->lastInsertId();
             return ['status' => 'success', 'message' => 'Emergency contact inserted successfully.', 'contact_id' => $contact_id];
@@ -616,8 +686,9 @@ class PatientManager{
             return ['status' => 'error', 'message' => 'Error inserting emergency contact. Please try again later.'];
         }
     }
-    
+     // Add a new student patient and associate them with additional information like program, major, and address.
     public function addStudentPatient($admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, $password, $status, $code, $idnum, $program, $major, $year, $section, $region, $province, $municipality, $barangay, $prkstrtadd, $conname, $relationship, $emergency_connum) {
+       //Checl first if student exists
         if ($this->students->studentExists($idnum)) {
             return ['status' => 'error', 'message' => 'Student ID Number already exists.'];
         }
@@ -628,24 +699,28 @@ class PatientManager{
             return $insertPatientResponse; 
         }
         
+        // Get patient ID from the inserted patient record
         $patientid = $insertPatientResponse['patient_id']; 
     
+        // Insert student-specific information
         $insertStudentResponse = $this->insertStudent($idnum, $patientid, $program, $major, $year, $section);
         if ($insertStudentResponse['status'] !== 'success') {
             return $insertStudentResponse; 
         }
     
+        // Insert address information for the patient
         $insertAddressResponse = $this->insertAddress($patientid, $region, $province, $municipality, $barangay, $prkstrtadd);
         if ($insertAddressResponse['status'] !== 'success') {
             return $insertAddressResponse; 
         }
     
+        // Insert emergency contact information for the patient
         $insertEmergencyContactResponse = $this->insertEmergencyContact($patientid, $conname, $relationship, $emergency_connum);
         if ($insertEmergencyContactResponse['status'] !== 'success') {
             return $insertEmergencyContactResponse; 
         }
     
-       
+       // Return a success message with IDs of associated records
         return [
             'status' => 'success',
             'message' => 'Student patient added successfully.',
@@ -656,6 +731,7 @@ class PatientManager{
         ];
     }
     
+    // Add a new faculty patient and associate them with faculty-specific information, address, and emergency contact.
     public function addFacultyPatient(
         $admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, 
         $password, $status, $code, $idnum, $college, $depart, $role,
@@ -663,6 +739,7 @@ class PatientManager{
         $relationship, $emergency_connum
     ) {
 
+        //Check first if the faculty exist
         if ($this->faculties->facultyExists($idnum)) {
             return ['status' => 'error', 'message' => 'Faculty ID Number already exists.'];
         }
@@ -673,25 +750,28 @@ class PatientManager{
         if ($insertPatientResponse['status'] !== 'success') {
             return $insertPatientResponse; 
         }
-        
+        // Get patient ID from the inserted patient record
         $patientid = $insertPatientResponse['patient_id']; 
 
-      
+        // Insert faculty-specific information
         $insertFacultyResponse = $this->insertFaculty($patientid, $idnum, $college, $depart, $role);
         if ($insertFacultyResponse['status'] !== 'success') {
             return $insertFacultyResponse; 
         }
 
+        // Insert address information for the patient
         $insertAddressResponse = $this->insertAddress($patientid, $region, $province, $municipality, $barangay, $prkstrtadd);
         if ($insertAddressResponse['status'] !== 'success') {
             return $insertAddressResponse; 
         }
 
+        // Insert emergency contact information for the patient
         $insertEmergencyContactResponse = $this->insertEmergencyContact($patientid, $conname, $relationship, $emergency_connum);
         if ($insertEmergencyContactResponse['status'] !== 'success') {
             return $insertEmergencyContactResponse; 
         }
 
+        // Return a success message with IDs of associated records
         return [
             'status' => 'success',
             'message' => 'Faculty patient added successfully.',
@@ -702,6 +782,7 @@ class PatientManager{
         ];
     }
 
+    //Same logic in inserting faculty and student
     public function addStaffPatient(
         $admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, 
         $password, $status, $code, $idnum, $office, $role,
@@ -745,6 +826,7 @@ class PatientManager{
         ];
     }
 
+    //Same logic in inserting faculty and student
     public function addExtenPatient(
         $admin_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $profile, $type, $dateadded, 
         $password, $status, $code, $idnum, $role,
@@ -788,6 +870,8 @@ class PatientManager{
     
     }
 
+
+    //Start - This section used for forgot password 
     public function emailVerify($email) {
         return $this->patients->PatientEmailExists($email) !== null;
     } 
@@ -834,8 +918,10 @@ class PatientManager{
             return false;
         }
     }
+    //End Section
 
 
+    // Method to update an existing patient's basic information
     public function updatePatient($admin_id, $patient_id, $lname, $fname, $mname, $dob, $email, $connum, $sex, $newPassword, $status) {
         try {
             // Set admin ID for logging
@@ -866,9 +952,10 @@ class PatientManager{
             ];
     
             $stmt->execute($params);
-    
+            
+            // Return success if the update is successful
             return ['status' => 'success', 'message' => 'Patient updated successfully.'];
-    
+        // Catch any errors and log them
         } catch (PDOException $e) {
             error_log("Error updating patient: " . $e->getMessage());
             return [
@@ -878,7 +965,7 @@ class PatientManager{
         }
     }
     
-    
+        // Method to update student-specific data
     public function updateStudent($patientid, $idnum, $program, $major, $year, $section) {
         $sql = "UPDATE patstudents 
                 SET student_idnum = ?, student_program = ?, student_major = ?, student_year = ?, student_section = ?
@@ -902,6 +989,7 @@ class PatientManager{
         }
     }
 
+    // Method to update faculty-specific data
     public function updateFaculty($patientid, $idnum, $college, $depart, $role) {    
         $sql = "UPDATE patfaculties 
                 SET faculty_idnum = ?, faculty_college = ?, faculty_depart = ?, faculty_role = ?
@@ -909,6 +997,7 @@ class PatientManager{
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Update faculty-specific data
             $stmt->execute([$idnum, $college, $depart, $role, $patientid]);
     
             return [
@@ -916,6 +1005,7 @@ class PatientManager{
                 'message' => 'Faculty updated successfully.'
             ];
         } catch (PDOException $e) {
+            // Log any errors and return failure message
             error_log("Error updating faculty: " . $e->getMessage());
             return [
                 'status' => 'error', 
@@ -924,6 +1014,7 @@ class PatientManager{
         }
     }
 
+    // Method to update staff-specific data
     public function updateStaff($patientid, $idnum, $office, $role) {
         $sql = "UPDATE patstaffs 
                 SET staff_idnum = ?, staff_office = ?, staff_role = ?
@@ -931,15 +1022,17 @@ class PatientManager{
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Update staff-specific data
             $stmt->execute([$idnum, $office, $role, $patientid]);
             return ['status' => 'success', 'message' => 'Staff updated successfully.'];
-    
+            // Log any errors and return failure message
         } catch (PDOException $e) {
             error_log("Error updating staff: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Error updating staff. Please try again later.'];
         }
     }
 
+    // Method to update extension-specific data
     public function updateExtension($patientid, $idnum, $role) {
         $sql = "UPDATE patextensions 
                 SET exten_idnum = ?, exten_role = ?
@@ -947,14 +1040,17 @@ class PatientManager{
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Update extension-specific data
             $stmt->execute([$idnum, $role, $patientid]);
             return ['status' => 'success', 'message' => 'Extension updated successfully.'];
         } catch (PDOException $e) {
+            // Log any errors and return failure message
             error_log("Error updating extension: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Error updating extension. Please try again later.'];
         }
     }
 
+        // Method to update address information
     public function updateAddress($patientid, $region, $province, $municipality, $barangay, $prkstrtadd) {
         $sql = "UPDATE pataddresses 
                 SET address_region = ?, address_province = ?, address_municipality = ?, address_barangay = ?, address_prkstrtadd = ?
@@ -962,15 +1058,19 @@ class PatientManager{
         $stmt = $this->db->prepare($sql);
     
         try {
+            // Update address information
             $stmt->execute([$region, $province, $municipality, $barangay, $prkstrtadd, $patientid]);
             return ['status' => 'success', 'message' => 'Address updated successfully.'];
     
-        } catch (PDOException $e) {
+        } catch (PDOException $e) {            // Log any errors and return failure message
+
             error_log("Error updating address: " . $e->getMessage());
             return ['status' => 'error', 'message' => 'Error updating address. Please try again later.'];
         }
     }
 
+    
+    // Method to update emergency contact information
     public function updateEmergencyContact($patientid, $conname, $relationship, $emergency_connum) {
         $sql = "UPDATE patemergencycontacts 
                 SET emcon_conname = ?, emcon_relationship = ?, emcon_connum = ?
@@ -1014,7 +1114,7 @@ class PatientManager{
         }
     }
     
-
+    //Update the details of a student patient.
     public function updateStudentPatient(
         $admin_id, $patientId, $lname, $fname, $mname, $dob, $email, $connum, $sex,   
         $password, $status, $idnum, $program, $major, $year, $section, 
@@ -1052,6 +1152,7 @@ class PatientManager{
         ];
     }
     
+    //Update the details of a faculty patient.
     public function updateFacultyPatient(
         $admin_id, $patientId, $lname, $fname, $mname, $dob, $email, $connum, $sex, 
         $password, $status, $idnum, $college, $depart, $role,
@@ -1089,6 +1190,7 @@ class PatientManager{
         ];
     }
     
+     //Update the details of a staff patient.
     public function updateStaffPatient(
         $admin_id,  $patientId, $lname, $fname, $mname, $dob, $email, $connum, $sex,
         $password, $status, $idnum, $office, $role,
@@ -1125,7 +1227,7 @@ class PatientManager{
             'contact_id' => $updateEmergencyContactResponse['contact_id']
         ];
     }
-    
+        //Update the details of an extension patient.
     public function updateExtenPatient(
         $admin_id,  $patientId, $lname, $fname, $mname, $dob, $email, $connum, $sex,
         $password, $status, $idnum, $role,
@@ -1165,34 +1267,42 @@ class PatientManager{
     
 
     
+    //Retrieve all patients.
     public function getAllPatients() {
         return $this->patients->getAllNodes();
     }
 
+    //Retrieve all students.
     public function getAllStudents() {
         return $this->students->getAllNodes();
     }
     
+    //Retrieve all faculty members.
     public function getAllFaculties() {
         return $this->faculties->getAllNodes();
     }
 
+    //Retrieve all staff members.
     public function getAllStaffs() {
         return $this->staffs->getAllNodes();
     }
 
+    //Retrieve all extensions.
     public function getAllExtensions() {
         return $this->extensions->getAllNodes();
     }
 
+    //Retrieve all addresses.
     public function getAllAddresses() {
         return $this->addresses->getAllNodes();
     }
 
+    //Retrieve all emergency contacts.
     public function getAllEmergencyCon() {
         return $this->emergencycon->getAllNodes();
     }
 
+    //Retrieve all patients and their information in a tabular format.
     public function getAllPatientsTable() {
         $patients = $this->patients->getAllNodes();
         $students = $this->students->getAllNodes();
@@ -1202,6 +1312,7 @@ class PatientManager{
     
         $combinedData = [];
     
+        // Helper function to combine data for a specific patient type
         $combineRows = function($personType, $dataArray) use (&$combinedData) {
             foreach ($dataArray as $entry) {
                 if (isset($entry->patient_id, $entry->patient_lname, $entry->patient_fname, $entry->patient_email, $entry->patient_sex, $entry->patient_status)) {
@@ -1210,6 +1321,7 @@ class PatientManager{
                     $idnumField = strtolower($personType) . '_idnum';
                     $idnum = property_exists($entry, $idnumField) ? $entry->$idnumField : null;
     
+                    // Create a unified entry format
                     $combinedEntry = (object) [
                         'id' => $entry->patient_id,
                         'name' => $entry->patient_lname . ' ' . $entry->patient_fname,
@@ -1227,7 +1339,7 @@ class PatientManager{
             }
         };
     
-        // Combine each type of data
+        // Combine data for each type of patient
         $combineRows('Patient', $patients);
         $combineRows('Student', $students);
         $combineRows('Faculty', $faculties);
@@ -1239,7 +1351,10 @@ class PatientManager{
     
     
     
-  
+
+  //The Remaining code used for viewing patient's profile
+  //The age is calculated by using stored function in the database
+  //Retrieve detailed information for a student patient.
     public function getStudentData($patient_id) {
         $query = "
             SELECT 
@@ -1298,11 +1413,11 @@ class PatientManager{
                 'emcon_relationship' => $data['emcon_relationship'],
                 'emcon_connum' => $data['emcon_connum']
             ],
-            'age' => $data['patient_age']  // The age will now be included in the response
+            'age' => $data['patient_age']  
         ];
     }
     
-
+//Retrieve detailed information for a faculty patient.
 public function getFacultyData($patient_id) {
     $query = "
         SELECT 
@@ -1363,6 +1478,7 @@ public function getFacultyData($patient_id) {
     ];
 }
 
+//Retrieve detailed information for a staff patient.
 public function getStaffData($patient_id) {
     $query = "
         SELECT 
@@ -1421,6 +1537,7 @@ public function getStaffData($patient_id) {
     ];
 }
 
+//Retrieve detailed information for an extension worker patient.
 public function getExtensionData($patient_id) {
     $query = "
         SELECT 

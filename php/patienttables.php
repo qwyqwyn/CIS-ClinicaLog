@@ -1,4 +1,5 @@
 <?php
+// Represents a patient in the All Patients table
 class AllPatTable {
     public $id;
     public $full_name;
@@ -9,6 +10,7 @@ class AllPatTable {
     public $sex; 
     public $type;
 
+        // Constructor to initialize AllPatTable object
     public function __construct($patient_id, $full_name, $all_email, 
                                 $all_profile, $all_status, $all_idnum,
                                  $all_sex, $patient_type) { 
@@ -22,7 +24,7 @@ class AllPatTable {
         $this->type = $patient_type; 
     }
 }
-
+// Represents a patient in the Student table
 class StudentTable {
     public $patient_id;
     public $full_name;
@@ -36,7 +38,7 @@ class StudentTable {
     public $student_section;
     public $student_sex; 
     public $patient_type;
-
+    // Constructor to initialize StudentTable object
     public function __construct($patient_id, $full_name, $student_email, 
                                 $student_profile, $student_status, $student_idnum, 
                                 $student_program, $student_major, $student_year, 
@@ -56,6 +58,7 @@ class StudentTable {
     }
 }
 
+// Represents a patient in the Faculty table
 class FacultyTable {
     public $patient_id;
     public $full_name;
@@ -68,6 +71,8 @@ class FacultyTable {
     public $faculty_role;
     public $faculty_sex; 
     public $patient_type;
+
+        // Constructor to initialize FacultyTable object
 
     public function __construct($patient_id, $full_name, $faculty_email, 
                                 $faculty_profile, $faculty_status, $faculty_idnum, 
@@ -86,6 +91,8 @@ class FacultyTable {
         $this->patient_type = $patient_type; 
     }
 }
+
+// Represents a patient in the Staff table
 
 class StaffTable {
     public $patient_id;
@@ -115,6 +122,7 @@ class StaffTable {
     }
 }
 
+// Represents a patient in the Extension table
 class ExtenTable {
     public $patient_id;
     public $full_name;
@@ -141,24 +149,28 @@ class ExtenTable {
     }
 }
 
-
+// Represents a node in a linked list
 class PatNode {
     public $item;
     public $next;
 
+    // Constructor to initialize a node with an item
     public function __construct($item) {
         $this->item = $item;
         $this->next = null;
     }
 }
 
+// Represents a linked list of patients
 class PatLinkedList {
     public $head;
 
+    // Constructor to initialize an empty linked list
     public function __construct() {
         $this->head = null;
     }
 
+    // Adds a new item to the linked list
     public function add($item) {
         $newNode = new PatNode($item);
         if ($this->head === null) {
@@ -172,17 +184,20 @@ class PatLinkedList {
         }
     }
 
+    // Retrieves all items from the linked list
     public function getAllNodes() {
         $nodes = [];
         $current = $this->head;
         while ($current !== null) {
             $nodes[] = $current->item;
             $current = $current->next;
+            $current = $current->next;
         }
         return $nodes;
     }
 }
 
+// Class to manage patient tables by type and load data into respective linked lists
 class PatientTablesbyType {
     private $db;
     private $allpat;
@@ -193,7 +208,7 @@ class PatientTablesbyType {
 
 
 
-
+    // Constructor initializes the database and loads data for all tables
     public function __construct($db) {
         $this->db = $db;
         $this->allpat= new PatLinkedList();
@@ -209,6 +224,7 @@ class PatientTablesbyType {
 
     }
 
+     // Loads all patients from the database and populates the allpat linked list
     public function loadAllTable() {
         $stmt = $this->db->prepare("SELECT 
                             p.patient_id AS patient_id,
@@ -243,6 +259,7 @@ class PatientTablesbyType {
         }
     }
 
+    // Loads all student records and populates the students linked list
     public function loadStudentTable() {
         $stmt = $this->db->prepare("SELECT p.patient_id, 
                                            get_patient_full_name(p.patient_id) AS full_name, 
@@ -275,6 +292,7 @@ class PatientTablesbyType {
     }
     
 
+    // Loads all faculty records and populates the faculties linked list
     public function loadFacultyTable() {
         $stmt = $this->db->prepare("SELECT p.patient_id, get_patient_full_name(p.patient_id) AS full_name,
                                     p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, pf.faculty_idnum, 
@@ -303,6 +321,7 @@ class PatientTablesbyType {
     }
 
     
+    // Loads all staff records and populates the staffs linked list
     public function loadStaffTable() {
         $stmt = $this->db->prepare("SELECT p.patient_id, get_patient_full_name(p.patient_id) AS full_name,
                                     p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, ps.staff_idnum, 
@@ -329,6 +348,7 @@ class PatientTablesbyType {
         }
     }
 
+        // Loads all extension records and populates the extens linked list
     public function loadExtensionsTable() {
         $stmt = $this->db->prepare("SELECT p.patient_id, get_patient_full_name(p.patient_id) AS full_name,
                                     p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, pe.exten_idnum, 
@@ -354,22 +374,27 @@ class PatientTablesbyType {
         }
     }
 
+    // Returns all patient data
     public function getAllTable() {
         return $this->allpat->getAllNodes();
     }
 
+    // Returns all student data
     public function getAllStudents() {
         return $this->students->getAllNodes();
     }
 
+    // Returns all faculty data
     public function getAllFaculties() {
         return $this->faculties->getAllNodes(); 
     }
 
+    // Returns all staff data
     public function getAllStaffs() {
         return $this->staffs->getAllNodes();
     }
 
+    // Returns all extension data
     public function getAllExtensions() {
         return $this->extens->getAllNodes();
     }

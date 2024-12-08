@@ -69,9 +69,7 @@ if ($patient_type === 'Student') {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pQnI6Z1ypA1QPTDdTnYkkpN0sE+0ZK3SAs+69IXS7SgSR/RG6upgjB8cSBaHh0FYv3cwUqq3Kv1BrV3iwGsnZw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    .profile-image {
-      
-    }
+ 
 
     .profile-image img {
       border-radius: 50%;

@@ -1,4 +1,5 @@
 <?php
+// Class representing an off-campus medical issuance record
 class OffCampus {
     public $offcampus_id;
     public $offcampus_medstockid;
@@ -6,6 +7,7 @@ class OffCampus {
     public $offcampus_medqty;
     public $offcampus_date;
 
+    // Constructor to initialize an OffCampus object
     public function __construct($id, $medstockid, $medstockname, $medqty, $date) {
         $this->offcampus_id = $id;
         $this->offcampus_medstockid = $medstockid;
@@ -15,23 +17,28 @@ class OffCampus {
     }
 }
 
+// Class representing a node in the linked list
 class LinkedListNode {
     public $data;
     public $next;
 
+    // Constructor to initialize a linked list node
     public function __construct($data) {
         $this->data = $data;
         $this->next = null;
     }
 }
  
+// Class managing a linked list of off-campus records
 class OffCampusLinked {
     private $head;
 
+    // Constructor to initialize an empty linked list
     public function __construct() {
         $this->head = null;
     }
 
+    // Add a new node to the linked list
     public function add($data) {
         $newNode = new LinkedListNode($data);
         if ($this->head === null) {
@@ -45,6 +52,7 @@ class OffCampusLinked {
         }
     }
 
+    // Retrieve all data from the linked list as an array
     public function getAll() {
         $dataArray = [];
         $current = $this->head;
@@ -56,16 +64,19 @@ class OffCampusLinked {
     }
 }
 
+// Class managing off-campus records, including database operations
 class OffCampusManager {
     private $db;
     public $offcampusRecords;
 
+    // Constructor to initialize the manager with a database connection
     public function __construct($db) {
         $this->db = $db;
         $this->offcampusRecords = new OffCampusLinked();
         $this->loadOffCampusData();
     }
 
+    // Retrieve all off-campus records as an array with selected fields
     public function getAllOffCampusData() {
         $allRecords = $this->offcampusRecords->getAll();
     
@@ -84,7 +95,7 @@ class OffCampusManager {
         return $filteredRecords;
     }
     
-
+    // Load off-campus records from the database and store them in the linked list
     private function loadOffCampusData() {
         $sql = "SELECT mi.mi_id, mi.mi_medstockid, m.medicine_name, mi.mi_medqty, mi.mi_date
                 FROM medissued mi
@@ -97,7 +108,7 @@ class OffCampusManager {
                 $row['mi_id'],
                 $row['mi_medstockid'],
                 $row['medicine_name'],
-                $row['mi_medqty'], 
+                $row['mi_medqty'],
                 $row['mi_date']
             );
 
@@ -105,8 +116,9 @@ class OffCampusManager {
         }
     }
 
-
+    // Insert a new off-campus record into the database
     public function insertOffCampusRecord($admin_id, $medstockid, $medqty, $date) {
+        //If you see this code to other function, this used for triggers parameter
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
         $setStmt->bindValue(':admin_id', $admin_id);
@@ -123,7 +135,7 @@ class OffCampusManager {
                     'id' => $this->db->lastInsertId() 
                 ];
             }
-        } catch (PDOException $e) {
+        } catch (PDOException $e) { // Handle database errors
             error_log("Error inserting record: " . $e->getMessage());
             return [
                 'status' => 'error',
@@ -137,7 +149,9 @@ class OffCampusManager {
         ];
     }
 
+    // Update an existing off-campus record in the database
     public function updateOffCampusRecord($admin_id, $id, $medstockid, $medqty, $date) {
+        //If you see this code to other function, this used for triggers parameter
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
         $setStmt->bindValue(':admin_id', $admin_id);
@@ -167,7 +181,9 @@ class OffCampusManager {
         ];
     }
 
+    // Delete an off-campus record from the database
     public function deleteOffCampusRecord($admin_id, $id) {
+        //If you see this code to other function, this used for triggers parameter
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
         $setStmt->bindValue(':admin_id', $admin_id);

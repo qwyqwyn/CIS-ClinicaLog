@@ -1,9 +1,11 @@
 <?php
+// Set the content type to JSON for API responses and enable error reporting for debugging
 session_start();
 header('Content-Type: application/json');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Include necessary files for database and business logic
 include('../database/config.php');
 include('../php/user.php');
 include('../php/medicine.php');
@@ -14,12 +16,15 @@ include('../php/patient.php');
 @include('../php/patient-extensionprofile.php');
 include('../php/consultation.php');
 
+// Initialize the database connection and required managers
 $db = new Database();
 $conn = $db->getConnection();
 $consultationManager = new ConsultationManager($conn); 
 $medicineManager = new MedicineManager($conn); 
+// Parse JSON input data for API calls
 $data = json_decode(file_get_contents('php://input'), true);
 
+// Check if the request is a POST request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['addcon'])) {
         $patient_idnum = $_POST['selected_patient_id'] ?? null;
@@ -29,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $consult_date = date('Y-m-d'); 
         $adminId = $_POST['admin_id'];
 
-    
+            // Ensure required fields are provided
         if (!$patient_idnum || !$diagnosis) {
             $_SESSION['status'] = 'error'; 
             $_SESSION['message'] = "Missing required fields.";
@@ -37,9 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
     
+                // Validate medicine ID and quantity
         $medstock_id = $_POST['selected_medicine_id'] ?? null;
         $treatment_medqty = isset($_POST['presmedqty']) ? (int)$_POST['presmedqty'] : null;
     
+                // Insert the consultation into the database
         if ($medstock_id && $treatment_medqty) {
             $availableQty = $consultationManager->getAvailableQuantity($medstock_id);
     
@@ -76,8 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: addconsultation.php');
         exit();
     }
+        // Handle editing an existing consultation
     
     if (isset($_POST['editcon'])) {
+                // Retrieve and validate input data for editing
         $consult_id = $_POST['edit_consult_id'] ?? null;
         $medstock_id = $_POST['edit_medicine_id'] ?? null;
         $edited_medqty = isset($_POST['edit_quantity']) ? (int)$_POST['edit_quantity'] : null;
@@ -90,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     
         error_log("Consult ID: $consult_id, Medicine ID: $medstock_id, Edited Quantity: $edited_medqty");
-    
+                // Ensure required fields are provided
         if (!$consult_id || !$medstock_id || !$edited_medqty || !$patient_idnum || !$diagnosis) {
             $_SESSION['status'] = 'error';
             $_SESSION['message'] = "Missing required fields.";
@@ -204,15 +213,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     
+        // Handle deleting a consultation
     if (isset($_POST['delete'])) {
         
-   
+        // Handle deletion of a consultation
         $consult_id = $_POST['edit_consult_id'] ?? null;
 
         if ($consult_id) {
             $deleteResult = $consultationManager->deleteConsultation($consult_id);
 
-
+            // Send JSON response
             echo json_encode([
                 'status' => $deleteResult['status'],
                 'message' => $deleteResult['message']
@@ -266,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["status" => "success"]);
         }
     
-        exit;  
+        exit;  // Ensure no further code is executed after the response
     }
     
     

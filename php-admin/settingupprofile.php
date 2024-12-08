@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if (move_uploaded_file($profile_tmp, $profile_destination)) {
 
-                $sql_update = "UPDATE adminusers SET user_profile = :profile_name WHERE user_idnum = :user_idnum";
+                $sql_update = "UPDATE adminusers SET user_profile = :user_profile WHERE user_idnum = :user_idnum";
                 $stmt = $conn->prepare($sql_update);
 
-                $stmt->bindValue(':profile_name', $profile_name, PDO::PARAM_STR);
-                $stmt->bindValue(':user_idnum', $user_idnum, PDO::PARAM_INT);
-
+                $stmt->bindValue(':user_profile', $profile_name, PDO::PARAM_STR);
+                $stmt->bindValue(':user_idnum', $user_idnum, PDO::PARAM_STR); // Ensure the binding type matches the database column
+ 
                 if ($stmt->execute()) {
                     $response['status'] = 'success';
                     $response['message'] = 'Profile updated successfully!';

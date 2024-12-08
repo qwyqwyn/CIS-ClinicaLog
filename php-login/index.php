@@ -31,13 +31,13 @@ if ($userData) {
 
     if ($userData->user_status === 'Active') {  
         if ($_SESSION['user_position'] === $defaultadmin) {
-            header('Location: ../php-admin/index.php');  
+            header('Location: ../php-superadmin/index.php');  
             exit;
         } elseif ($_SESSION['user_role'] === 'Super Admin') {
-            header('Location: ../php-admin/index.php'); 
+            header('Location: ../php-superadmin/index.php'); 
             exit;
         } elseif ($_SESSION['user_role'] === 'Admin') { 
-            header('Location: ../php-admin/adminindex.php');   
+            header('Location: ../php-admin/index.php');   
             exit;
         }
     } else {   
@@ -139,7 +139,7 @@ unset($_SESSION['error_message']);
                 <button id="loginbtn" type="submit">Login</button>
             </form>
         </div>
-    </div>
+    </div> 
     <script>
         document.getElementById('show-password').addEventListener('change', function() {
             const passwordField = document.getElementById('password');

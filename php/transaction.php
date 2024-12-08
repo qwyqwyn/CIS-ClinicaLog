@@ -1,4 +1,5 @@
 <?php
+// Represents a transaction with all its details
 class Transaction {
     public $transac_id;
     public $transac_patientid;
@@ -30,23 +31,28 @@ class Transaction {
     }
 }
 
+// Node structure for the linked list, holds a transaction
 class LinkedlistNode {
     public $transaction;
     public $next;
 
+    // Constructor to initialize a node with a transaction
     public function __construct($transaction) {
         $this->transaction = $transaction;
         $this->next = null;
     }
 }
 
+// Implements a linked list to store transactions
 class TransacLinked {
     private $head;
 
+    // Constructor initializes an empty linked list
     public function __construct() {
         $this->head = null;
     }
 
+    // Adds a transaction to the linked list
     public function addTransaction($transaction) {
         $newNode = new LinkedlistNode($transaction);
         if ($this->head === null) {
@@ -60,6 +66,7 @@ class TransacLinked {
         }
     }
 
+    // Returns all transactions in the linked list as an array
     public function getAllTransaction() {
         $dataArray = [];
         $current = $this->head;
@@ -70,6 +77,7 @@ class TransacLinked {
         return $dataArray;
     }
     
+    // Removes a transaction from the linked list by ID
     public function removeTransactionById($transac_id) {
         if ($this->head === null) {
             return;
@@ -88,16 +96,19 @@ class TransacLinked {
     }
 }
 
+// Manages transaction data and operations
 class TransacManager{
     private $db;
     private $transacList;
 
+    // Constructor initializes the manager and loads transactions
     public function __construct($db) {
         $this->db = $db;
         $this->transacList = new TransacLinked();
         $this->loadTransactions();
     }
 
+    // Loads all transactions from the database into the linked list
     public function loadTransactions() {
     $query = "
         SELECT 
@@ -167,25 +178,29 @@ class TransacManager{
     }
     
 
+    // Adds a new transaction to the database
     public function addTransaction($admin_id, $transac_patientid, $transac_purpose) {
-        $transac_in = '00:00:00';
-        $transac_out = '00:00:00';
-        $transac_spent = 0;
-        $transac_date = date('Y-m-d'); 
-        $transac_status = 'Pending';
-        
+        $transac_in = '00:00:00'; // Default value for transaction start time
+        $transac_out = '00:00:00'; // Default value for transaction end time
+        $transac_spent = 0; // Default value for time spent
+        $transac_date = date('Y-m-d'); // Sets the current date as transaction date
+        $transac_status = 'Pending'; // Initial status of the transaction
+
+        // Sets the admin ID for use in triggers or stored procedures
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
         $setStmt->bindValue(':admin_id', $admin_id);
         $setStmt->execute();
 
+        // Query to insert a new transaction
         $query = "
             INSERT INTO transactions (transac_patientid, transac_purpose, transac_date, transac_in, transac_out, transac_spent, transac_status) 
             VALUES (?, ?, ?, ?, ?, ?, ?);
         ";
-    
+
         $stmt = $this->db->prepare($query);
-    
+
+        // Bind values to the query placeholders
         $stmt->bindValue(1, $transac_patientid);
         $stmt->bindValue(2, $transac_purpose);
         $stmt->bindValue(3, $transac_date);
@@ -193,7 +208,8 @@ class TransacManager{
         $stmt->bindValue(5, $transac_out);
         $stmt->bindValue(6, $transac_spent);
         $stmt->bindValue(7, $transac_status);
-    
+
+        // Execute the query and return success or error response
         if ($stmt->execute()) {
             return [
                 'status' => 'success',
@@ -207,28 +223,28 @@ class TransacManager{
         }
     }
 
+    // Retrieves all transactions from the linked list
     public function getAllTransac() {
         $transac = $this->transacList->getAllTransaction();
-    
         return $transac;
     }
-    
-    // Method to update the status to "Pending"
+
+    // Updates the transaction status to "Pending"
     public function updateStatusToPending($admin_id, $transac_id) {
         return $this->updateTransactionStatusToPending($admin_id, $transac_id);
     }
-    
-    // Method to update the status to "In Progress"
+
+    // Updates the transaction status to "In Progress"
     public function updateStatusToInProgress($admin_id, $transac_id) {
         return $this->updateTransactionStatusToInProgress($admin_id, $transac_id);
     }
 
-    // Method to update the status to "Done"
+    // Updates the transaction status to "Done"
     public function updateStatusToDone($admin_id, $transac_id) {
         return $this->updateTransactionStatusToDone($admin_id, $transac_id);
     }
 
-    // Helper method to update the transaction status to "Pending"
+    // Helper method to update status to "Pending"
     private function updateTransactionStatusToPending($admin_id, $transac_id) {
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
@@ -248,7 +264,7 @@ class TransacManager{
         $stmt->bindValue(5, $transac_id);
 
         if ($stmt->execute()) {
-            // Update the status in the linked list
+            // Updates the status in the linked list
             $this->updateStatusInLinkedList($transac_id, 'Pending', $transac_in, $transac_out, $transac_spent);
             return [
                 'status' => 'success',
@@ -262,7 +278,7 @@ class TransacManager{
         }
     }
 
-    // Helper method to update the transaction status to "In Progress"
+    // Helper method to update status to "In Progress"
     private function updateTransactionStatusToInProgress($admin_id, $transac_id) {
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->db->prepare($setAdminIdQuery);
@@ -270,8 +286,8 @@ class TransacManager{
         $setStmt->execute();
 
         $query = "UPDATE transactions SET transac_status = ?, transac_in = ? WHERE transac_id = ?";
-        date_default_timezone_set('Asia/Manila');
-        $transac_in = date('H:i:s');
+        date_default_timezone_set('Asia/Manila'); // Set timezone
+        $transac_in = date('H:i:s'); // Current time as start time
 
         $stmt = $this->db->prepare($query);
         $stmt->bindValue(1, 'Progress');
@@ -279,7 +295,7 @@ class TransacManager{
         $stmt->bindValue(3, $transac_id);
 
         if ($stmt->execute()) {
-            // Update the status in the linked list
+            // Updates the status in the linked list
             $this->updateStatusInLinkedList($transac_id, 'Progress', $transac_in, null, null);
             return [
                 'status' => 'success',
@@ -420,29 +436,34 @@ class TransacManager{
 
     private function updatePatientAndPurposeInLinkedList($transac_id, $new_patientid, $new_purpose) {
         $transactions = $this->transacList->getAllTransaction();
-        
+    
+        // If transactions are stored as an array
         if (is_array($transactions)) {
             foreach ($transactions as $transac) {
                 if ($transac->transac_id === $transac_id) {
                     $transac->transac_patientid = $new_patientid;
                     $transac->transac_purpose = $new_purpose;
-                    return true;  
+                    return true; // Update successful
                 }
             }
-        } else {
+        } 
+        // If transactions are stored as a linked list
+        else {
             $current = $transactions;
             while ($current !== null) {
-                if ($current->transac_id === $transac_id) {
+                // Assuming each node has a 'transaction' object containing the data
+                if ($current->transaction->transac_id === $transac_id) {
                     $current->transaction->transac_patientid = $new_patientid;
                     $current->transaction->transac_purpose = $new_purpose;
-                    return true; 
+                    return true; // Update successful
                 }
-                $current = $current->next;
+                $current = $current->next; // Move to the next node
             }
         }
-        
-        return false;  
+    
+        return false; // No matching transaction found
     }
+    
 
 
     

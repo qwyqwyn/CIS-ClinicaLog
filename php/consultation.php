@@ -8,6 +8,7 @@ class Consultation {
     public $consultation_consult_remark;
     public $consult_date;
 
+// Initialize consultation details
     public function __construct($id, $idnum, $consult_diagnosis, $notes, $consult_remark, $date) {
         $this->consult_id = $id;
         $this->consult_patientid = $idnum;
@@ -53,6 +54,7 @@ class ConsultationLinkedList {
         $this->head = null;
     }
 
+// Adds an item to the list
     public function add($item) {
         $newNode = new ConsultListNode($item);
         if ($this->head === null) {
@@ -66,6 +68,7 @@ class ConsultationLinkedList {
         }
     }
 
+// Retrieves all nodes as an array
     public function getAllNodes() {
         $nodes = [];
         $current = $this->head;
@@ -76,6 +79,7 @@ class ConsultationLinkedList {
         return $nodes;
     }
 
+// Finds a node by ID
     public function find($id) {
         $current = $this->head;
         while ($current !== null) {
@@ -87,6 +91,7 @@ class ConsultationLinkedList {
         return null;
     }
 
+// Removes a node by ID
     public function remove($id) {
         if ($this->head === null) return false;
 
@@ -121,12 +126,14 @@ class ConsultationManager {
         $this->loadPrescribemeds();
     }
 
+    // Load all consultations from the database
     private function loadConsultations() {
-        // Updated SQL to ensure column names match the table structure
+
         $sql = "SELECT *
                 FROM consultations";
         $stmt = $this->db->query($sql);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // Consultation object for each row and add it to the linked list
             $consultation = new Consultation(
                 $row['consult_id'],
                 $row['consult_patientid'],
@@ -136,30 +143,35 @@ class ConsultationManager {
                 $row['consult_date'],
             );
 
-            $this->consultations->add($consultation);
+            $this->consultations->add($consultation); // Add consultation to the list
         }
     }
 
+    // Load all prescribed medications from the database
     private function loadPrescribemeds() {
         $sql = "SELECT * FROM prescribemed";
         $stmt = $this->db->query($sql);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            // Prescribemed object for each row and add it to the linked list
             $prescribemed = new Prescribemed(
                 $row['pm_id'],
                 $row['pm_consultid'],
                 $row['pm_medstockid'],
                 $row['pm_medqty']
             );
-            $this->prescribemeds->add($prescribemed);
+            $this->prescribemeds->add($prescribemed); // Add prescribed medication to the list
         }
     }
 
+    // Insert a new prescribed medicine into the database
     public function insertPrescribemed($pm_consultid, $pm_medstockid, $pm_medqty) {
         $sql = "INSERT INTO prescribemed (pm_consultid, pm_medstockid, pm_medqty) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         if ($stmt) {
+            // Execute the query with provided values
             $stmt->execute([$pm_consultid, $pm_medstockid, $pm_medqty]);
             $pm_id = $this->db->lastInsertId(); 
+            // Create a new Prescribemed object and add it to the list
             $prescribemed = new Prescribemed($pm_id, $pm_consultid, $pm_medstockid, $pm_medqty);
             $this->prescribemeds->add($prescribemed);
             echo "Prescribed Medicine inserted successfully.<br>";
@@ -169,7 +181,7 @@ class ConsultationManager {
             return false;
         }
     }
-    
+     // Insert a new consultation into the database
     public function insertConsultation($admin_id, $consult_patientid, $consult_diagnosis, $consult_treatmentnotes, $consult_remark, $consult_date) {
         try {
             // Set the admin ID for the session
@@ -181,7 +193,7 @@ class ConsultationManager {
             // Prepare the call to the stored procedure
             $query = "CALL add_patient_consultation(:consult_patientid, :consult_clinician, :consult_diagnosis, :consult_treatmentnotes, :consult_remark, :consult_date)";
             $stmt = $this->db->prepare($query);
-            
+             
             if (!$stmt) {
                 throw new Exception("Failed to prepare SQL statement.");
             }
@@ -199,7 +211,7 @@ class ConsultationManager {
                 // Fetch the last inserted consultation ID returned by the stored procedure
                 $consult_id = $stmt->fetch(PDO::FETCH_ASSOC)['consult_id'];
     
-                // Create a new Consultation object and add it to the list
+                
                 $consultation = new Consultation($consult_id, $consult_patientid, $consult_diagnosis, $consult_treatmentnotes, $consult_remark, $consult_date);
                 $this->consultations->add($consultation);
     
@@ -261,10 +273,11 @@ class ConsultationManager {
         return $combinedItems; 
     }
     
-
+    
+// Fetch consultations along with patient details
     public function getConsultations() {
-        // Correctly reference the patient ID column in the JOIN clause
-        $sql = "SELECT * FROM patient_consultation_history"; // Adjust this if necessary
+        // using view from database
+        $sql = "SELECT * FROM patient_consultation_history"; 
          
         // Fetch all consultations
         $consultations = $this->db->query($sql)->fetchAll();
@@ -288,9 +301,10 @@ class ConsultationManager {
     }
 
 
-
+// Update consultation details
     public function updateConsultation($admin_id, $consult_id, $diagnosis, $treatment_notes, $remark) {
         try {
+            // Check if the consultation exists
             $checkSql = "SELECT consult_id FROM consultations WHERE consult_id = :consult_id";
             $checkStmt = $this->db->prepare($checkSql);
             $checkStmt->bindParam(':consult_id', $consult_id, PDO::PARAM_INT);
@@ -343,7 +357,7 @@ class ConsultationManager {
     }
     
     
-
+    // Fetch a single consultation by ID
     public function getConsultationById($consult_id) {
         $sql = "SELECT * FROM consultations WHERE consult_id = :consult_id";
         $stmt = $this->db->prepare($sql);
@@ -351,7 +365,7 @@ class ConsultationManager {
         
         return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
-
+    // Fetch prescribed medicine details by its ID
     public function getMedDataByPmId($pm_id) {
         try {
             $stmt = $this->db->prepare("SELECT pm_medstockid, pm_medqty FROM prescribemed WHERE pm_id = :pm_id");
@@ -370,6 +384,7 @@ class ConsultationManager {
         }
     }
 
+    // Update prescribed medicine details
     public function updatePrescribemd($pm_id, $pm_consultid, $medstock_id, $pm_medqty) {
         try {
             error_log("Attempting to update prescribed medicine: PM ID = $pm_id, Consult ID = $pm_consultid, Medstock ID = $medstock_id, Quantity = $pm_medqty");
@@ -380,6 +395,7 @@ class ConsultationManager {
                 return ['status' => 'error', 'message' => 'Invalid input data provided.'];
             }
     
+            // Update query for prescribed medicine
             $sql = "UPDATE prescribemed SET 
                         pm_medstockid = :pm_medstockid,
                         pm_medqty = :pm_medqty 
@@ -520,16 +536,17 @@ class ConsultationManager {
             return ['status' => 'error', 'message' => 'Error deleting consultation: ' . $e->getMessage()];
         }
     }
-    
+    // Search for a patient by name or ID
     public function searchPatientByNameOrId($query) {
         $sql = "SELECT * FROM patients WHERE CONCAT(patient_fname, ' ', patient_lname) LIKE ? OR consult_patientid = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute(['%' . $query . '%', $query]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-     
+
+     // Fetch available medicine quantity for a stock ID
     public function getAvailableQuantity($medstock_id) {
-        $stmt = $this->db->prepare("CALL get_available_quantity(:medstock_id)");
+        $stmt = $this->db->prepare("CALL get_available_quantity(:medstock_id)"); //Using stored procedure
         $stmt->bindParam(':medstock_id', $medstock_id, PDO::PARAM_STR);
         $stmt->execute();
     
