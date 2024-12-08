@@ -2,6 +2,7 @@
 session_start();
 include('../database/config.php');
 include('../php/user.php');
+include('../php/adminnotif.php');
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   header('Location: ../php-login/index.php'); 
@@ -13,7 +14,93 @@ $conn = $db->getConnection();
 
 $user = new User($conn); 
 $user_idnum = $_SESSION['user_idnum'];
-$userData = $user->getUserData($user_idnum); 
+$userData = $user->getUserData($user_idnum);
+$adminNotif = new AdminNotif($db); 
+
+
+
+// Function to format time ago
+function timeAgo($timestamp) {
+  $time_ago = strtotime($timestamp);
+  $current_time = time();
+  $time_difference = $current_time - $time_ago;
+  $seconds = $time_difference;
+  $minutes      = round($seconds / 60);           // value 60 is seconds
+  $hours        = round($seconds / 3600);         // value 3600 is 60 minutes * 60 sec
+  $days         = round($seconds / 86400);        // value 86400 is 24 hours * 60 minutes * 60 sec
+  $weeks        = round($seconds / 604800);       // value 604800 is 7 days * 24 hours * 60 minutes * 60 sec
+  $months       = round($seconds / 2629440);      // value 2629440 is ((365+365)/2/12) days * 24 hours * 60 minutes * 60 sec
+  $years        = round($seconds / 31553280);     // value 31553280 is ((365+365)/2) days * 24 hours * 60 minutes * 60 sec
+
+  if ($seconds <= 60) {
+      return "Just Now";
+  } else if ($minutes <= 60) {
+      if ($minutes == 1) {
+          return "one minute ago";
+      } else {
+          return "$minutes minutes ago";
+      }
+  } else if ($hours <= 24) {
+      if ($hours == 1) {
+          return "an hour ago";
+      } else {
+          return "$hours hours ago";
+      }
+  } else if ($days <= 7) {
+      if ($days == 1) {
+          return "yesterday";
+      } else {
+          return "$days days ago";
+      }
+  } else if ($weeks <= 4.3) { // 4.3 == 30/7
+      if ($weeks == 1) {
+          return "a week ago";
+      } else {
+          return "$weeks weeks ago";
+      }
+  } else if ($months <= 12) {
+      if ($months == 1) {
+          return "one month ago";
+      } else {
+          return "$months months ago";
+      }
+  } else {
+      if ($years == 1) {
+          return "one year ago";
+      } else {
+          return "$years years ago";
+      }
+  }
+}
+
+// Function to get the icon for the notification
+function getNotifIcon($status) {
+  switch ($status) {
+      case 'primary':
+          return 'fa-user-plus';
+      case 'success':
+          return 'fa-comment';
+      case 'danger':
+          return 'fa-heart';
+      default:
+          return 'fa-bell';
+  }
+}
+
+// Function to get the class for the notification
+function getNotifClass($status) {
+  switch ($status) {
+      case 'primary':
+          return 'success';
+      case 'success':
+          return 'success';
+      case 'danger':
+          return 'danger';
+      default:
+          return 'info';
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +115,7 @@ $userData = $user->getUserData($user_idnum);
     <link 
       rel="icon"
       href="../assets/img/ClinicaLog.ico"
-      type="image/x-icon"
+      type="image/x-icon" 
     />
 
     <!-- Fonts and icons -->
@@ -146,83 +233,51 @@ $userData = $user->getUserData($user_idnum);
                 </li>
 
                 <li class="nav-item topbar-icon dropdown hidden-caret">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    id="notifDropdown"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                  >
-                    <i class="fa fa-bell"></i>
-                    <span class="notification">4</span>
+                  <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-bell"></i>
+                     <span class="notification"><?php echo $adminNotif->getUnreadCount(); ?></span>
+
                   </a>
-                  <ul
-                    class="dropdown-menu notif-box animated fadeIn"
-                    aria-labelledby="notifDropdown"
-                  >
-                    <li>
-                      <div class="dropdown-title">
-                        You have 4 new notification
-                      </div>
-                    </li>
-                    <li>
-                      <div class="notif-scroll scrollbar-outer">
-                        <div class="notif-center">
-                          <a href="#">
-                            <div class="notif-icon notif-primary">
-                              <i class="fa fa-user-plus"></i>
-                            </div>
-                            <div class="notif-content">
-                              <span class="block"> New user registered </span>
-                              <span class="time">5 minutes ago</span>
-                            </div>
+                  <?php
+                  $notifications = $adminNotif->getFourNewestNotifications();
+                  ?>
+                  <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
+                      <li>
+                          <div class="dropdown-title">
+                              You have <?php echo count($notifications); ?> new notifications
+                          </div>
+                      </li>
+                      <li>
+                          <div class="notif-scroll scrollbar-outer">
+                              <div class="notif-center">
+                                  <?php
+                                  foreach ($notifications as $notif) {
+                                      $timeAgo = timeAgo($notif['notif_date_added']);
+                                      $patientName = $notif['patient_name']; 
+                                      echo '
+                                      <a href="adminnotiftable.php">
+                                          <div class="notif-icon notif-' . getNotifClass($notif['notif_status']) . '">
+                                              <i class="fa ' . getNotifIcon($notif['notif_status']) . '"></i>
+                                          </div>
+                                          <div class="notif-content">
+                                              <span class="block">' . $patientName . ' - ' . $notif['notif_message'] . '</span>
+                                              <span class="time">' . $timeAgo . '</span>
+                                          </div>
+                                      </a>';
+                                  }
+                                  ?>
+                              </div>
+                          </div>
+                      </li>
+                      <li>
+                          <a class="see-all" href="adminnotiftable.php">
+                              See all notifications<i class="fa fa-angle-right"></i>
                           </a>
-                          <a href="#">
-                            <div class="notif-icon notif-success">
-                              <i class="fa fa-comment"></i>
-                            </div>
-                            <div class="notif-content">
-                              <span class="block">
-                                Rahmad commented on Admin
-                              </span>
-                              <span class="time">12 minutes ago</span>
-                            </div>
-                          </a>
-                          <a href="#">
-                            <div class="notif-img">
-                              <img
-                                src="../assets/img/profile2.jpg"
-                                alt="Img Profile"
-                              />
-                            </div>
-                            <div class="notif-content">
-                              <span class="block">
-                                Reza send messages to you
-                              </span>
-                              <span class="time">12 minutes ago</span>
-                            </div>
-                          </a>
-                          <a href="#">
-                            <div class="notif-icon notif-danger">
-                              <i class="fa fa-heart"></i>
-                            </div>
-                            <div class="notif-content">
-                              <span class="block"> Farrah liked Admin </span>
-                              <span class="time">17 minutes ago</span>
-                            </div>
-                          </a>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <a class="see-all" href="javascript:void(0);"
-                        >See all notifications<i class="fa fa-angle-right"></i>
-                      </a>
-                    </li>
+                      </li>
                   </ul>
-                </li>
+              </li>
+
+
                 <li class="nav-item topbar-user dropdown hidden-caret">
                 <?php if ($userData): ?>
                   <a

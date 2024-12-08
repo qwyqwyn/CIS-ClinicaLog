@@ -27,7 +27,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
   echo "No patient data found.";
 }
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="en"> 
 
@@ -100,6 +100,79 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
     .upload-btn {
       margin-top: 10px;
     }
+      /* Normal page styles */
+      body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        .back-nav {
+            font-size: 16px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                padding: 0;
+            }
+
+            .page-inner {
+                page-break-before: always;
+            }
+
+            .back-nav {
+                display: none;
+            }
+
+            .row {
+                display: block;
+                margin-bottom: 20px;
+            }
+
+            .card-header {
+                text-align: center;
+            }
+
+            .card-body {
+                font-size: 12pt;
+            }
+
+            /* Tables */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            table, th, td {
+                border: 1px solid black;
+            }
+
+            th, td {
+                padding: 8px;
+                text-align: left;
+            }
+
+            /* Hide non-print content */
+            .no-print {
+                display: none;
+            }
+        }
   </style>
 </head>
 
@@ -112,6 +185,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
       <!-- Header -->
       <div class="main-header" id="header"></div>
       <!-- Main Content -->
+      <button onclick="convertToPDF()">Download PDF</button>
       <div class="container" id="content">
         <div class="page-inner">
           <div class=row>
@@ -327,22 +401,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
         return `${monthName} ${dayNumber}, ${year}`;
       }
 
-      function calculateAge(dobString) {
-        if (!dobString) return '';
-
-        const dob = new Date(dobString);
-        const today = new Date();
-
-        let age = today.getFullYear() - dob.getFullYear();
-        const monthDifference = today.getMonth() - dob.getMonth();
-
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
-          age--;
-        }
-
-        return age;
-      }
-
       function getOrdinalSuffix(num) {
         const suffixes = ["th", "st", "nd", "rd"];
         const value = num % 100;
@@ -354,13 +412,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
 
       function populatePatientForm(data) {
         const dobFormatted = data.patient.patient_dob ? formatDateToWords(data.patient.patient_dob) : 'Ey';
-        const age = calculateAge(data.patient.patient_dob);
+        
 
         $('#lastName').text(data.patient.patient_lname || '');
         $('#firstName').text(data.patient.patient_fname || '');
         $('#middleName').text(data.patient.patient_mname || '');
         $('#dob').text(dobFormatted);
-        $('#age').text(age);
+        $('#age').text(data.patient.patient_age);
         $('#sex').text(data.patient.patient_sex || 'Male');
         $('#staffID').text(data.staff.staff_idnum || '');
         $('#Office').text(data.staff.staff_office || '');
@@ -383,6 +441,17 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
       populatePatientForm(patientData);
     });
   </script>
+    <script>
+        function printContent(elmId) {
+            var content = document.getElementById(elmId).innerHTML;
+            var originalContent = document.body.innerHTML;
+
+            // Replace content with what we want to print
+            document.body.innerHTML = content;
+            window.print();  // Trigger print dialog
+            document.body.innerHTML = originalContent;  // Restore original content after printing
+        }
+    </script>
 </body>
 
 </html>

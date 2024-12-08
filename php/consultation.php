@@ -172,43 +172,44 @@ class ConsultationManager {
  
     public function insertConsultation($admin_id, $consult_patientid, $consult_diagnosis, $consult_treatmentnotes, $consult_remark, $consult_date) {
         try {
-
+            // Set the admin ID for the session
             $setAdminIdQuery = "SET @admin_id = :admin_id";
             $setStmt = $this->db->prepare($setAdminIdQuery);
             $setStmt->bindValue(':admin_id', $admin_id);
             $setStmt->execute();
-
-            // SQL statement to match database table column names
-            $sql = "INSERT INTO consultations (consult_patientid, consult_diagnosis, consult_treatmentnotes, consult_remark, consult_date)
-                    VALUES (?, ?, ?, ?, ?)";
-            $stmt = $this->db->prepare($sql);
     
-            // Parameters for the query
-            $params = [
-                $consult_patientid, 
-                $consult_diagnosis, 
-                $consult_treatmentnotes, 
-                $consult_remark,  
-                $consult_date
-            ];
+            // Prepare the call to the stored procedure
+            $query = "CALL add_patient_consultation(:consult_patientid, :consult_diagnosis, :consult_treatmentnotes, :consult_remark, :consult_date)";
+            $stmt = $this->db->prepare($query);
+            
+            if (!$stmt) {
+                throw new Exception("Failed to prepare SQL statement.");
+            }
     
-            // Execute the query
-            $stmt->execute($params);
+            // Bind the parameters to the stored procedure
+            $stmt->bindValue(':consult_patientid', $consult_patientid, PDO::PARAM_INT);
+            $stmt->bindValue(':consult_diagnosis', $consult_diagnosis, PDO::PARAM_STR);
+            $stmt->bindValue(':consult_treatmentnotes', $consult_treatmentnotes, PDO::PARAM_STR);
+            $stmt->bindValue(':consult_remark', $consult_remark, PDO::PARAM_STR);
+            $stmt->bindValue(':consult_date', $consult_date, PDO::PARAM_STR);
     
-            // Retrieve the last inserted consultation ID
-            $consult_id = $this->db->lastInsertId(); 
+            // Execute the stored procedure
+            if ($stmt->execute()) {
+                // Retrieve the last inserted consultation ID
+                $consult_id = $this->db->query("SELECT LAST_INSERT_ID()")->fetch(PDO::FETCH_ASSOC)['consult_id'];
     
-            $consultation = new Consultation($consult_id, $consult_patientid, $consult_diagnosis, $consult_treatmentnotes, $consult_remark, $consult_date);
+                // Create a new Consultation object and add it to the list
+                $consultation = new Consultation($consult_id, $consult_patientid, $consult_diagnosis, $consult_treatmentnotes, $consult_remark, $consult_date);
+                $this->consultations->add($consultation);
     
-            $this->consultations->add($consultation); 
-    
-            // Return success response
-            return [
-                'status' => 'success', 
-                'message' => 'Consultation inserted successfully.', 
-                'consult_id' => $consult_id // Return the consultation ID
-            ];
-    
+                return [
+                    'status' => 'success',
+                    'message' => 'Consultation inserted successfully.',
+                    'consult_id' => $consult_id // Return the consultation ID
+                ];
+            } else {
+                throw new Exception("Failed to execute the stored procedure.");
+            }
         } catch (PDOException $e) {
             // Log and return a detailed database error
             error_log("Error inserting consultation: " . $e->getMessage());
@@ -225,6 +226,7 @@ class ConsultationManager {
             ];
         }
     }
+    
     
     
 
@@ -260,10 +262,8 @@ class ConsultationManager {
 
     public function getConsultations() {
         // Correctly reference the patient ID column in the JOIN clause
-        $sql = "SELECT consultations.*, patients.patient_fname, patients.patient_lname 
-                FROM consultations 
-                JOIN patients ON consultations.consult_patientid = patients.patient_id"; // Adjust this if necessary
-        
+        $sql = "SELECT * FROM patient_consultation_history"; // Adjust this if necessary
+         
         // Fetch all consultations
         $consultations = $this->db->query($sql)->fetchAll();
     
@@ -271,40 +271,19 @@ class ConsultationManager {
         $consultationDetails = [];
         foreach ($consultations as $consultation) {
             $consultationDetails[] = [
-                'consult_id' => $consultation['consult_id'],
-                'name' => $consultation['patient_lname'] . ' ' . $consultation['patient_fname'],
-                'consult_patientid' => $consultation['consult_patientid'],
-                'consult_diagnosis' => $consultation['consult_diagnosis'],
-                'consult_remark' => $consultation['consult_remark'],
-                'consult_treatmentnotes' => $consultation['consult_treatmentnotes'],
-                'consult_date' => $consultation['consult_date'],
+                'consult_id' => $consultation['consultid'],
+                'name' => $consultation['lname'] . ' ' . $consultation['fname'],
+                'consult_patientid' => $consultation['patid'],
+                'consult_diagnosis' => $consultation['diagnosis'],
+                'consult_remark' => $consultation['remark'],
+                'consult_treatmentnotes' => $consultation['treatment'],
+                'consult_date' => $consultation['date'],
             ];
         }
     
         return $consultationDetails;
     }
 
-    public function getPrescribedMeds() {
-        // Query to fetch all data from the prescribemed table
-        $sql = "SELECT * FROM prescribemed";
-        
-        // Fetch all records from prescribemed
-        $prescribedMeds = $this->db->query($sql)->fetchAll();
-        
-        // Prepare the prescription details for return
-        $prescribedMedDetails = [];
-        foreach ($prescribedMeds as $prescribedMed) {
-            $prescribedMedDetails[] = [
-                'pm_id' => $prescribedMed['pm_id'],
-                'pm_consultid' => $prescribedMed['pm_consultid'],
-                'pm_medstockid' => $prescribedMed['pm_medstockid'],
-                'pm_medqty' => $prescribedMed['pm_medqty']
-            ];
-        }
-        
-        return $prescribedMedDetails;
-    }
-    
 
 
     public function updateConsultation($admin_id, $consult_id, $diagnosis, $treatment_notes, $remark) {
@@ -547,16 +526,41 @@ class ConsultationManager {
     }
      
     public function getAvailableQuantity($medstock_id) {
-        $stmt = $this->db->prepare("SELECT m.medstock_qty - 
-                                      (IFNULL(SUM(pm.pm_medqty), 0) + IFNULL(SUM(mi.mi_medqty), 0)) AS available_stock
-                                      FROM medstock m
-                                      LEFT JOIN prescribemed pm ON pm.pm_medstockid = m.medstock_id
-                                      LEFT JOIN medissued mi ON mi.mi_medstockid = m.medstock_id
-                                      WHERE m.medstock_id = ?
-                                      GROUP BY m.medstock_id");
-        $stmt->execute([$medstock_id]);
-        return (int) $stmt->fetchColumn();
+        $stmt = $this->db->prepare("
+            SELECT 
+                ms.medstock_qty - 
+                    (COALESCE(SUM(p.pm_medqty), 0) + COALESCE(SUM(mi.mi_medqty), 0)) AS current_qty
+            FROM  
+                medstock ms
+            LEFT JOIN 
+                (SELECT pm_medstockid, SUM(pm_medqty) AS pm_medqty
+                FROM prescribemed
+                GROUP BY pm_medstockid) p 
+                ON ms.medstock_id = p.pm_medstockid
+            LEFT JOIN 
+                (SELECT mi_medstockid, SUM(mi_medqty) AS mi_medqty
+                FROM medissued
+                GROUP BY mi_medstockid) mi 
+                ON ms.medstock_id = mi.mi_medstockid
+            WHERE 
+                ms.medstock_id = :medstock_id 
+            GROUP BY 
+                ms.medstock_id, ms.medstock_qty
+        ");
+    
+        // Bind the medstock_id parameter
+        $stmt->bindParam(':medstock_id', $medstock_id, PDO::PARAM_STR);
+    
+        // Execute the statement
+        $stmt->execute();
+    
+        // Fetch the result and return it, or return 0 if no result is found
+        $current_qty = $stmt->fetchColumn();
+        
+        // If no result found, return 0 as the default
+        return $current_qty !== false ? (int) $current_qty : 0;
     }
+    
     
 
 

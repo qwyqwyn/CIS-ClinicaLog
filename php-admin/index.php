@@ -222,18 +222,15 @@ foreach ($allMonths as $month) {
     $end_date = (new DateTime($start_date))->modify('last day of this month')->format('Y-m-d');
 
     $chartData['labels'][] = $month;
-    $chartData['Faculties'][] = array_sum($dashboard->countFacultyConsultationsPerMonth($start_date, $end_date));
-    $chartData['Students'][] = array_sum($dashboard->countStudentConsultationsPerMonth($start_date, $end_date));
-    $chartData['Staffs'][] = array_sum($dashboard->countStaffConsultationsPerMonth($start_date, $end_date));
-    $chartData['Extensions'][] = array_sum($dashboard->countExtensionConsultationsPerMonth($start_date, $end_date));
+    $chartData['Faculties'][] = array_sum($dashboard->countFacultyPerMonth($start_date, $end_date));
+    $chartData['Students'][] = array_sum($dashboard->countStudentPerMonth($start_date, $end_date));
+    $chartData['Staffs'][] = array_sum($dashboard->countStaffPerMonth($start_date, $end_date));
+    $chartData['Extensions'][] = array_sum($dashboard->countExtensionPerMonth($start_date, $end_date));
 }
 
 // Pass the chart data as JSON to the frontend
 echo '<script>var chartData = ' . json_encode($chartData) . ';</script>';
 ?>
-
-
-
                   </div>
                 </div>
               </div>
@@ -272,9 +269,9 @@ echo '<script>var chartData = ' . json_encode($chartData) . ';</script>';
                             <?php if (!empty($medstocks)): ?>
                                 <?php foreach ($medstocks as $medstock): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($medstock['medstock_id']); ?></td>
-                                        <td><?= htmlspecialchars($medstock['medicine_name']); ?></td>
-                                        <td><?= htmlspecialchars($medstock['medstock_expirationdt']); ?></td>
+                                        <td><?= htmlspecialchars($medstock['med_name']); ?></td>
+                                        <td><?= htmlspecialchars($medstock['stock_id']); ?></td>
+                                        <td><?= htmlspecialchars($medstock['expiration_date']); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
@@ -465,7 +462,7 @@ echo '<script>var chartData = ' . json_encode($chartData) . ';</script>';
           text.push('<li><span style="background-color:' + chart.data.datasets[i].legendColor + '"></span>');
           if (chart.data.datasets[i].label) {
             text.push(chart.data.datasets[i].label);
-          }
+          } 
           text.push('</li>');
         }
         text.push('</ul>');

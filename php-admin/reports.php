@@ -87,8 +87,6 @@ $user_idnum = $_SESSION['user_idnum'];
                 <div class="page-inner">
                 <div class="page-inner">
                                 <!-- Year Selection Dropdown -->
-
-
                                 <div class="row">
                                             <div class="col-md-9 mb-3">
                                             <label for="yearSelect" class="form-label"></label>
@@ -114,7 +112,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                                 <span class="btn-label"><i class="fa fa-pencil"></i></span>
                                                 Export
                                                 </a>
-                                            </div>
+                                            </div> 
                                             </div>
                                         </div>
                                         <div class="card-container" style="display: flex; flex-direction: column; gap: 20px;">
@@ -125,12 +123,12 @@ $user_idnum = $_SESSION['user_idnum'];
                                             </div>
                                         </div>
                                         </div>
-                                    </div>                   
+                                    </div>                    
                                     </div>
                                 
                                 <h1></h1>
                                 <h1></h1>
-                                <h1></h1>
+                                <h1></h1>   
                                 <h1>Number of Clients Served Each Transactions</h1>
                                  <!-- Start All Transactions Report -->
                                  <div class="row">
@@ -140,17 +138,19 @@ $user_idnum = $_SESSION['user_idnum'];
                                             <div class="card-head-row">
                                             <div class="card-title">Total for All Transactions</div>
                                             <div class="card-tools">
-                                                <a
-                                                href="#"
-                                                class="btn btn-label-success btn-round btn-sm me-2"
-                                                >
-                                                <span class="btn-label">
-                                                    <i class="fa fa-pencil"></i>
-                                                </span>
-                                                Export
-                                                </a>
+                                                    <a
+                                                        href="#"
+                                                        class="btn btn-label-success btn-round btn-sm me-2"
+                                                        onclick="reportToExportAllTable()">
+                                                    
+                                                        <span class="btn-label">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </span>
+                                                        Export
+                                                    </a>
+                                                </div>
                                             </div>
-                                            </div>
+                                            <div id="loadingMessage" style="display: none;">Loading, please wait...</div>
                                         </div>
                                         <div class="card-body">
                                             <div class="chart-container" style="min-height: 375px">
@@ -521,6 +521,6 @@ $user_idnum = $_SESSION['user_idnum'];
             });
         });
     </script>
-    
+
 </body> 
 </html>

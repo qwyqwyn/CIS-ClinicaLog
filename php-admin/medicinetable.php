@@ -198,6 +198,17 @@ $userData = $user->getUserData($user_idnum);
                                 </div>
                                 <div class="col-md-6 pe-0">
                                   <div class="form-group form-group-default">
+                                    <label for="addunit">Medicine unit</label>
+                                    <select id="addunit" name="addunit" class="form-control" placeholder="Select medicine unit">
+                                      <option value="" disabled selected>Select a unit</option>
+                                      <option value="Sachet">Sachet</option>
+                                      <option value="Capsule">Capsule</option>
+                                      <option value="Tablet">Tablet</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group form-group-default">
                                     <label>Expiration Date</label>
                                     <input
                                       id="addED"
@@ -290,7 +301,7 @@ $userData = $user->getUserData($user_idnum);
                                 <input id="editquantity" name="editquantity" type="number" class="form-control" placeholder="fill quantity" />
                               </div>
                             </div>
-                            <div class="col-md-6 pe-0">
+                            <div class="col-md-6">
                               <div class="form-group form-group-default">
                                 <label>Dosage Strength</label>
                                 <input id="editDS" name="editDS" type="text" class="form-control" placeholder="fill dosage strength" />
@@ -303,6 +314,17 @@ $userData = $user->getUserData($user_idnum);
                               </div>
                             </div>
                             <div class="col-md-6">
+                                  <div class="form-group form-group-default">
+                                    <label for="editunit">Medicine unit</label>
+                                    <select id="editunit" name="editunit" class="form-control" placeholder="Select medicine unit">
+                                      <option value="" disabled selected>Select a unit</option>
+                                      <option value="Sachet">Sachet</option>
+                                      <option value="Capsule">Capsule</option>
+                                      <option value="Tablet">Tablet</option>
+                                    </select>
+                                  </div>
+                            </div>
+                            <div class="col-md-6">
                               <div class="form-group form-group-default">
                                 <label>Disable</label>
                                 <select id="editDisable" name="editDisable" class="form-control">
@@ -311,7 +333,7 @@ $userData = $user->getUserData($user_idnum);
                                 </select>
                               </div>
                             </div>
-                          </div>
+                          </div> 
                           <div class="modal-footer border-0">
                             <button type="submit" class="btn btn-primary" data-bs-target="updatemedicine" id="updatemedicine" name="updatemedicine">
                               Edit
@@ -333,7 +355,7 @@ $userData = $user->getUserData($user_idnum);
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Quantity</th>
+                                <th>Current/Original Quantity</th>
                                 <th>Dosage Strength</th>
                                 <th>Date & Time Added</th>
                                 <th>Expiration Date</th>
@@ -370,19 +392,20 @@ $userData = $user->getUserData($user_idnum);
                               }
 
                               // Check if the medicine is expired
-                              $currentDate = date('Y-m-d');
+                              $currentDate = date('Y-m-d'); 
                               $expirationStatus = (strtotime($node->medstock_expirationdt) < strtotime($currentDate)) ? 'Expired' : '';
  
                               echo "<tr data-id='{$node->medstock_id}' 
-                                        data-name='{$node->medicine_name}' 
-                                        data-qty='{$node->medstock_qty}' 
+                                        data-name='{$node->medicine_name}'
+                                        data-unit='{$node->medstock_unit}' 
+                                        data-qty='{$node->medstock_origqty}' 
                                         data-dosage='{$node->medstock_dosage}' 
                                         data-dateadded='{$node->medstock_dateadded} {$node->medstock_timeadded}' 
                                         data-expirationdt='{$node->medstock_expirationdt}' 
                                         data-disable='{$node->medstock_disabled}' class='$statusColor'>
                                     <td>{$node->medstock_id}</td>
-                                    <td>{$node->medicine_name}</td>
-                                    <td style='color: $qtycolor;'>{$statusqtyMessage}</td>
+                                    <td>{$node->medicine_name} ({$node->medstock_unit})</td>
+                                    <td style='color: $qtycolor;'>{$statusqtyMessage} / {$node->medstock_origqty}</td>
                                     <td>{$node->medstock_dosage}</td>
                                     <td>{$node->medstock_dateadded} {$node->medstock_timeadded}</td>
                                     <td>
@@ -470,6 +493,7 @@ $userData = $user->getUserData($user_idnum);
         var row = $(this).closest('tr');
         var id = row.data('id');
         var name = row.data('name');
+        var unit = row.data('unit');
         var qty = row.data('qty');
         var dosage = row.data('dosage');
         var dateadded = row.data('dateadded');
@@ -478,6 +502,7 @@ $userData = $user->getUserData($user_idnum);
 
         $("#editid").val(id); 
         $("#editname").val(name); 
+        $("#editunit").val(unit);
         $("#editquantity").val(qty);
         $("#editDS").val(dosage);
         $("#editdatetimeadded").text(dateadded);

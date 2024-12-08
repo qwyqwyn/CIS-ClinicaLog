@@ -42,7 +42,6 @@
         user_password CHAR(60) NOT NULL,         
         user_code MEDIUMINT UNSIGNED NOT NULL     
     );";  
-
     if (mysqli_query($conn, $sql_adminusers)) { 
         echo "Table 'adminusers' created successfully<br>";
 
@@ -330,7 +329,7 @@
         transac_status ENUM('Pending', 'Progress', 'Done') NOT NULL,
         FOREIGN KEY (transac_patientid) REFERENCES patients(patient_id)
     )";
- 
+  
     if (mysqli_query($conn, $sql_transaction)) {
         echo "Table 'transaction' created successfully<br>";
     } else {

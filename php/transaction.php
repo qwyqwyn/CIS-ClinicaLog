@@ -166,7 +166,6 @@ class TransacManager{
         }
     }
     
-    
 
     public function addTransaction($admin_id, $transac_patientid, $transac_purpose) {
         
@@ -215,7 +214,7 @@ class TransacManager{
         return $transac;
     }
     
-   // Method to update the status to "Pending"
+// Method to update the status to "Pending"
 public function updateStatusToPending($admin_id, $transac_id) {
     return $this->updateTransactionStatusToPending($admin_id, $transac_id);
 }

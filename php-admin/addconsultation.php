@@ -31,46 +31,7 @@ $patientType = isset($_GET['patient_patienttype']) ? $_GET['patient_patienttype'
  
 $patientDetails = null;
 
-if (isset($_POST['pname'])) {
-    $searchQuery = "%" . $_POST['pname'] . "%"; 
 
-    $sql = "SELECT 
-                p.patient_id, 
-                CONCAT(p.patient_fname, ' ', p.patient_lname) AS name, 
-                CASE 
-                    WHEN p.patient_patienttype = 'Student' THEN ps.student_idnum
-                    WHEN p.patient_patienttype = 'Faculty' THEN pf.faculty_idnum
-                    WHEN p.patient_patienttype = 'Staff' THEN pst.staff_idnum
-                    WHEN p.patient_patienttype = 'Extension' THEN pe.exten_idnum
-                    ELSE NULL 
-                END AS idnum
-            FROM 
-                patients p
-            LEFT JOIN patstudents ps ON p.patient_id = ps.student_patientid
-            LEFT JOIN patfaculties pf ON p.patient_id = pf.faculty_patientid
-            LEFT JOIN patstaffs pst ON p.patient_id = pst.staff_patientid
-            LEFT JOIN patextensions pe ON p.patient_id = pe.exten_patientid
-            WHERE 
-                p.patient_lname LIKE ? OR p.patient_fname LIKE ? OR 
-                ps.student_idnum LIKE ? OR pf.faculty_idnum LIKE ? OR pst.staff_idnum LIKE ? OR pe.exten_idnum LIKE ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$searchQuery, $searchQuery, $searchQuery, $searchQuery, $searchQuery, $searchQuery]);
-
-    $patients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Return results as suggestions
-    if ($patients) {
-        foreach ($patients as $p) {
-            echo "<div class='suggestion' data-id='{$p['patient_id']}'>
-                    {$p['name']} ({$p['idnum']})
-                  </div>";
-        }
-    } else {
-        echo "<div>No results found</div>";
-    }
-    exit(); 
-}
 
 $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -81,7 +42,7 @@ if (isset($_POST['prescribemed'])) {
         SELECT medstock.medstock_id, medicine.medicine_name 
         FROM medstock 
         JOIN medicine ON medstock.medicine_id = medicine.medicine_id 
-        WHERE medicine.medicine_name LIKE ?"; 
+        WHERE medicine.medicine_name LIKE ? AND medstock_disable = 0"; 
 
     $stmt = $conn->prepare($medQuery);
     $stmt->execute([$searchMed]); 
@@ -156,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
           urls: ["../css/fonts.min.css"], 
         },
         active: function () {
-          sessionStorage.fonts = true;
+          sessionStorage.fonts = true; 
         },
       });
     </script> 
@@ -354,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
 
                                             $edit_medicine = $conn->real_escape_string($edit_medicine);
 
-                                            $sql = "SELECT medstock_id, medicine_name FROM medstock WHERE medicine_name LIKE '%$edit_medicine%' OR medstock_id LIKE '%$edit_medicine%' LIMIT 10";
+                                            $sql = "SELECT medstock_id, medicine_name FROM medstock WHERE medicine_name LIKE '%$edit_medicine%' OR medstock_id LIKE '%$edit_medicine%' LIMIT 10 AND medstock_disable = 0";
                                             $result = $conn->query($sql);
 
                                             if ($result->num_rows > 0) {
@@ -497,7 +458,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                                         <tbody>
                                         <?php
                                             $items = $consultations->getAllItems();
-
+ 
                                             if (is_array($items) && !empty($items)) {
                                                 foreach ($items as $item) {
                                                     if (is_array($item)) {
@@ -605,36 +566,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
         pageLength: 10, 
         responsive: true 
     });
-    // Keyup event for search box
-    $('#pname').on('keyup', function () {
-        var query = $(this).val();
 
-        if (query.length > 2) { 
-            $.ajax({
-                url: 'addconsultation.php', 
-                method: 'POST',
-                data: { pname: query }, 
-                success: function (data) {
-                    $('#suggestions').html(data).show();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching suggestions:', error);
-                }
-            });
-        } else {
-            $('#suggestions').html('').hide(); 
-        }
-    });
+});
+</script>
 
-    $(document).on('click', '.suggestion', function () {
-        var name = $(this).text().split(' (')[0]; 
-        var patientId = $(this).data('id'); 
+<script>
+document.getElementById('pname').addEventListener('input', function() {
+    var pname = this.value;
 
-        $('#selected_patient_id').val(patientId); 
-        $('#pname').val(name); 
+    if (pname.length >= 3) { 
+        fetch('transacsearch.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'pname=' + pname
+        })
+        .then(response => response.text())
+        .then(data => {
+            var suggestions = document.getElementById('suggestions');
+            suggestions.innerHTML = data;
+            suggestions.style.display = data ? 'block' : 'none';
+        });
+    } else {
+        document.getElementById('suggestions').style.display = 'none';
+    }
+});
 
-        $('#suggestions').html('').hide(); 
-    });
+document.getElementById('suggestions').addEventListener('click', function(e) {
+    if (e.target.classList.contains('suggestion')) {
+        var patientId = e.target.getAttribute('data-id');
+        var patientName = e.target.innerText;
+        document.getElementById('pname').value = patientName;
+        document.getElementById('selected_patient_id').value = patientId;
+        document.getElementById('suggestions').style.display = 'none';
+    }
 });
 </script>
 

@@ -67,6 +67,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Stocks</th>
+                                    <th>Total Quantity</th>
                                     <th style="width: 10%">Action</th>
                                 </tr>
                             </thead>
@@ -76,6 +77,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                     <th>Name</th>
                                     <th>Category</th>
                                     <th>Stocks</th>
+                                    <th>Total Quantity</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>

@@ -16,7 +16,8 @@ class ListNode {
     public $code; 
     public $next;
 
-    public function __construct($user_id, $user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $passwordhash, $code, $next = null) {
+    public function __construct($user_id, $user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, 
+    $user_status, $user_dateadded, $user_profile, $passwordhash, $code, $next = null) {
         $this->user_id = $user_id;
         $this->user_idnum = $user_idnum;
         $this->user_fname = $user_fname;
@@ -45,8 +46,10 @@ class LinkedList {
         return $this->head;
     }
 
-    public function addNode($user_id, $user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $passwordhash, $code) {
-        $newNode = new ListNode($user_id, $user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $passwordhash, $code, $this->head);
+    public function addNode($user_id, $user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status,
+     $user_dateadded, $user_profile, $passwordhash, $code) {
+        $newNode = new ListNode($user_id, $user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, 
+        $user_dateadded, $user_profile, $passwordhash, $code, $this->head);
         $this->head = $newNode;
     }
 
@@ -128,90 +131,35 @@ class User {
     
 
     private function loadUsers() {
-        $query = "SELECT user_id, user_idnum, user_fname, user_lname, user_mname, user_email, user_position, user_role, user_status, user_dateadded, user_profile, user_password, user_code FROM adminusers";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->linkedList->addNode(
-                $row['user_id'],
-                $row['user_idnum'],
-                $row['user_fname'],
-                $row['user_lname'],
-                $row['user_mname'],
-                $row['user_email'],
-                $row['user_position'],
-                $row['user_role'],
-                $row['user_status'],
-                $row['user_dateadded'],
-                $row['user_profile'],
-                $row['user_password'],
-                $row['user_code']
-            );
+        try {
+            $query = "SELECT * FROM admin_user_info";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+
+            // Fetch each row and add it to the linked list
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $this->linkedList->addNode(
+                    $row['admin_id'] ?? null,
+                    $row['admin_idnum'] ?? null,
+                    $row['admin_fname'] ?? null,
+                    $row['admin_lname'] ?? null,
+                    $row['admin_mname'] ?? null,
+                    $row['admin_email'] ?? null,
+                    $row['admin_position'] ?? null,
+                    $row['admin_role'] ?? null,
+                    $row['admin_status'] ?? null,
+                    $row['admin_dateadded'] ?? null,
+                    $row['admin_profile'] ?? null,
+                    $row['admin_password'] ?? null,
+                    $row['admin_code'] ?? null
+                );
+            }
+        } catch (PDOException $e) {
+            // Log or handle database errors
+            error_log("Database error: " . $e->getMessage());
         }
     }
 
-    public function getUserDataa($user_idnum) {
-    
-        $node = $this->linkedList->findNode($user_idnum);
-        
-        if ($node) {
-            return [
-                'user_id' => $node->user_id,
-                'user_idnum' => $node->user_idnum,
-                'user_fname' => $node->user_fname,
-                'user_lname' => $node->user_lname,
-                'user_mname' => $node->user_mname,
-                'user_email' => $node->user_email,
-                'user_position' => $node->user_position,
-                'user_role' => $node->user_role,
-                'user_status' => $node->user_status,
-                'user_dateadded' => $node->user_dateadded,
-                'user_profile' => $node->user_profile,
-                'passwordhash' => $node->passwordhash,
-                'code' => $node->code
-            ];
-        } else {
-            
-            $query = "SELECT user_id, user_idnum, user_fname, user_lname, user_mname, user_email, user_position, user_role, user_status, user_dateadded, user_profile, user_password, user_code FROM adminusers WHERE user_idnum = ?";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindValue(1, $user_idnum);
-            $stmt->execute();
-            
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                
-                $this->linkedList->addNode(
-                    $row['user_id'],
-                    $row['user_idnum'],
-                    $row['user_fname'],
-                    $row['user_lname'],
-                    $row['user_mname'],
-                    $row['user_email'],
-                    $row['user_position'],
-                    $row['user_role'],
-                    $row['user_status'],
-                    $row['user_dateadded'],    
-                    $row['user_profile'],
-                    $row['user_password'],
-                    $row['user_code']
-                );
-                
-                return $row;
-            } else {
-                return null; 
-            }
-        } 
-    }
-
-    public function getUserData($user_idnum) {
-        $query = "SELECT * FROM adminusers WHERE user_idnum = :user_idnum";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':user_idnum', $user_idnum);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);  
-    }
-    
-    
 
     public function userExists($email, $password) {
         $node = $this->linkedList->findNode($email);
@@ -229,14 +177,10 @@ class User {
     }
     
     private function log($message) {
-        // Log to the server-side log (error_log)
+        
         error_log($message); 
-    
-        // Log to the browser console
         echo "<script>console.log(" . json_encode($message) . ");</script>";
     }
-    
-    
     
 
     public function emailVerify($email) {
@@ -264,59 +208,67 @@ class User {
     }
     
 
-    public function register($user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $password, $code, $admin_id) {
-        if ($this->emailVerify($user_email)) {
-            $_SESSION['status'] = 'error';
-            $_SESSION['message'] = 'Email already exists.';
-            return false;
-        }
+    public function register($user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status,
+    $user_dateadded, $user_profile, $password, $code, $admin_id) {
+    
+    // Check if the email already exists
+    if ($this->emailVerify($user_email)) {
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Email already exists.';
+        return false;
+    }
 
+    try {
+        // First, execute the SET statement to store the admin_id value in a session variable
         $setAdminIdQuery = "SET @admin_id = :admin_id";
         $setStmt = $this->conn->prepare($setAdminIdQuery);
         $setStmt->bindValue(':admin_id', $admin_id);
         $setStmt->execute();
 
-        $query = "INSERT INTO adminusers (user_idnum, user_fname, user_lname, user_mname, user_email, user_position, user_role, user_status, user_dateadded, user_profile, user_password, user_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Now, prepare and execute the stored procedure to insert the new admin user
+        $query = "CALL add_new_admin_user(:user_idnum, :user_fname, :user_lname, :user_mname, :user_email, 
+            :user_position, :user_role, :user_status, :user_dateadded, :user_profile, :user_password, :user_code)";
+
+        // Prepare the statement
         $stmt = $this->conn->prepare($query);
 
-        if ($stmt) {
-            $stmt->bindValue(1, $user_idnum); 
-            $stmt->bindValue(2, $user_fname);
-            $stmt->bindValue(3, $user_lname);
-            $stmt->bindValue(4, $user_mname); 
-            $stmt->bindValue(5, $user_email);
-            $stmt->bindValue(6, $user_position);
-            $stmt->bindValue(7, $user_role);
-            $stmt->bindValue(8, $user_status); 
-            $stmt->bindValue(9, $user_dateadded); 
-            $stmt->bindValue(10, $user_profile);
-            $stmt->bindValue(11, $password); 
-            $stmt->bindValue(12, $code); 
+        // Bind parameters
+        $stmt->bindValue(':user_idnum', $user_idnum);
+        $stmt->bindValue(':user_fname', $user_fname);
+        $stmt->bindValue(':user_lname', $user_lname);
+        $stmt->bindValue(':user_mname', $user_mname);
+        $stmt->bindValue(':user_email', $user_email);
+        $stmt->bindValue(':user_position', $user_position);
+        $stmt->bindValue(':user_role', $user_role);
+        $stmt->bindValue(':user_status', $user_status);
+        $stmt->bindValue(':user_dateadded', $user_dateadded);
+        $stmt->bindValue(':user_profile', $user_profile);
+        $stmt->bindValue(':user_password', $password);
+        $stmt->bindValue(':user_code', $code);
 
-            if ($stmt->execute()) {
-                //$user_id = $this->conn->lastInsertedId();
-
-                //$this->linkedList->addNode($user_idnum, $user_fname, $user_lname, $user_mname, $user_email, $user_position, $user_role, $user_status, $user_dateadded, $user_profile, $password, $code);
-                $_SESSION['status'] = 'success';
-                $_SESSION['message'] = 'User registered successfully!';
-                header('Location: staffuser.php');
-                exit();
-                
-            } else {
-                $errorInfo = $stmt->errorInfo();
-                $_SESSION['status'] = 'error';
-                $_SESSION['message'] = 'Error executing query: ' . $errorInfo[2];
-                error_log("Error executing query: " . $errorInfo[2]);
-                return false;
-            }
+        // Execute the stored procedure
+        if ($stmt->execute()) {
+            $_SESSION['status'] = 'success';
+            $_SESSION['message'] = 'User registered successfully!';
+            header('Location: staffuser.php');
+            exit();
         } else {
-            $errorInfo = $this->conn->errorInfo();
+            $errorInfo = $stmt->errorInfo();
             $_SESSION['status'] = 'error';
-            $_SESSION['message'] = 'Error preparing statement: ' . $errorInfo[2]; 
-            error_log("Error preparing statement: " . $errorInfo[2]);
+            $_SESSION['message'] = 'Error executing query: ' . $errorInfo[2];
+            error_log("Error executing query: " . $errorInfo[2]);
             return false;
         }
+    } catch (PDOException $e) {
+        $_SESSION['status'] = 'error';
+        $_SESSION['message'] = 'Error executing stored procedure: ' . $e->getMessage();
+        error_log("Error executing stored procedure: " . $e->getMessage());
+        return false;
     }
+}
+
+
+    
 
     public function updateCode($email, $otp) {
         $sql_update_statement = "UPDATE adminusers SET user_code = ? WHERE user_email = ?";
@@ -378,7 +330,9 @@ class User {
             return false;
         }
     }
-    public function updateUser($admin_id, $old_user_idnum, $new_user_idnum, $new_fname, $new_lname, $new_mname, $new_email, $new_position, $new_role, $new_status) {
+    
+    public function updateUser($admin_id, $old_user_idnum, $new_user_idnum, $new_fname, $new_lname, $new_mname, 
+    $new_email, $new_position, $new_role, $new_status) {
         try {
             // Start a transaction to ensure atomicity
             $this->conn->beginTransaction();
@@ -464,6 +418,14 @@ class User {
             error_log("Error preparing update statement: " . $this->conn->errorInfo()[2]);
             return false;
         }
+    }
+
+    public function getUserData($user_idnum) {
+        $query = "SELECT * FROM adminusers WHERE user_idnum = :user_idnum";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':user_idnum', $user_idnum);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);  
     }
     
     

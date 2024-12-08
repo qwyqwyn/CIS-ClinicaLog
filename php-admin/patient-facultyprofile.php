@@ -330,22 +330,6 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             return `${monthName} ${dayNumber}, ${year}`;
           }
 
-          function calculateAge(dobString) {
-            if (!dobString) return '';
-
-            const dob = new Date(dobString);
-            const today = new Date();
-
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDifference = today.getMonth() - dob.getMonth();
-
-            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < dob.getDate())) {
-              age--;
-            }
-
-            return age;
-          }
-
           function getOrdinalSuffix(num) {
             const suffixes = ["th", "st", "nd", "rd"];
             const value = num % 100;
@@ -363,7 +347,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             $('#firstName').text(data.patient.patient_fname || '');
             $('#middleName').text(data.patient.patient_mname || '');
             $('#dob').text(dobFormatted); 
-            $('#age').text(age); 
+            $('#age').text(data.patient.patient_age);
             $('#sex').text(data.patient.patient_sex || 'Male');
             $('#facultyID').text(data.faculty.faculty_idnum || '');
             $('#college').text(data.faculty.faculty_college || ''); 

@@ -43,7 +43,7 @@ if (isset($_POST['prescribemed'])) {
         SELECT medstock.medstock_id, medicine.medicine_name 
         FROM medstock 
         JOIN medicine ON medstock.medicine_id = medicine.medicine_id 
-        WHERE medicine.medicine_name LIKE ?"; 
+        WHERE medicine.medicine_name LIKE ? AND medstock_disable = 0"; 
 
     $stmt = $conn->prepare($medQuery);
     $stmt->execute([$searchMed]); 
@@ -274,7 +274,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
 
                                             $edit_medicine = $conn->real_escape_string($edit_medicine);
 
-                                            $sql = "SELECT medstock_id, medicine_name FROM medstock WHERE medicine_name LIKE '%$edit_medicine%' OR medstock_id LIKE '%$edit_medicine%' LIMIT 10";
+                                            $sql = "SELECT medstock_id, medicine_name FROM medstock WHERE medicine_name LIKE '%$edit_medicine%' OR medstock_id LIKE '%$edit_medicine%' LIMIT 10 
+                                            AND medstock_disable = 0";
                                             $result = $conn->query($sql);
 
                                             if ($result->num_rows > 0) {

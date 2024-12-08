@@ -136,7 +136,7 @@ class MedicineManager {
         $this->medstocks[] = $medstock;
     }
 
-    // Fetch medstock data from the database and populate the list.
+    // Fetch medstock data from the database and populate the list. 
     public function fetchAndStoreMedstocks($selectedDate, $quarterStart, $quarterEnd) {
         $query = "SELECT ms.medstock_id, CONCAT(m.medicine_name, ' ', ms.medstock_dosage) AS item, ms.medstock_unit, ms.medstock_expirationdt AS expiry_date
                   FROM medstock ms

@@ -822,7 +822,7 @@ class PatientManager{
             $stmt = $this->db->prepare($sql_update_statement);
 
             if ($stmt) {
-                $stmt->bindParam(1, $newPassword);
+                $stmt->bindParam(1, $newPassword); 
                 $stmt->bindParam(2, $code);
                 $stmt->bindParam(3, $email);
 
@@ -1240,65 +1240,68 @@ class PatientManager{
     
     
   
-public function getStudentData($patient_id) {
-    $query = "
-        SELECT 
-            p.*, 
-            s.student_idnum, 
-            s.student_program, 
-            s.student_major, 
-            s.student_year, 
-            s.student_section, 
-            a.address_region, 
-            a.address_province, 
-            a.address_municipality, 
-            a.address_barangay, 
-            a.address_prkstrtadd, 
-            ec.emcon_conname, 
-            ec.emcon_relationship, 
-            ec.emcon_connum
-        FROM 
-            patients p
-        LEFT JOIN 
-            patstudents s ON p.patient_id = s.student_patientid
-        LEFT JOIN 
-            pataddresses a ON p.patient_id = a.address_patientid
-        LEFT JOIN 
-            patemergencycontacts ec ON p.patient_id = ec.emcon_patientid
-        WHERE 
-            p.patient_id = :patient_id AND 
-            p.patient_patienttype = 'Student'
-    ";
+    public function getStudentData($patient_id) {
+        $query = "
+            SELECT 
+                p.*, 
+                s.student_idnum, 
+                s.student_program, 
+                s.student_major, 
+                s.student_year, 
+                s.student_section, 
+                a.address_region, 
+                a.address_province, 
+                a.address_municipality, 
+                a.address_barangay, 
+                a.address_prkstrtadd, 
+                ec.emcon_conname, 
+                ec.emcon_relationship, 
+                ec.emcon_connum,
+                calculate_age(p.patient_dob) AS patient_age
+            FROM 
+                patients p
+            LEFT JOIN 
+                patstudents s ON p.patient_id = s.student_patientid
+            LEFT JOIN 
+                pataddresses a ON p.patient_id = a.address_patientid
+            LEFT JOIN 
+                patemergencycontacts ec ON p.patient_id = ec.emcon_patientid
+            WHERE 
+                p.patient_id = :patient_id AND 
+                p.patient_patienttype = 'Student'
+        ";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':patient_id', $patient_id);
+        $stmt->execute();
     
-    $stmt = $this->db->prepare($query);
-    $stmt->bindParam(':patient_id', $patient_id);
-    $stmt->execute();
-
-    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC); 
     
-    return [
-        'patient' => $data, 
-        'student' => [
-            'student_idnum' => $data['student_idnum'],
-            'student_program' => $data['student_program'],
-            'student_major' => $data['student_major'],
-            'student_year' => $data['student_year'],
-            'student_section' => $data['student_section']
-        ],
-        'address' => [
-            'address_region' => $data['address_region'],
-            'address_province' => $data['address_province'],
-            'address_municipality' => $data['address_municipality'],
-            'address_barangay' => $data['address_barangay'],
-            'address_prkstrtadd' => $data['address_prkstrtadd']
-        ],
-        'emergencyContact' => [
-            'emcon_conname' => $data['emcon_conname'],
-            'emcon_relationship' => $data['emcon_relationship'],
-            'emcon_connum' => $data['emcon_connum']
-        ]
-    ];
-}
+        return [
+            'patient' => $data, 
+            'student' => [
+                'student_idnum' => $data['student_idnum'],
+                'student_program' => $data['student_program'],
+                'student_major' => $data['student_major'],
+                'student_year' => $data['student_year'],
+                'student_section' => $data['student_section']
+            ],
+            'address' => [
+                'address_region' => $data['address_region'],
+                'address_province' => $data['address_province'],
+                'address_municipality' => $data['address_municipality'],
+                'address_barangay' => $data['address_barangay'],
+                'address_prkstrtadd' => $data['address_prkstrtadd']
+            ],
+            'emergencyContact' => [
+                'emcon_conname' => $data['emcon_conname'],
+                'emcon_relationship' => $data['emcon_relationship'],
+                'emcon_connum' => $data['emcon_connum']
+            ],
+            'age' => $data['patient_age']  // The age will now be included in the response
+        ];
+    }
+    
 
 public function getFacultyData($patient_id) {
     $query = "
@@ -1315,7 +1318,8 @@ public function getFacultyData($patient_id) {
             a.address_prkstrtadd, 
             ec.emcon_conname, 
             ec.emcon_relationship, 
-            ec.emcon_connum
+            ec.emcon_connum,
+            calculate_age(p.patient_dob) AS patient_age
         FROM 
             patients p
         LEFT JOIN 
@@ -1354,7 +1358,8 @@ public function getFacultyData($patient_id) {
             'emcon_conname' => $data['emcon_conname'],
             'emcon_relationship' => $data['emcon_relationship'],
             'emcon_connum' => $data['emcon_connum']
-        ]
+        ],
+        'age' => $data['patient_age']
     ];
 }
 
@@ -1372,7 +1377,8 @@ public function getStaffData($patient_id) {
             a.address_prkstrtadd, 
             ec.emcon_conname, 
             ec.emcon_relationship, 
-            ec.emcon_connum
+            ec.emcon_connum,
+            calculate_age(p.patient_dob) AS patient_age
         FROM 
             patients p
         LEFT JOIN 
@@ -1410,7 +1416,8 @@ public function getStaffData($patient_id) {
             'emcon_conname' => $data['emcon_conname'],
             'emcon_relationship' => $data['emcon_relationship'],
             'emcon_connum' => $data['emcon_connum']
-        ]
+        ],
+        'age' => $data['patient_age']
     ];
 }
 
@@ -1427,7 +1434,8 @@ public function getExtensionData($patient_id) {
             a.address_prkstrtadd, 
             ec.emcon_conname, 
             ec.emcon_relationship, 
-            ec.emcon_connum
+            ec.emcon_connum,
+            calculate_age(p.patient_dob) AS patient_age
         FROM 
             patients p
         LEFT JOIN 
@@ -1464,7 +1472,8 @@ public function getExtensionData($patient_id) {
             'emcon_conname' => $data['emcon_conname'],
             'emcon_relationship' => $data['emcon_relationship'],
             'emcon_connum' => $data['emcon_connum']
-        ]
+        ],
+        'age' => $data['patient_age']
     ];
 }
 

@@ -748,7 +748,7 @@ $(".viewButton").click(function() {
         dataType: "json",
         success: function(response) {
             if (response.status === 'success') {
-                // Redirect based on patient type
+                // Redirect based on patient type 
                 if (patientType === 'Faculty') {
                     window.location.href = "patient-facultyprofile.php";
                 } else if (patientType === 'Student') {
@@ -757,7 +757,7 @@ $(".viewButton").click(function() {
                     window.location.href = "patient-staffprofile.php";
                 } else if (patientType === 'Extension') {
                     window.location.href = "patient-extensionprofile.php";
-                } else {
+                } else { 
                     alert("Invalid patient type");
                 }
             } else {

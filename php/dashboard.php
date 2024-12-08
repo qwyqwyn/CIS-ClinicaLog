@@ -114,7 +114,7 @@ class Dashboard {
     public function countActivePatients() {
         try {
             // Prepare the SQL query to count active patients
-            $query = "SELECT COUNT(*) AS active_count FROM patients WHERE patient_status = 'Active'";
+            $query = "SELECT * FROM active_patient_count";
     
             // Execute the query
             $stmt = $this->db->prepare($query);
@@ -131,36 +131,36 @@ class Dashboard {
         }
     }
     
-    public function countStudentConsultationsPerMonth($start_date = null, $end_date = null) {
-        return $this->countConsultationsByTypePerMonth('student', $start_date, $end_date);
+    public function countStudentPerMonth($start_date = null, $end_date = null) {
+        return $this->countPatientsByTypePerMonth('student', $start_date, $end_date);
     }
     
-    public function countFacultyConsultationsPerMonth($start_date = null, $end_date = null) {
-        return $this->countConsultationsByTypePerMonth('faculty', $start_date, $end_date);
+    public function countFacultyPerMonth($start_date = null, $end_date = null) {
+        return $this->countPatientsByTypePerMonth('faculty', $start_date, $end_date);
     }
     
-    public function countStaffConsultationsPerMonth($start_date = null, $end_date = null) {
-        return $this->countConsultationsByTypePerMonth('staff', $start_date, $end_date);
+    public function countStaffPerMonth($start_date = null, $end_date = null) {
+        return $this->countPatientsByTypePerMonth('staff', $start_date, $end_date);
     }
     
-    public function countExtensionConsultationsPerMonth($start_date = null, $end_date = null) {
-        return $this->countConsultationsByTypePerMonth('extension', $start_date, $end_date);
+    public function countExtensionPerMonth($start_date = null, $end_date = null) {
+        return $this->countPatientsByTypePerMonth('extension', $start_date, $end_date);
     }
  
-    private function countConsultationsByTypePerMonth($type, $start_date = null, $end_date = null) {
+    private function countPatientsByTypePerMonth($type, $start_date = null, $end_date = null) {
         try {
             // SQL query for consultations filtered by patient type
             $query = "
-                SELECT  
-                    YEAR(c.consult_date) AS year,
-                    MONTH(c.consult_date) AS month,
+               SELECT 
+                    YEAR(p.patient_dateadded) AS year,
+                    MONTH(p.patient_dateadded) AS month,
                     COUNT(*) AS count
-                FROM consultations c
-                INNER JOIN patients p ON c.consult_patientid = p.patient_id
+                FROM patients p
                 WHERE p.patient_patienttype = :type
-                " . ($start_date && $end_date ? "AND c.consult_date BETWEEN :start_date AND :end_date" : "") . "
-                GROUP BY YEAR(c.consult_date), MONTH(c.consult_date)
-                ORDER BY YEAR(c.consult_date), MONTH(c.consult_date);
+                AND p.patient_status = 'Active'
+                " . ($start_date && $end_date ? "AND p.patient_dateadded BETWEEN :start_date AND :end_date" : "") . "
+                GROUP BY YEAR(p.patient_dateadded), MONTH(p.patient_dateadded), p.patient_patienttype
+                ORDER BY YEAR(p.patient_dateadded), MONTH(p.patient_dateadded);
             ";
     
             $stmt = $this->db->prepare($query);
@@ -196,7 +196,7 @@ class Dashboard {
             }
     
             return $monthlyCounts;
-        } catch (PDOException $e) { 
+        } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return [];
         }
@@ -208,7 +208,7 @@ class Dashboard {
     public function countActiveadminusers() {
         try {
             // Prepare the SQL query to count active staff users with role 'Admin'
-            $query = "SELECT COUNT(*) AS active_staff_count FROM adminusers WHERE user_status = 'Active' AND user_role = 'Admin'";
+            $query = "SELECT * FROM active_admin_count";
     
             // Execute the query
             $stmt = $this->db->prepare($query);
@@ -228,12 +228,8 @@ class Dashboard {
     //working
     public function countAvailableMedstocks() {
         try {
-            // Prepare the SQL query to count medstocks that are available (not disabled, not expired, and in stock)
-            $query = "SELECT SUM(medstock_qty) AS total_available_qty
-                  FROM medstock
-                  WHERE medstock_disable = 0
-                  AND medstock_expirationdt >= CURDATE()
-                  AND medstock_qty > 0";
+            
+            $query = "SELECT * FROM available_medicine_stock";
     
             // Execute the query
             $stmt = $this->db->prepare($query);
@@ -241,62 +237,56 @@ class Dashboard {
     
             // Fetch the result
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            return $row['total_available_qty'];
+     
+            return $row['overall_available_stock'];
         } catch (PDOException $e) {
             // Handle any errors
             echo "Error: " . $e->getMessage();
-            return 0;
+            return 0; 
         }
     }   
 
-    //working
+
     public function getAlmostExpiredMedstocks($daysThreshold = 30) {
         try {
-            // Prepare the SQL query to get medstock details that are almost expired
-            $query = "
-                SELECT m.medicine_name, ms.medstock_id, ms.medstock_expirationdt
-                FROM medstock ms
-                JOIN medicine m ON ms.medicine_id = m.medicine_id
-                WHERE ms.medstock_disable = 0
-                  AND ms.medstock_expirationdt >= CURDATE()
-                  AND ms.medstock_expirationdt <= CURDATE() + INTERVAL :daysThreshold DAY
-                ORDER BY ms.medstock_expirationdt ASC
-                LIMIT 5
-            ";
+            // Define the stored procedure call
+            $query = "CALL get_expiring_med_soon(:daysThreshold)";
     
-            // Prepare and execute the statement with the threshold parameter
-            $stmt = $this->db->prepare($query); 
+            // Prepare the statement
+            $stmt = $this->db->prepare($query);
+    
+            // Bind the parameter (daysThreshold)
             $stmt->bindParam(':daysThreshold', $daysThreshold, PDO::PARAM_INT);
+    
+            // Execute the statement
             $stmt->execute();
     
-            // Fetch the results and store them in an array
+            // Fetch all the results
             $almostExpiredMedstocks = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+            // Return the results
             return $almostExpiredMedstocks;
         } catch (PDOException $e) {
             // Handle any errors
             echo "Error: " . $e->getMessage();
             return array();
         }
-    }    
+    }
+      
 
-    //working
     public function countTransactions() {
         try {
-            // Prepare the SQL query to count the total number of transactions
-            $query = "SELECT COUNT(*) AS total_transactions FROM transactions where transac_status = 'Done' ";
+            
+            $query = "SELECT * FROM total_done_transactions ";
     
-            // Execute the query 
             $stmt = $this->db->prepare($query);
             $stmt->execute();
-    
-            // Fetch the result
+
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
     
             return $row['total_transactions'];
         } catch (PDOException $e) {
-            // Handle any errors
+           
             echo "Error: " . $e->getMessage();
             return 0;
         }
