@@ -38,8 +38,9 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.2/xlsx.full.min.js"></script>
 
-    
+
     <!-- Fonts and icons -->
     <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
@@ -104,9 +105,14 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
         <div class="container" id="content">
             <div class="page-inner">
                 <div class="page-inner">
-                <div class="row">
-                        <h1>Manage Transactions</h1>
-                    </div>
+                <div class="row"> 
+                <div class="col-md-11 mb-3">
+                    <h1 class="fw-bold mb-3">Manage Transaction</h1>
+                </div>
+                <div class="col-md-1  mb-3">
+                    <button onclick="exportToExcel()" class="btn btn-primary">Export</button>
+                </div>
+                </div>
                 <div
                     class="modal fade"
                     id="addRowModal"
@@ -236,6 +242,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
                                         <i class="fa fa-plus"></i>
                                         Add 
                                     </button>
+                                    
                                 </div>
                             </div>
 
@@ -436,6 +443,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
 
         $('#add-con').DataTable({
         "ordering": false,  
+        
     })
 
 
@@ -533,6 +541,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
         <?php endif; ?>
     });
 </script>
+
 <script>
     $(document).ready(function() {
        
@@ -777,10 +786,12 @@ $(".viewButton").click(function() {
 </script>
 
 
-
-
-
-
+<script>
+    function exportToExcel() {
+        var wb = XLSX.utils.table_to_book(document.getElementById('add-con'), {sheet: "Sheet 1"});
+        XLSX.writeFile(wb, "table_data.xlsx");
+    }
+</script>
 
 </body>
 </html>

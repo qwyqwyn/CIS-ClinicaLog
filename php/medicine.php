@@ -366,7 +366,7 @@ class MedicineManager {
                 $medstock = $this->medstocks->find($medstock_id);
                 if ($medstock) {
                     $medstock->medicine_id = $medicine_id; // Update to new medicine ID
-                    $medstock->medstock_qty = $medicine_qty;
+                    $medstock->medstock_qty = $medicine_qty; 
                     $medstock->medstock_dosage = $medicine_dosage;
                     $medstock->medstock_expirationdt = $medicine_expirationdt;
                     $medstock->medstock_disabled = $medicine_disable;
@@ -382,6 +382,19 @@ class MedicineManager {
         }
     }
     
+    public function getMedicineStock($medicine_id) {
+        // SQL to call the stored function
+        $query = "SELECT get_medicine_stock(:medicine_id) AS remaining_stock";
+        
+        // Prepare and execute the query
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':medicine_id', $medicine_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        // Fetch and return the result
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $data['remaining_stock'];
+    }
     
     
     

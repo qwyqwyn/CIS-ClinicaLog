@@ -29,7 +29,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
     echo "No patient data found.";
 }
 
-?> 
+?>  
  
 <!DOCTYPE html>  
 <html lang="en">
@@ -371,7 +371,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             $('#email').text(data.patient.patient_email || '');
             $('#contactNumber').text(data.patient.patient_connum || '');
             $('#emergencyContactName').text(data.emergencyContact.emcon_conname || 'None');
-            $('#relationship').text(data.emergencyContact.emcon_relationship || 'None');
+            $('#relationship').text(data.emergencyContact.emcon_relationship || 'None'); 
             $('#emergencyContactNumber').text(data.emergencyContact.emcon_connum || 'None');
             $('#Status').text(data.patient.patient_status || '');
             $('#profilePic').attr('src', data.patient.patient_profile ? `uploads/${data.patient.patient_profile}` : 'default-image.jpg');

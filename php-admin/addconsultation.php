@@ -387,7 +387,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                     <script>
                     $(document).on('click', '.editConButton', function () {
                         const row = $(this).closest('tr'); 
@@ -435,8 +435,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                                             <tr>
                                                 <th>Name:</th>
                                                 <th>Diagnosis</th>
-                                                <th>Prescribed Medicine:</th>
-                                                <th>Quantity:</th>
+                                                <th>Prescribed Medicine (Quantity)</th>
+                                                <th>Clinician</th>
                                                 <th>Notes:</th>
                                                 <th>Remark</th>
                                                 <th>Date</th>
@@ -447,8 +447,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                                             <tr>
                                                 <th>Name:</th>
                                                 <th>Diagnosis</th> 
-                                                <th>Prescribed Medicine:</th>
-                                                <th>Quantity:</th>
+                                                <th>Prescribed Medicine (Quantity)</th>
+                                                <th>Clinician</th>
                                                 <th>Notes:</th>
                                                 <th>Remark</th>
                                                 <th>Date</th>
@@ -497,8 +497,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['medstock_id'], $_POST
                                                             consult_date='" . htmlspecialchars($item['consult_date'] ?? 'N/A') . "' >
                                                             <td>" . htmlspecialchars($item['name'] ?? 'N/A') . "</td>
                                                             <td>" . htmlspecialchars($item['consult_diagnosis'] ?? 'N/A') . "</td>
-                                                            <td>" . $medicationName . "</td>
-                                                            <td>" . $medQty . "</td>
+                                                            <td>" . $medicationName . " (". $medQty . ")" ."</td>
+                                                            <td>" . htmlspecialchars($item['consult_clinician'] ?? 'N/A') ."</td>
                                                             <td>" . htmlspecialchars($item['consult_treatmentnotes'] ?? 'N/A') . "</td>
                                                             <td>" . htmlspecialchars($item['consult_remark'] ?? 'N/A') . "</td>
                                                             <td>" . htmlspecialchars($item['consult_date'] ?? 'N/A') . "</td>

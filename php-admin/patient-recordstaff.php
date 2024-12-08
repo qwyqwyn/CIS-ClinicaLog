@@ -277,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                     echo '<tr>';
                                     echo '<td>' . $counter++ . '</td>';
-                                    echo '<td>' . $staff->staff_lname . ', ' . $staff->staff_fname . ' ' . $staff->staff_mname . ' (' . $staff->staff_idnum . ')</td>';
+                                    echo '<td>' . $staff->full_name. '</td>';
                                     echo '<td>' . $staff->staff_email . '</td>';
                                     echo '<td>' . $staff->staff_sex . '</td>';
                                     echo '<td>' . $staff->staff_office . '</td>';

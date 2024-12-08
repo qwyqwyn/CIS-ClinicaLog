@@ -60,7 +60,7 @@ $user_idnum = $_SESSION['user_idnum'];
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="add-med" class="display table table-striped table-hover">
+                    <table id="add-med" class="display table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -83,9 +83,13 @@ $user_idnum = $_SESSION['user_idnum'];
                             </tfoot>
                             <tbody>
                             <?php
-                           $items = $medicine->getMedicinesWithStockCount();
+                            $items = $medicine->getMedicinesWithStockCount();
 
                             foreach ($items as $item) {
+                                // Get the remaining stock using the function
+                                $remaining_stock = $medicine->getMedicineStock($item['medicine_id']);
+
+                                // Output the table row with the remaining stock
                                 echo "<tr data-id='{$item['medicine_id']}' 
                                         data-name='{$item['medicine_name']}' 
                                         data-category='{$item['medicine_category']}' 
@@ -94,18 +98,20 @@ $user_idnum = $_SESSION['user_idnum'];
                                         <td>{$item['medicine_name']}</td>
                                         <td>{$item['medicine_category']}</td>
                                         <td>{$item['stock_count']}</td>
+                                        <td>{$remaining_stock}</td> <!-- Display Remaining Stock -->
                                         <td>
-                                          <div class='form-button-action'>
-                                              <button type='button' class='btn btn-link btn-primary btn-lg editMedButton'>
-                                                  <i class='fa fa-edit'></i>
-                                              </button>
-                                          </div>
-                                      </td>
+                                            <div class='form-button-action'>
+                                                <button type='button' class='btn btn-link btn-primary btn-lg editMedButton'>
+                                                    <i class='fa fa-edit'></i>
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>";
                             }
                             ?>
-                        </tbody>
+                            </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>

@@ -42,6 +42,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.69/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.69/vfs_fonts.js"></script>
 
   <!-- Fonts and icons -->
   <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
@@ -124,8 +126,13 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             </div>
           </div>
           <div class="page-inner">
-            <div class="row">
-              <h3 class="fw-bold mb-3">Patient's Profle</h3>
+            <div class="row"> 
+            <div class="col-md-11 mb-3">
+                <h3 class="fw-bold mb-3">Patient's Profle</h3>
+            </div>
+            <div class="col-md-1  mb-3">
+                <button onclick="generatePDF()" class="btn btn-primary">Download</button>
+            </div>
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -341,17 +348,17 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
 
           function populatePatientForm(data) {
             const dobFormatted = data.patient.patient_dob ? formatDateToWords(data.patient.patient_dob) : 'Ey';
-            const age = calculateAge(data.patient.patient_dob);
+            
 
             $('#lastName').text(data.patient.patient_lname || '');
             $('#firstName').text(data.patient.patient_fname || '');
             $('#middleName').text(data.patient.patient_mname || '');
             $('#dob').text(dobFormatted); 
             $('#age').text(data.patient.patient_age);
-            $('#sex').text(data.patient.patient_sex || 'Male');
+            $('#sex').text(data.patient.patient_sex || 'Male'); 
             $('#facultyID').text(data.faculty.faculty_idnum || '');
             $('#college').text(data.faculty.faculty_college || ''); 
-            $('#department').text(data.faculty.faculty_department || ''); 
+            $('#department').text(data.faculty.faculty_department || '');  
             $('#role').text(data.faculty.faculty_role);
             $('#region').text(data.address.address_region || '');
             $('#province').text(data.address.address_province || '');
@@ -371,6 +378,146 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
           
         });
       </script>
+
+<script>
+    function convertImageToBase64(url, callback) {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous'; // Prevent CORS issues
+        img.onload = function () {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const dataURL = canvas.toDataURL('image/png'); // Convert to base64
+            callback(dataURL);
+        };
+        img.onerror = function () {
+            callback(null); // Handle errors
+        };
+        img.src = url;
+    }
+
+    function convertImageToBase64Element(id) {
+        const image = document.getElementById(id);
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        ctx.drawImage(image, 0, 0);
+        
+        // Convert canvas to base64
+        const base64Image = canvas.toDataURL('image/png');
+        return base64Image;
+    }
+
+    function generatePDF() {
+        const profilePicSrc = $('#profilePic').attr('src'); // Get the profile picture source
+
+        // Convert profile picture to base64
+        convertImageToBase64(profilePicSrc, function (profilePicBase64) {
+            if (!profilePicBase64) {
+                console.error('Failed to load profile image.');
+                return;
+            }
+
+            // Fetch other populated data
+            const facultyID = $('#facultyID').text();
+            const lastName = $('#lastName').text();
+            const firstName = $('#firstName').text();
+            const middleName = $('#middleName').text();
+            const dob = $('#dob').text();
+            const age = $('#age').text();
+            const sex = $('#sex').text();
+            const college = $('#college').text();
+            const depart = $('#department').text();
+            const role = $('#role').text();
+            const region = $('#region').text();
+            const province = $('#province').text();
+            const municipality = $('#municipality').text();
+            const barangay = $('#barangay').text();
+            const street = $('#street').text();
+            const email = $('#email').text();
+            const contactNumber = $('#contactNumber').text();
+            const emergencyContactName = $('#emergencyContactName').text();
+            const relationship = $('#relationship').text();
+            const emergencyContactNumber = $('#emergencyContactNumber').text();
+
+            const docDefinition = {
+                content: [
+                    // Header with ClinicLog Title
+                    {
+                        stack: [
+                            {
+                                text: 'ClinicaLog',  // ClinicLog text
+                                style: 'clinicHeader',
+                                alignment: 'left'
+                            },
+                            {
+                                text: 'Patient Profile', // Title of the report
+                                style: 'subheader',
+                                alignment: 'left'
+                            }
+                        ],
+                        alignment: 'center',
+                        margin: [0, 0, 0, 20]
+                    },
+                    // Patient Profile Section
+                    {
+                        stack: [
+                            {
+                                image: profilePicBase64,
+                                width: 100,
+                                height: 100,
+                                alignment: 'center',
+                                margin: [0, 0, 0, 10]
+                            },
+                            {
+                                text: `${lastName}, ${firstName} ${middleName}`,
+                                style: 'header',
+                                alignment: 'center'
+                            },
+                            {
+                                text: `Faculty ID: ${facultyID}`,
+                                style: 'subheader',
+                                alignment: 'center'
+                            }
+                        ],
+                        alignment: 'center',
+                        margin: [0, 20, 0, 20]
+                    },
+                    // Personal Details Section
+                    { text: '\nPersonal Details:', style: 'sectionHeader' },
+                    { text: `Date of Birth: ${dob}` },
+                    { text: `Age: ${age}` },
+                    { text: `Sex: ${sex}` },
+                    { text: '\nAcademic Information:', style: 'sectionHeader' },
+                    { text: `College: ${college}` },
+                    { text: `Department: ${depart}` },
+                    { text: `Role: ${role}` },
+                    { text: '\nContact Details:', style: 'sectionHeader' },
+                    { text: `Email: ${email}` },
+                    { text: `Contact Number: ${contactNumber}` },
+                    { text: '\nAddress:', style: 'sectionHeader' },
+                    { text: `${street}, ${barangay}, ${municipality}, ${province}, ${region}` },
+                    { text: '\nEmergency Contact:', style: 'sectionHeader' },
+                    { text: `Name: ${emergencyContactName} (${relationship})` },
+                    { text: `Contact Number: ${emergencyContactNumber}` }
+                ],
+                styles: {
+                    clinicHeader: { fontSize: 12, bold: true, color: '#DA6F65' }, 
+                    header: { fontSize: 16, bold: true },
+                    subheader: { fontSize: 12, bold: true, margin: [0, 5, 0, 5] },
+                    sectionHeader: { fontSize: 14, bold: true, margin: [0, 10, 0, 3] }
+                },
+                pageMargins: [40, 60, 40, 40]
+            };
+
+            // Generate the PDF
+            pdfMake.createPdf(docDefinition).download(`${lastName}_${facultyID}.pdf`);
+        });
+    }
+</script>
 </body>
 
 </html>

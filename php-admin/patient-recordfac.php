@@ -277,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                     echo '<tr>';
                                     echo '<td>' . $counter++ . '</td>';
-                                    echo '<td>' . $faculty->faculty_lname . ', ' . $faculty->faculty_fname . ' ' . $faculty->faculty_mname . ' (' . $faculty->faculty_idnum . ')</td>';
+                                    echo '<td>' . $faculty->full_name. '</td>';
                                     echo '<td>' . $faculty->faculty_email . '</td>';
                                     echo '<td>' . $faculty->faculty_sex . '</td>';
                                     echo '<td>' . $faculty->faculty_college . ' - ' . $faculty->faculty_depart . '</td>';

@@ -330,7 +330,7 @@
         FOREIGN KEY (transac_patientid) REFERENCES patients(patient_id)
     )";
   
-    if (mysqli_query($conn, $sql_transaction)) {
+    if (mysqli_query($conn, $sql_transaction)) { 
         echo "Table 'transaction' created successfully<br>";
     } else {
         echo "Error creating table 'transaction': " . mysqli_error($conn) . "<br>";

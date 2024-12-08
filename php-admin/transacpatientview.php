@@ -9,21 +9,19 @@ include('../database/config.php');
 include('../php/medicine.php');
 
 $db = new Database();
-$conn = $db->getConnection();
-
+$conn = $db->getConnection(); 
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // First check: patient_id and patient_type are set
     if (isset($_POST['patient_id']) && isset($_POST['patient_type'])) {
         $_SESSION['id'] = $_POST['patient_id']; 
         $_SESSION['type'] = $_POST['patient_type'];
 
         echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Patient data not found']);
     }
-
-    if (isset($_POST['notif_id'], $_POST['patient_id'], $_POST['patient_type'])) {
+    // Second check: notif_id, patient_id, and patient_type are set
+    else if (isset($_POST['notif_id'], $_POST['patient_id'], $_POST['patient_type'])) {
         // Store patient data in the session
         $_SESSION['id'] = $_POST['patient_id'];
         $_SESSION['type'] = $_POST['patient_type'];
@@ -49,5 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['status' => 'error', 'message' => 'Missing required parameters']);
     }
 }
+
 ?>
  

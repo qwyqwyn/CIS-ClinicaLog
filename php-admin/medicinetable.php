@@ -33,7 +33,7 @@ $userData = $user->getUserData($user_idnum);
       href="../assets/img/ClinicaLog.ico"
       type="image/x-icon"
     />
- 
+  
     <!-- Fonts and icons --> 
     <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
     <script>

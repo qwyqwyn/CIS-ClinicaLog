@@ -1,23 +1,19 @@
 <?php
-class AllPatTable{
+class AllPatTable {
     public $id;
-    public $lname;
-    public $fname;
-    public $mname;
+    public $full_name;
     public $email;
     public $profile;
     public $status;
     public $idnum;
     public $sex; 
-    public $type; 
+    public $type;
 
-    public function __construct($patient_id, $all_lname, $all_fname, $all_mname, $all_email, 
+    public function __construct($patient_id, $full_name, $all_email, 
                                 $all_profile, $all_status, $all_idnum,
                                  $all_sex, $patient_type) { 
         $this->id = $patient_id;
-        $this->lname = $all_lname;
-        $this->fname = $all_fname;
-        $this->mname = $all_mname;
+        $this->full_name = $full_name;  
         $this->email = $all_email;
         $this->profile = $all_profile;
         $this->status = $all_status;
@@ -27,11 +23,9 @@ class AllPatTable{
     }
 }
 
-class StudentTable{
+class StudentTable {
     public $patient_id;
-    public $student_lname;
-    public $student_fname;
-    public $student_mname;
+    public $full_name;
     public $student_email;
     public $student_profile;
     public $student_status;
@@ -41,15 +35,14 @@ class StudentTable{
     public $student_year;
     public $student_section;
     public $student_sex; 
-    public $patient_type; 
+    public $patient_type;
 
-    public function __construct($patient_id, $student_lname, $student_fname, $student_mname, $student_email, 
-                                $student_profile, $student_status, $student_idnum, $student_program, 
-                                $student_major, $student_year, $student_section, $student_sex, $patient_type) { 
+    public function __construct($patient_id, $full_name, $student_email, 
+                                $student_profile, $student_status, $student_idnum, 
+                                $student_program, $student_major, $student_year, 
+                                $student_section, $student_sex, $patient_type) { 
         $this->patient_id = $patient_id;
-        $this->student_lname = $student_lname;
-        $this->student_fname = $student_fname;
-        $this->student_mname = $student_mname;
+        $this->full_name = $full_name;  
         $this->student_email = $student_email;
         $this->student_profile = $student_profile;
         $this->student_status = $student_status;
@@ -58,16 +51,14 @@ class StudentTable{
         $this->student_major = $student_major;
         $this->student_year = $student_year;
         $this->student_section = $student_section;
-        $this->student_sex = $student_sex; 
+        $this->student_sex = $student_sex;
         $this->patient_type = $patient_type; 
     }
 }
 
-class FacultyTable{
+class FacultyTable {
     public $patient_id;
-    public $faculty_lname;
-    public $faculty_fname;
-    public $faculty_mname;
+    public $full_name;
     public $faculty_email;
     public $faculty_profile;
     public $faculty_status;
@@ -76,15 +67,14 @@ class FacultyTable{
     public $faculty_depart;
     public $faculty_role;
     public $faculty_sex; 
-    public $patient_type; 
+    public $patient_type;
 
-    public function __construct($patient_id, $faculty_lname, $faculty_fname, $faculty_mname, $faculty_email, 
-                                $faculty_profile, $faculty_status, $faculty_idnum, $faculty_college, 
-                                $faculty_depart, $faculty_role, $faculty_sex, $patient_type) { 
+    public function __construct($patient_id, $full_name, $faculty_email, 
+                                $faculty_profile, $faculty_status, $faculty_idnum, 
+                                $faculty_college, $faculty_depart, $faculty_role, 
+                                $faculty_sex, $patient_type) { 
         $this->patient_id = $patient_id;
-        $this->faculty_lname = $faculty_lname;
-        $this->faculty_fname = $faculty_fname;
-        $this->faculty_mname = $faculty_mname;
+        $this->full_name = $full_name;  
         $this->faculty_email = $faculty_email;
         $this->faculty_profile = $faculty_profile;
         $this->faculty_status = $faculty_status;
@@ -97,11 +87,9 @@ class FacultyTable{
     }
 }
 
-class StaffTable{
+class StaffTable {
     public $patient_id;
-    public $staff_lname;
-    public $staff_fname;
-    public $staff_mname;
+    public $full_name;
     public $staff_email;
     public $staff_profile;
     public $staff_status;
@@ -109,15 +97,13 @@ class StaffTable{
     public $staff_office;
     public $staff_role;
     public $staff_sex; 
-    public $patient_type; 
+    public $patient_type;
 
-    public function __construct($patient_id, $staff_lname, $staff_fname, $staff_mname, $staff_email, 
-                                $staff_profile, $staff_status, $staff_idnum, $staff_office, 
-                                $staff_role, $staff_sex, $patient_type) { 
+    public function __construct($patient_id, $full_name, $staff_email, 
+                                $staff_profile, $staff_status, $staff_idnum, 
+                                $staff_office, $staff_role, $staff_sex, $patient_type) { 
         $this->patient_id = $patient_id;
-        $this->staff_lname = $staff_lname;
-        $this->staff_fname = $staff_fname;
-        $this->staff_mname = $staff_mname;
+        $this->full_name = $full_name;  
         $this->staff_email = $staff_email;
         $this->staff_profile = $staff_profile;
         $this->staff_status = $staff_status;
@@ -129,26 +115,22 @@ class StaffTable{
     }
 }
 
-class ExtenTable{
+class ExtenTable {
     public $patient_id;
-    public $exten_lname;
-    public $exten_fname;
-    public $exten_mname;
+    public $full_name;
     public $exten_email;
     public $exten_profile;
     public $exten_status;
     public $exten_idnum;
     public $exten_role;
     public $exten_sex; 
-    public $patient_type; 
+    public $patient_type;
 
-    public function __construct($patient_id, $exten_lname, $exten_fname, $exten_mname, $exten_email, 
-                                $exten_profile, $exten_status, $exten_idnum,
+    public function __construct($patient_id, $full_name, $exten_email, 
+                                $exten_profile, $exten_status, $exten_idnum, 
                                 $exten_role, $exten_sex, $patient_type) { 
         $this->patient_id = $patient_id;
-        $this->exten_lname = $exten_lname;
-        $this->exten_fname = $exten_fname;
-        $this->exten_mname = $exten_mname;
+        $this->full_name = $full_name;  
         $this->exten_email = $exten_email;
         $this->exten_profile = $exten_profile;
         $this->exten_status = $exten_status;
@@ -158,6 +140,7 @@ class ExtenTable{
         $this->patient_type = $patient_type; 
     }
 }
+
 
 class PatNode {
     public $item;
@@ -228,21 +211,19 @@ class PatientTablesbyType {
 
     public function loadAllTable() {
         $stmt = $this->db->prepare("SELECT 
-                            patients.patient_id AS patient_id,
-                            patients.patient_lname AS all_lname,
-                            patients.patient_fname AS all_fname,
-                            patients.patient_mname AS all_mname,
-                            patients.patient_email AS all_email,
-                            patients.patient_profile AS all_profile,
-                            patients.patient_status AS all_status,
-                            patients.patient_sex AS all_sex,
-                            patients.patient_patienttype AS patient_type,
+                            p.patient_id AS patient_id,
+                            get_patient_full_name(p.patient_id) AS full_name, 
+                            p.patient_email AS all_email,
+                            p.patient_profile AS all_profile,
+                            p.patient_status AS all_status,
+                            p.patient_sex AS all_sex,
+                            p.patient_patienttype AS patient_type,
                             COALESCE(patstudents.student_idnum, patfaculties.faculty_idnum, patstaffs.staff_idnum, patextensions.exten_idnum) AS all_idnum
-                        FROM patients
-                        LEFT JOIN patstudents ON patients.patient_id = patstudents.student_patientid
-                        LEFT JOIN patfaculties ON patients.patient_id = patfaculties.faculty_patientid
-                        LEFT JOIN patstaffs ON patients.patient_id = patstaffs.staff_patientid
-                        LEFT JOIN patextensions ON patients.patient_id = patextensions.exten_patientid;
+                        FROM patients p
+                        LEFT JOIN patstudents ON p.patient_id = patstudents.student_patientid
+                        LEFT JOIN patfaculties ON p.patient_id = patfaculties.faculty_patientid
+                        LEFT JOIN patstaffs ON p.patient_id = patstaffs.staff_patientid
+                        LEFT JOIN patextensions ON p.patient_id = patextensions.exten_patientid;
                         ");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -250,9 +231,7 @@ class PatientTablesbyType {
         foreach ($result as $row) {
             $all = new AllPatTable(
                 $row['patient_id'],
-                $row['all_lname'],
-                $row['all_fname'],
-                $row['all_mname'],
+                $row['full_name'], 
                 $row['all_email'],
                 $row['all_profile'],
                 $row['all_status'],
@@ -265,20 +244,21 @@ class PatientTablesbyType {
     }
 
     public function loadStudentTable() {
-        $stmt = $this->db->prepare("SELECT p.patient_id, p.patient_lname, p.patient_fname, p.patient_mname, 
-                                    p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, ps.student_idnum, 
-                                    ps.student_program, ps.student_major, ps.student_year, ps.student_section, p.patient_patienttype
+        $stmt = $this->db->prepare("SELECT p.patient_id, 
+                                           get_patient_full_name(p.patient_id) AS full_name, 
+                                           p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, 
+                                           ps.student_idnum, ps.student_program, ps.student_major, ps.student_year, 
+                                           ps.student_section, p.patient_patienttype
                                     FROM patients p
                                     JOIN patstudents ps ON p.patient_id = ps.student_patientid"); 
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    
         foreach ($result as $row) {
+            
             $student = new StudentTable(
                 $row['patient_id'],
-                $row['patient_lname'],
-                $row['patient_fname'],
-                $row['patient_mname'],
+                $row['full_name'],  
                 $row['patient_email'],
                 $row['patient_profile'],
                 $row['patient_status'],
@@ -293,9 +273,10 @@ class PatientTablesbyType {
             $this->students->add($student);
         }
     }
+    
 
     public function loadFacultyTable() {
-        $stmt = $this->db->prepare("SELECT p.patient_id, p.patient_lname, p.patient_fname, p.patient_mname, 
+        $stmt = $this->db->prepare("SELECT p.patient_id, get_patient_full_name(p.patient_id) AS full_name,
                                     p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, pf.faculty_idnum, 
                                     pf.faculty_college, pf.faculty_depart, pf.faculty_role, p.patient_patienttype
                                     FROM patients p
@@ -306,9 +287,7 @@ class PatientTablesbyType {
         foreach ($result as $row) {
             $faculty = new FacultyTable(
                 $row['patient_id'],
-                $row['patient_lname'],
-                $row['patient_fname'],
-                $row['patient_mname'],
+                $row['full_name'],
                 $row['patient_email'],
                 $row['patient_profile'],
                 $row['patient_status'],
@@ -325,7 +304,7 @@ class PatientTablesbyType {
 
     
     public function loadStaffTable() {
-        $stmt = $this->db->prepare("SELECT p.patient_id, p.patient_lname, p.patient_fname, p.patient_mname, 
+        $stmt = $this->db->prepare("SELECT p.patient_id, get_patient_full_name(p.patient_id) AS full_name,
                                     p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, ps.staff_idnum, 
                                     ps.staff_office, ps.staff_role, p.patient_patienttype
                                     FROM patients p
@@ -336,9 +315,7 @@ class PatientTablesbyType {
         foreach ($result as $row) {
             $staff = new StaffTable(
                 $row['patient_id'],
-                $row['patient_lname'],
-                $row['patient_fname'],
-                $row['patient_mname'],
+                $row['full_name'],
                 $row['patient_email'],
                 $row['patient_profile'],
                 $row['patient_status'],
@@ -353,7 +330,7 @@ class PatientTablesbyType {
     }
 
     public function loadExtensionsTable() {
-        $stmt = $this->db->prepare("SELECT p.patient_id, p.patient_lname, p.patient_fname, p.patient_mname, 
+        $stmt = $this->db->prepare("SELECT p.patient_id, get_patient_full_name(p.patient_id) AS full_name,
                                     p.patient_email, p.patient_sex, p.patient_profile, p.patient_status, pe.exten_idnum, 
                                     pe.exten_role, p.patient_patienttype
                                     FROM patients p
@@ -364,9 +341,7 @@ class PatientTablesbyType {
         foreach ($result as $row) {
             $exten = new ExtenTable(
                 $row['patient_id'],
-                $row['patient_lname'],
-                $row['patient_fname'],
-                $row['patient_mname'],
+                $row['full_name'],
                 $row['patient_email'],
                 $row['patient_profile'],
                 $row['patient_status'],

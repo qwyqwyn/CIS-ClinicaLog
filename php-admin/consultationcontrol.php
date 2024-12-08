@@ -206,13 +206,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (isset($_POST['delete'])) {
         
-        // Handle deletion of a consultation
+   
         $consult_id = $_POST['edit_consult_id'] ?? null;
 
         if ($consult_id) {
             $deleteResult = $consultationManager->deleteConsultation($consult_id);
 
-            // Send JSON response
+
             echo json_encode([
                 'status' => $deleteResult['status'],
                 'message' => $deleteResult['message']
@@ -227,10 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
     if (isset($_POST['medstock_id'], $_POST['requested_qty'])) {
-        $medstock_id = $_POST['medstock_id'];  // Ensure this matches the JavaScript value
-        $requested_qty = (int) $_POST['requested_qty'];  // Cast to integer
-    
-        // Prepare SQL query
+        $medstock_id = $_POST['medstock_id'];  
+        $requested_qty = (int) $_POST['requested_qty'];  
+  
         $stmt = $conn->prepare("
             SELECT 
                  ms.medstock_qty - 
@@ -253,14 +252,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ms.medstock_id, ms.medstock_qty
         ");
     
-        // Bind the medstock_id parameter
-        $stmt->bindParam(':medstock_id', $medstock_id, PDO::PARAM_INT);  // Assuming medstock_id is an integer
+
+        $stmt->bindParam(':medstock_id', $medstock_id, PDO::PARAM_INT);  
         $stmt->execute();
-        
-        // Fetch the current quantity
+
         $current_qty = $stmt->fetchColumn();
-    
-        // Check if quantity exists and if requested quantity is available
+
         if ($current_qty === false) {
             echo json_encode(["status" => "error", "message" => "Medicine not found"]);
         } elseif ($requested_qty > $current_qty) {
@@ -269,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["status" => "success"]);
         }
     
-        exit;  // Ensure no further code is executed after the response
+        exit;  
     }
     
     

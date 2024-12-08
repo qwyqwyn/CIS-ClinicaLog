@@ -13,7 +13,7 @@ $user_idnum = $_SESSION['user_idnum'];
 <html lang="en">
 
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Add Student Patient</title>
   <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
   <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon" />
@@ -90,8 +90,8 @@ $user_idnum = $_SESSION['user_idnum'];
                 <div class="card-body">
                   <!-- Form Starts Here -->
                   <form id="studentForm" action="patientcontrol.php" method="POST" enctype="multipart/form-data" novalidate>
-                  <input id="admin_id" name="admin_id" type="hidden" class="form-control" value="<?php echo htmlspecialchars($user_idnum, ENT_QUOTES, 'UTF-8'); ?>"/>
-                  <!-- Name Fields -->
+                    <input id="admin_id" name="admin_id" type="hidden" class="form-control" value="<?php echo htmlspecialchars($user_idnum, ENT_QUOTES, 'UTF-8'); ?>" />
+                    <!-- Name Fields -->
                     <div class="row">
                       <div class="col-md-3 mb-3">
                         <label for="Profile" class="form-label">Profile Upload</label>
@@ -173,41 +173,47 @@ $user_idnum = $_SESSION['user_idnum'];
                     <!-- Address Fields -->
                     <h5>Current Address</h5>
                     <div class="row">
+                      <!-- Region Dropdown -->
                       <div class="col-md-2 mb-3">
                         <label for="region" class="form-label">Region</label>
                         <select class="form-select form-control" id="region" name="region" required>
-                          <option selected disabled>Select Region</option>x
+                          <option value="" disabled selected>Select Region</option>
                         </select>
                         <div class="invalid-feedback">Please select a region.</div>
                       </div>
 
+                      <!-- Province Dropdown -->
                       <div class="col-md-3 mb-3">
                         <label for="province" class="form-label">Province</label>
                         <select class="form-select form-control" id="province" name="province" required>
-                          <option selected disabled>Select Province</option>
+                          <option value="" disabled selected>Select Province</option>
                         </select>
                         <div class="invalid-feedback">Please select a province.</div>
                       </div>
 
+                      <!-- Municipality Dropdown -->
                       <div class="col-md-3 mb-3">
                         <label for="municipality" class="form-label">Municipality</label>
                         <select class="form-select form-control" id="municipality" name="municipality" required>
-                          <option selected disabled>Select Municipality</option>
+                          <option value="" disabled selected>Select Municipality</option>
                         </select>
                         <div class="invalid-feedback">Please select a municipality.</div>
                       </div>
 
+                      <!-- Barangay Dropdown -->
                       <div class="col-md-2 mb-3">
                         <label for="barangay" class="form-label">Barangay</label>
                         <select class="form-select form-control" id="barangay" name="barangay" required>
-                          <option selected disabled>Select Barangay</option>
+                          <option value="" disabled selected>Select Barangay</option>
                         </select>
                         <div class="invalid-feedback">Please select a barangay.</div>
                       </div>
 
+
+                      <!-- Street Input (Text Field) -->
                       <div class="col-md-2 mb-3">
                         <label for="street" class="form-label">Purok/Block No./Street</label>
-                        <input type="text" class="form-control" id="street" name="street" placeholder="Enter street address" />
+                        <input type="text" class="form-control" id="street" name="street" placeholder="Enter street address" required />
                       </div>
                     </div>
 
@@ -238,13 +244,13 @@ $user_idnum = $_SESSION['user_idnum'];
                         <label for="relationship" class="form-label">Relationship</label>
                         <input type="text" class="form-control" id="relationship" name="relationship" placeholder="Enter relationship" />
                       </div>
-                      
+
                       <div class="col-md-3 mb-3">
                         <label for="emergencyContactNumber" class="form-label">Emergency Contact Number</label>
                         <input type="tel" class="form-control" id="emergencyContactNumber" name="emergencyContactNumber" placeholder="Enter emergency contact number" />
                       </div>
                     </div>
-                    
+
                     <div class="row">
                       <div class="col-md-12 text-center">
                         <button type="submit" class="btn btn-primary" id="addstudentpatient" name="addstudentpatient">Submit</button>
@@ -274,6 +280,7 @@ $user_idnum = $_SESSION['user_idnum'];
   <!-- Core JS -->
   <script src="../assets/js/core/popper.min.js"></script>
   <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/address.js"></script>
 
   <!-- Kaiadmin JS -->
   <script src="../assets/js/kaiadmin.min.js"></script>
@@ -287,6 +294,7 @@ $user_idnum = $_SESSION['user_idnum'];
   <script src="../assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
   <script src="../assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
   <script src="../assets/js/plugin/jsvectormap/world.js"></script>
+
 
 
   <script>
@@ -419,130 +427,6 @@ $user_idnum = $_SESSION['user_idnum'];
           $('#major').val(savedMajor).trigger('change');
         }
       }
-    }
-
-
-    // Function to initialize address data
-    function initializeAddressDataWithSession() {
-      // Address Data Logic
-      const addressData = {
-        regions: {
-          "Region XI": {
-            provinces: {
-              "Davao del Norte": {
-                municipalities: ["Tagum City", "Sto. Tomas"],
-                barangays: {
-                  "Tagum City": ["Apokon", "Pagsabangan"],
-                  "Sto. Tomas": ["Kinamayan", "Poblacion"]
-                }
-              },
-              "Davao de Oro": {
-                municipalities: ["Pantukan", "Nabunturan"],
-                barangays: {
-                  "Pantukan": ["Kingking", "Magnaga"],
-                  "Nabunturan": ["Anislagan", "Poblacion"]
-                }
-              }
-            }
-          },
-          "Region XII": {
-            provinces: {
-              "Cotabato": {
-                municipalities: ["Alamada", "Carmen"],
-                barangays: {
-                  "Alamada": ["Camansi", "Macabasa"],
-                  "Carmen": ["Bentangan", "General Luna"]
-                }
-              }
-            }
-          }
-        }
-      };
-
-      // Function to populate dropdowns
-      function populateDropdown(dropdown, options) {
-        dropdown.innerHTML = '<option selected disabled>Select</option>';
-        options.forEach(option => {
-          const opt = document.createElement("option");
-          opt.value = option;
-          opt.textContent = option;
-          dropdown.appendChild(opt);
-        });
-      }
-
-      // Populate Regions dropdown
-      const regionSelect = document.getElementById("region");
-      populateDropdown(regionSelect, Object.keys(addressData.regions));
-
-      // Handle region change
-      regionSelect.addEventListener("change", function() {
-        const selectedRegion = this.value;
-        const provinces = Object.keys(addressData.regions[selectedRegion].provinces);
-        const provinceSelect = document.getElementById("province");
-        populateDropdown(provinceSelect, provinces);
-        provinceSelect.dispatchEvent(new Event('change')); // Trigger change to update municipalities
-      });
-
-      // Handle province change
-      document.getElementById("province").addEventListener("change", function() {
-        const selectedRegion = regionSelect.value;
-        const selectedProvince = this.value;
-        const municipalities = addressData.regions[selectedRegion].provinces[selectedProvince].municipalities;
-        const municipalitySelect = document.getElementById("municipality");
-        populateDropdown(municipalitySelect, municipalities);
-        municipalitySelect.dispatchEvent(new Event('change')); // Trigger change to update barangays
-      });
-
-      // Handle municipality change
-      document.getElementById("municipality").addEventListener("change", function() {
-        const selectedRegion = regionSelect.value;
-        const selectedProvince = document.getElementById("province").value;
-        const selectedMunicipality = this.value;
-        const barangays = addressData.regions[selectedRegion].provinces[selectedProvince].barangays[selectedMunicipality];
-        const barangaySelect = document.getElementById("barangay");
-        populateDropdown(barangaySelect, barangays);
-      });
-
-      // Check for previously selected values in sessionStorage
-      if (sessionStorage.getItem('selectedRegion')) {
-        regionSelect.value = sessionStorage.getItem('selectedRegion');
-        regionSelect.dispatchEvent(new Event('change'));
-      }
-      if (sessionStorage.getItem('selectedProvince')) {
-        const provinceSelect = document.getElementById("province");
-        provinceSelect.value = sessionStorage.getItem('selectedProvince');
-        provinceSelect.dispatchEvent(new Event('change'));
-      }
-      if (sessionStorage.getItem('selectedMunicipality')) {
-        const municipalitySelect = document.getElementById("municipality");
-        municipalitySelect.value = sessionStorage.getItem('selectedMunicipality');
-        municipalitySelect.dispatchEvent(new Event('change'));
-      }
-      if (sessionStorage.getItem('selectedBarangay')) {
-        const barangaySelect = document.getElementById("barangay");
-        barangaySelect.value = sessionStorage.getItem('selectedBarangay');
-      }
-
-      // Event handlers for dropdown changes
-      regionSelect.addEventListener('change', function() {
-        const region = this.value;
-        sessionStorage.setItem('selectedRegion', region);
-      });
-
-      document.getElementById("province").addEventListener('change', function() {
-        const province = this.value;
-        sessionStorage.setItem('selectedProvince', province);
-      });
-
-      document.getElementById("municipality").addEventListener('change', function() {
-        const municipality = this.value;
-        sessionStorage.setItem('selectedMunicipality', municipality);
-      });
-
-      document.getElementById("barangay").addEventListener('change', function() {
-        const barangay = this.value;
-        sessionStorage.setItem('selectedBarangay', barangay); // Store barangay in sessionStorage
-      });
     }
 
     // Function to restore form fields from sessionStorage

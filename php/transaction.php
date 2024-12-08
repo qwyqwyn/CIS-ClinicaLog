@@ -124,7 +124,7 @@ class TransacManager{
         INNER JOIN 
             patients AS p ON t.transac_patientid = p.patient_id
         LEFT JOIN 
-            patstudents AS s ON p.patient_id = s.student_patientid
+            patstudents AS s ON p.patient_id = s.student_patientid 
         LEFT JOIN 
             patfaculties AS f ON p.patient_id = f.faculty_patientid
         LEFT JOIN 
@@ -168,7 +168,6 @@ class TransacManager{
     
 
     public function addTransaction($admin_id, $transac_patientid, $transac_purpose) {
-        
         $transac_in = '00:00:00';
         $transac_out = '00:00:00';
         $transac_spent = 0;
@@ -214,236 +213,236 @@ class TransacManager{
         return $transac;
     }
     
-// Method to update the status to "Pending"
-public function updateStatusToPending($admin_id, $transac_id) {
-    return $this->updateTransactionStatusToPending($admin_id, $transac_id);
-}
- 
-// Method to update the status to "In Progress"
-public function updateStatusToInProgress($admin_id, $transac_id) {
-    return $this->updateTransactionStatusToInProgress($admin_id, $transac_id);
-}
-
-// Method to update the status to "Done"
-public function updateStatusToDone($admin_id, $transac_id) {
-    return $this->updateTransactionStatusToDone($admin_id, $transac_id);
-}
-
-// Helper method to update the transaction status to "Pending"
-private function updateTransactionStatusToPending($admin_id, $transac_id) {
-    $setAdminIdQuery = "SET @admin_id = :admin_id";
-    $setStmt = $this->db->prepare($setAdminIdQuery);
-    $setStmt->bindValue(':admin_id', $admin_id);
-    $setStmt->execute();
-
-    $query = "UPDATE transactions SET transac_status = ?, transac_in = ?, transac_out = ?, transac_spent = ? WHERE transac_id = ?";
-    $transac_in = '00:00:00';
-    $transac_out = '00:00:00';
-    $transac_spent = 0;
-
-    $stmt = $this->db->prepare($query);
-    $stmt->bindValue(1, 'Pending');
-    $stmt->bindValue(2, $transac_in);
-    $stmt->bindValue(3, $transac_out);
-    $stmt->bindValue(4, $transac_spent);
-    $stmt->bindValue(5, $transac_id);
-
-    if ($stmt->execute()) {
-        // Update the status in the linked list
-        $this->updateStatusInLinkedList($transac_id, 'Pending', $transac_in, $transac_out, $transac_spent);
-        return [
-            'status' => 'success',
-            'message' => "Transaction status updated to 'Pending'."
-        ];
-    } else {
-        return [
-            'status' => 'error',
-            'message' => 'Failed to update the status to Pending.'
-        ];
+    // Method to update the status to "Pending"
+    public function updateStatusToPending($admin_id, $transac_id) {
+        return $this->updateTransactionStatusToPending($admin_id, $transac_id);
     }
-}
-
-// Helper method to update the transaction status to "In Progress"
-private function updateTransactionStatusToInProgress($admin_id, $transac_id) {
-    $setAdminIdQuery = "SET @admin_id = :admin_id";
-    $setStmt = $this->db->prepare($setAdminIdQuery);
-    $setStmt->bindValue(':admin_id', $admin_id);
-    $setStmt->execute();
-
-    $query = "UPDATE transactions SET transac_status = ?, transac_in = ? WHERE transac_id = ?";
-    date_default_timezone_set('Asia/Manila');
-    $transac_in = date('H:i:s');
-
-    $stmt = $this->db->prepare($query);
-    $stmt->bindValue(1, 'Progress');
-    $stmt->bindValue(2, $transac_in);
-    $stmt->bindValue(3, $transac_id);
-
-    if ($stmt->execute()) {
-        // Update the status in the linked list
-        $this->updateStatusInLinkedList($transac_id, 'Progress', $transac_in, null, null);
-        return [
-            'status' => 'success',
-            'message' => "Transaction status updated to 'In Progress'."
-        ];
-    } else {
-        return [
-            'status' => 'error',
-            'message' => 'Failed to update the status to In Progress.'
-        ];
+    
+    // Method to update the status to "In Progress"
+    public function updateStatusToInProgress($admin_id, $transac_id) {
+        return $this->updateTransactionStatusToInProgress($admin_id, $transac_id);
     }
-}
 
-// Helper method to update the transaction status to "Done"
-private function updateTransactionStatusToDone($admin_id, $transac_id) {
-    $setAdminIdQuery = "SET @admin_id = :admin_id";
-    $setStmt = $this->db->prepare($setAdminIdQuery);
-    $setStmt->bindValue(':admin_id', $admin_id);
-    $setStmt->execute();
+    // Method to update the status to "Done"
+    public function updateStatusToDone($admin_id, $transac_id) {
+        return $this->updateTransactionStatusToDone($admin_id, $transac_id);
+    }
 
-    $query = "UPDATE transactions SET transac_status = ?, transac_out = ?, transac_spent = ? WHERE transac_id = ?";
-    date_default_timezone_set('Asia/Manila');
-    $transac_out = date('H:i:s');
+    // Helper method to update the transaction status to "Pending"
+    private function updateTransactionStatusToPending($admin_id, $transac_id) {
+        $setAdminIdQuery = "SET @admin_id = :admin_id";
+        $setStmt = $this->db->prepare($setAdminIdQuery);
+        $setStmt->bindValue(':admin_id', $admin_id);
+        $setStmt->execute();
 
-    // Fetch transac_in from the database to calculate transac_spent
-    $existingTransac = $this->getTransactionById($transac_id);
-    if ($existingTransac && isset($existingTransac['transac_in'])) {
-        $transac_spent = $this->calculateDuration($existingTransac['transac_in'], $transac_out);
+        $query = "UPDATE transactions SET transac_status = ?, transac_in = ?, transac_out = ?, transac_spent = ? WHERE transac_id = ?";
+        $transac_in = '00:00:00';
+        $transac_out = '00:00:00';
+        $transac_spent = 0;
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindValue(1, 'Done');
-        $stmt->bindValue(2, $transac_out);
-        $stmt->bindValue(3, $transac_spent);
-        $stmt->bindValue(4, $transac_id);
+        $stmt->bindValue(1, 'Pending');
+        $stmt->bindValue(2, $transac_in);
+        $stmt->bindValue(3, $transac_out);
+        $stmt->bindValue(4, $transac_spent);
+        $stmt->bindValue(5, $transac_id);
 
         if ($stmt->execute()) {
             // Update the status in the linked list
-            $this->updateStatusInLinkedList($transac_id, 'Done', null, $transac_out, $transac_spent);
+            $this->updateStatusInLinkedList($transac_id, 'Pending', $transac_in, $transac_out, $transac_spent);
             return [
                 'status' => 'success',
-                'message' => "Transaction status updated to 'Done'."
+                'message' => "Transaction status updated to 'Pending'."
             ];
         } else {
             return [
                 'status' => 'error',
-                'message' => 'Failed to update the status to Done.'
+                'message' => 'Failed to update the status to Pending.'
             ];
         }
-    } else {
-        return [
-            'status' => 'error',
-            'message' => 'Failed to fetch transaction details for calculating duration.'
-        ];
     }
-}
 
-// Helper method to fetch a transaction by ID
-private function getTransactionById($transac_id) {
-    // Assuming a method that retrieves the transaction by its ID
-    $query = "SELECT transac_in FROM transactions WHERE transac_id = ?";
-    $stmt = $this->db->prepare($query);
-    $stmt->bindValue(1, $transac_id);
-    $stmt->execute();
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+    // Helper method to update the transaction status to "In Progress"
+    private function updateTransactionStatusToInProgress($admin_id, $transac_id) {
+        $setAdminIdQuery = "SET @admin_id = :admin_id";
+        $setStmt = $this->db->prepare($setAdminIdQuery);
+        $setStmt->bindValue(':admin_id', $admin_id);
+        $setStmt->execute();
 
-// Helper method to calculate the duration (transac_spent) in seconds
-private function calculateDuration($transac_in, $transac_out) {
-    // Assuming transac_in and transac_out are in 'H:i:s' format, we will calculate the difference
-    $inTime = strtotime($transac_in);
-    $outTime = strtotime($transac_out);
-    
-    // Calculate the difference in seconds
-    $duration = $outTime - $inTime;
-    
-    // Return the duration in seconds
-    return $duration;
-}
+        $query = "UPDATE transactions SET transac_status = ?, transac_in = ? WHERE transac_id = ?";
+        date_default_timezone_set('Asia/Manila');
+        $transac_in = date('H:i:s');
 
-private function updateStatusInLinkedList($transac_id, $new_status, $transac_in, $transac_out, $transac_spent) {
-    $transactions = $this->transacList->getAllTransaction();
-    
-    foreach ($transactions as $transaction) {
-        if ($transaction->transac_id === $transac_id) {
-            $transaction->transac_status = $new_status;
-            if ($new_status === 'Progress') {
-                $transaction->transac_in = $transac_in;
-            } elseif ($new_status === 'Done') {
-                $transaction->transac_out = $transac_out;
-                $transaction->transac_spent = $transac_spent;
-            } elseif ($new_status === 'Pending') {
-                $transaction->transac_in = $transac_in;
-                $transaction->transac_out = $transac_out;
-                $transaction->transac_spent = $transac_spent;
-            }
-            break;
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(1, 'Progress');
+        $stmt->bindValue(2, $transac_in);
+        $stmt->bindValue(3, $transac_id);
+
+        if ($stmt->execute()) {
+            // Update the status in the linked list
+            $this->updateStatusInLinkedList($transac_id, 'Progress', $transac_in, null, null);
+            return [
+                'status' => 'success',
+                'message' => "Transaction status updated to 'In Progress'."
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to update the status to In Progress.'
+            ];
         }
     }
-}
 
-public function updatePatientAndPurpose($admin_id, $transac_id, $new_patientid, $new_purpose) {
-    $setAdminIdQuery = "SET @admin_id = :admin_id";
-    $setStmt = $this->db->prepare($setAdminIdQuery);
-    $setStmt->bindValue(':admin_id', $admin_id);
-    $setStmt->execute();
+    // Helper method to update the transaction status to "Done"
+    private function updateTransactionStatusToDone($admin_id, $transac_id) {
+        $setAdminIdQuery = "SET @admin_id = :admin_id";
+        $setStmt = $this->db->prepare($setAdminIdQuery);
+        $setStmt->bindValue(':admin_id', $admin_id);
+        $setStmt->execute();
 
-    $query = "UPDATE transactions SET transac_patientid = ?, transac_purpose = ? WHERE transac_id = ?";
-    $stmt = $this->db->prepare($query);
-    $stmt->bindValue(1, $new_patientid);
-    $stmt->bindValue(2, $new_purpose);
-    $stmt->bindValue(3, $transac_id);
+        $query = "UPDATE transactions SET transac_status = ?, transac_out = ?, transac_spent = ? WHERE transac_id = ?";
+        date_default_timezone_set('Asia/Manila');
+        $transac_out = date('H:i:s');
 
-    // Start a database transaction
-    $this->db->beginTransaction();
-    try {
-        if ($stmt->execute()) {
-            // Update in linked list if needed
-            if ($this->updatePatientAndPurposeInLinkedList($transac_id, $new_patientid, $new_purpose)) {
-                $this->db->commit();
+        // Fetch transac_in from the database to calculate transac_spent
+        $existingTransac = $this->getTransactionById($transac_id);
+        if ($existingTransac && isset($existingTransac['transac_in'])) {
+            $transac_spent = $this->calculateDuration($existingTransac['transac_in'], $transac_out);
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bindValue(1, 'Done');
+            $stmt->bindValue(2, $transac_out);
+            $stmt->bindValue(3, $transac_spent);
+            $stmt->bindValue(4, $transac_id);
+
+            if ($stmt->execute()) {
+                // Update the status in the linked list
+                $this->updateStatusInLinkedList($transac_id, 'Done', null, $transac_out, $transac_spent);
                 return [
                     'status' => 'success',
-                    'message' => 'Patient ID and purpose successfully updated.'
+                    'message' => "Transaction status updated to 'Done'."
                 ];
             } else {
-                throw new Exception('Failed to update linked list.');
+                return [
+                    'status' => 'error',
+                    'message' => 'Failed to update the status to Done.'
+                ];
             }
         } else {
-            throw new Exception('Database update failed.');
+            return [
+                'status' => 'error',
+                'message' => 'Failed to fetch transaction details for calculating duration.'
+            ];
         }
-    } catch (Exception $e) {
-        $this->db->rollBack();
-        return [
-            'status' => 'error',
-            'message' => $e->getMessage()
-        ];
     }
-}
 
-private function updatePatientAndPurposeInLinkedList($transac_id, $new_patientid, $new_purpose) {
-    $transactions = $this->transacList->getAllTransaction();
-    
-    if (is_array($transactions)) {
-        foreach ($transactions as $transac) {
-            if ($transac->transac_id === $transac_id) {
-                $transac->transac_patientid = $new_patientid;
-                $transac->transac_purpose = $new_purpose;
-                return true;  
+    // Helper method to fetch a transaction by ID
+    private function getTransactionById($transac_id) {
+        // Assuming a method that retrieves the transaction by its ID
+        $query = "SELECT transac_in FROM transactions WHERE transac_id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(1, $transac_id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Helper method to calculate the duration (transac_spent) in seconds
+    private function calculateDuration($transac_in, $transac_out) {
+        // Assuming transac_in and transac_out are in 'H:i:s' format, we will calculate the difference
+        $inTime = strtotime($transac_in);
+        $outTime = strtotime($transac_out);
+        
+        // Calculate the difference in seconds
+        $duration = $outTime - $inTime;
+        
+        // Return the duration in seconds
+        return $duration;
+    }
+
+    private function updateStatusInLinkedList($transac_id, $new_status, $transac_in, $transac_out, $transac_spent) {
+        $transactions = $this->transacList->getAllTransaction();
+        
+        foreach ($transactions as $transaction) {
+            if ($transaction->transac_id === $transac_id) {
+                $transaction->transac_status = $new_status;
+                if ($new_status === 'Progress') {
+                    $transaction->transac_in = $transac_in;
+                } elseif ($new_status === 'Done') {
+                    $transaction->transac_out = $transac_out;
+                    $transaction->transac_spent = $transac_spent;
+                } elseif ($new_status === 'Pending') {
+                    $transaction->transac_in = $transac_in;
+                    $transaction->transac_out = $transac_out;
+                    $transaction->transac_spent = $transac_spent;
+                }
+                break;
             }
-        }
-    } else {
-        $current = $transactions;
-        while ($current !== null) {
-            if ($current->transac_id === $transac_id) {
-                $current->transaction->transac_patientid = $new_patientid;
-                $current->transaction->transac_purpose = $new_purpose;
-                return true; 
-            }
-            $current = $current->next;
         }
     }
-    
-    return false;  
-}
+
+    public function updatePatientAndPurpose($admin_id, $transac_id, $new_patientid, $new_purpose) {
+        $setAdminIdQuery = "SET @admin_id = :admin_id";
+        $setStmt = $this->db->prepare($setAdminIdQuery);
+        $setStmt->bindValue(':admin_id', $admin_id);
+        $setStmt->execute();
+
+        $query = "UPDATE transactions SET transac_patientid = ?, transac_purpose = ? WHERE transac_id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(1, $new_patientid);
+        $stmt->bindValue(2, $new_purpose);
+        $stmt->bindValue(3, $transac_id);
+
+        // Start a database transaction
+        $this->db->beginTransaction();
+        try {
+            if ($stmt->execute()) {
+                // Update in linked list if needed
+                if ($this->updatePatientAndPurposeInLinkedList($transac_id, $new_patientid, $new_purpose)) {
+                    $this->db->commit();
+                    return [
+                        'status' => 'success',
+                        'message' => 'Patient ID and purpose successfully updated.'
+                    ];
+                } else {
+                    throw new Exception('Failed to update linked list.');
+                }
+            } else {
+                throw new Exception('Database update failed.');
+            }
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    private function updatePatientAndPurposeInLinkedList($transac_id, $new_patientid, $new_purpose) {
+        $transactions = $this->transacList->getAllTransaction();
+        
+        if (is_array($transactions)) {
+            foreach ($transactions as $transac) {
+                if ($transac->transac_id === $transac_id) {
+                    $transac->transac_patientid = $new_patientid;
+                    $transac->transac_purpose = $new_purpose;
+                    return true;  
+                }
+            }
+        } else {
+            $current = $transactions;
+            while ($current !== null) {
+                if ($current->transac_id === $transac_id) {
+                    $current->transaction->transac_patientid = $new_patientid;
+                    $current->transaction->transac_purpose = $new_purpose;
+                    return true; 
+                }
+                $current = $current->next;
+            }
+        }
+        
+        return false;  
+    }
 
 
     
