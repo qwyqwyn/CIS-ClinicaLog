@@ -8,34 +8,34 @@ include('../php/adminlogs.php');
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header('Location: ../php-login/index.php');  
-    exit;
-}
+    exit; 
+} 
 
 $db = new Database();
-$conn = $db->getConnection();
+$conn = $db->getConnection();  
 
 $user = new User($conn); 
 $user_idnum = $_SESSION['user_idnum'];
 
 $logs = new SystemLogs($conn);
 
-$logData = $logs->getAllSystemLogs();
+$logData = $logs->getAllSystemLogs(); 
 
 ?>
- 
-<!DOCTYPE html> 
-<html lang="en">   
+   
+<!DOCTYPE html>  
+<html lang="en">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CIS:Clinicalog</title> 
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
-
+ 
     <!-- Fonts and icons -->
     <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
-      WebFont.load({ 
-        google: { families: ["Public Sans:300,400,500,600,700"] },
+      WebFont.load({  
+        google: { families: ["Public Sans:300,400,500,600,700"] }, 
         custom: {
           families: [ 
             "Font Awesome 5 Solid",

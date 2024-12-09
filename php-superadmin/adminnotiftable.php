@@ -19,7 +19,7 @@ $user_idnum = $_SESSION['user_idnum'];
 $notificationHandler = new AdminNotif($conn);
 $notifications = $notificationHandler->getAllNotifications();
 
-function getNotifIcon($status) {
+function getNotifIcon($status) {  
     switch ($status) {
         case 'read':
             return 'fa-check-circle'; // Example icon
@@ -35,7 +35,7 @@ function getNotifIcon($status) {
 <!DOCTYPE html> 
 <html lang="en">  
 <head>  
-    
+
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CIS:Clinicalog</title> 
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
