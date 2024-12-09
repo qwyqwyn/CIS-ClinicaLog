@@ -422,8 +422,8 @@ function getNotifIcon($status) {
                 document.body.appendChild(form);
                 form.submit();
             });
-        });
-    });
+        }); 
+    }); 
 </script>
  
 <script>

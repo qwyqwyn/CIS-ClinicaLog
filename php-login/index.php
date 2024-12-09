@@ -32,7 +32,7 @@ if ($userData) {
     if ($userData->user_status === 'Active') {  
         if ($_SESSION['user_position'] === $defaultadmin) {
             header('Location: ../php-superadmin/index.php');  
-            exit;
+            exit; 
         } elseif ($_SESSION['user_role'] === 'Super Admin') {
             header('Location: ../php-superadmin/index.php'); 
             exit;
