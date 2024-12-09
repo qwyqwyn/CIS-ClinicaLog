@@ -449,7 +449,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }   
 
-            // AJAX request to handle the notification and redirect
             $.ajax({
                 url: "transacpatientview.php",
                 method: "POST",

@@ -15,7 +15,7 @@ $conn = $db->getConnection();
  
 $user = new User($conn); 
 $user_idnum = $_SESSION['user_idnum'];
-// Assuming $notifList is an object that has the method getAllNotifications.
+
 $notificationHandler = new AdminNotif($conn);
 $notifications = $notificationHandler->getAllNotifications();
 
