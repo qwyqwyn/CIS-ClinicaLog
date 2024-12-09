@@ -425,7 +425,7 @@ function getNotifIcon($status) {
         });
     });
 </script>
-
+ 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.querySelector("tbody"); // Target the table body for event delegation

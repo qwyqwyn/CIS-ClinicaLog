@@ -99,7 +99,7 @@ function getNotifIcon($status) {
         <!-- End Sidebar -->
         <div class="main-panel">
             <!-- Header --> 
-            <div class="main-header" id="header"></div>
+            <div class="main-header" id="header"></div> 
             <!-- Main Content -->
             <div class="container" id="content">
             <div class="page-inner">
