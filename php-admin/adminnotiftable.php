@@ -447,7 +447,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!notifId || !patientId || !patientType) {
                 Swal.fire('Error', 'Invalid or missing notification or patient data.', 'error');
                 return;
-            }
+            }   
 
             // AJAX request to handle the notification and redirect
             $.ajax({
