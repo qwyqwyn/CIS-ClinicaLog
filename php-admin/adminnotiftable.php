@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             default:
                                 Swal.fire('Error', 'Unknown patient type.', 'error');
                                 return;
-                        }
+                        }  
                         // Redirect to the respective profile page
                         window.location.href = redirectUrl;
                     } else {
