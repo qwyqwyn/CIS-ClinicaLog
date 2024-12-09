@@ -31,7 +31,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -420,7 +420,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
                   "City of Panabo": ["A. O. Floirendo", "Buenavista", "Cacao", "Cagangohan", "Consolacion", "Dapco", "Datu Abdul Dadia", "Gredu (Pob.)", "J.P. Laurel", "Kasilak", "Katipunan", "Katualan", "Kauswagan", "Kiotoy", "Little Panay", "Lower Panaga", "Mabunao", "Maduao", "Malativas", "Manay", "Nanyo", "New Malaga", "New Malitbog", "New Pandan (Pob.)", "New Visayas", "Quezon", "Salvacion", "San Francisco (Pob.)", "San Nicolas", "San Pedro", "San Roque", "San Vicente", "Santa Cruz", "Santo Ni\u00f1o (Pob.)", "Sindaton", "Southern Davao", "Tagpore", "Tibungol", "Upper Licanan", "Waterfall"],
                   "Island Garden City of Samal": ["Adecor", "Anonang", "Aumbay", "Aundanao", "Balet", "Bandera", "Caliclic", "Camudmud", "Catagman", "Cawag", "Cogon", "Cogon (Talicod)", "Dadatan", "Del Monte", "Guilon", "Kanaan", "Kinawitnon", "Libertad", "Libuak", "Licup", "Limao", "Linosutan", "Mambago-A", "Mambago-B", "Miranda (Pob.)", "Moncado (Pob.)", "Pangubatan", "Pe\u00f1aplata (Pob.)", "Poblacion", "San Agustin", "San Antonio", "San Isidro (Babak)", "San Isidro (Kaputian)", "San Jose", "San Miguel", "San Remigio", "Santa Cruz", "Santo Ni\u00f1o", "Sion", "Tagbaobo", "Tagbay", "Tagbitan-ag", "Tagdaliao", "Tagpopongan", "Tambo", "Toril"],
                   "Santo Tomas": ["Balagunan", "Bobongon", "Casig-Ang", "Esperanza", "Kimamon", "Kinamayan", "La Libertad", "Lungaog", "Magwawa", "New Katipunan", "New Visayas", "Pantaron", "Salvacion", "San Jose", "San Miguel", "San Vicente", "Talomo", "Tibal-og (Pob.)", "Tulalian"],
-                  "City of Tagum": ["Busaon", "Canocotan", "Cuambogan", "La Filipina", "Liboganon", "Madaum", "Magdum", "Magugpo East", "Magugpo North", "Magugpo Poblacion", "Magugpo South", "Magugpo West", "Mankilam", "New Balamban", "Nueva Fuerza", "Pagsabangan", "Pandapan", "San Agustin", "San Isidro", "San Miguel", "Visayan Village"],
+                  "City of Tagum": ["Apokon", "Busaon", "Canocotan", "Cuambogan", "La Filipina", "Liboganon", "Madaum", "Magdum", "Magugpo East", "Magugpo North", "Magugpo Poblacion", "Magugpo South", "Magugpo West", "Mankilam", "New Balamban", "Nueva Fuerza", "Pagsabangan", "Pandapan", "San Agustin", "San Isidro", "San Miguel", "Visayan Village"],
                   "Talaingod": ["Dagohoy", "Palma Gil", "Santo Ni\u00f1o"],
                   "Braulio E. Dujali": ["Cabay-Angan", "Dujali", "Magupising", "New Casay", "Tanglaw"],
                   "San Isidro": ["Dacudao", "Datu Balong", "Igangon", "Kipalili", "Libuton", "Linao", "Mamangan", "Monte Dujali", "Pinamuno", "Sabangan", "San Miguel", "Santo Ni\u00f1o", "Sawata"]

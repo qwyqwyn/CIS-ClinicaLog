@@ -484,7 +484,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 },
                 error: function (xhr) {
-                    let redirectUrl;
+                    let redirectUrl;  
                         switch (patientType) {
                             case 'Faculty':
                                 redirectUrl = "patient-facultyprofile.php";

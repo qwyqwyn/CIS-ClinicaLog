@@ -23,13 +23,13 @@ function getNotifIcon($status) {
     switch ($status) {
         case 'read':
             return 'fa-check-circle'; // Example icon
-        case 'unread':
+        case 'unread': 
             return 'fa-circle'; // Example icon
         default:
-            return 'fa-bell'; // Default icon
+            return 'fa-bell'; // Default icon 
     }
 }
-
+  
 ?>
  
 <!DOCTYPE html> 
