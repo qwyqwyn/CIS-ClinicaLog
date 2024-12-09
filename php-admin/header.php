@@ -255,7 +255,7 @@ function getNotifClass($status) {
                                       $timeAgo = timeAgo($notif['notif_date_added']);
                                       $patientName = $notif['patient_name']; 
                                       echo '
-                                      <a href="adminnotiftable.php">
+                                      <a href="adnotiftable.php">
                                           <div class="notif-icon notif-' . getNotifClass($notif['notif_status']) . '">
                                               <i class="fa ' . getNotifIcon($notif['notif_status']) . '"></i>
                                           </div>
@@ -270,7 +270,7 @@ function getNotifClass($status) {
                           </div>
                       </li>
                       <li>
-                          <a class="see-all" href="adminnotiftable.php">
+                          <a class="see-all" href="adnotiftable.php">
                               See all notifications<i class="fa fa-angle-right"></i>
                           </a>
                       </li>

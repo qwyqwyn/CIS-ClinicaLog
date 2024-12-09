@@ -17,7 +17,7 @@ if (isset($_POST['mark_as_read'])) {
     
     if ($stmt->execute()) {
         // Redirect back to the page after the update
-        header("Location: adminnotiftable.php");
+        header("Location: adnotiftable.php");
         exit();
     } else {
         echo "Failed to mark as read.";
@@ -34,7 +34,7 @@ if (isset($_POST['delete_notif'])) {
     
     if ($stmt->execute()) {
         // Redirect back to the page after deletion
-        header("Location: adminnotiftable.php");
+        header("Location: adnotiftable.php");
         exit();
     } else {
         echo "Failed to delete notification.";
