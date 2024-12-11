@@ -230,7 +230,7 @@ class PatientTablesbyType {
                             p.patient_id AS patient_id,
                             get_patient_full_name(p.patient_id) AS full_name, 
                             p.patient_email AS all_email,
-                            p.patient_profile AS all_profile,
+                            p.patient_profile AS all_profile, 
                             p.patient_status AS all_status,
                             p.patient_sex AS all_sex,
                             p.patient_patienttype AS patient_type,

@@ -160,7 +160,7 @@ $userData = $user->getUserData($user_idnum);
                                   <input type="text" class="form-control" id="otp" name="otp" required />
                                   <button type="button" class="btn btn-secondary mt-2" id="verify">Send OTP</button>
                                 </div>
-                              </form>
+                              </form> 
                               <form method="POST" id="changePasswordForm">
                               <input type="hidden" id="userEmail" name="emaill" value="<?php echo htmlspecialchars($userData['user_email']); ?>" />
                                     <div id="newPasswordSection" style="display: none;">

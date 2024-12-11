@@ -24,7 +24,7 @@ function timeAgo($timestamp) {
   $time_ago = strtotime($timestamp);
   $current_time = time();
   $time_difference = $current_time - $time_ago;
-  $seconds = $time_difference;
+  $seconds = $time_difference; 
   $minutes      = round($seconds / 60);           // value 60 is seconds
   $hours        = round($seconds / 3600);         // value 3600 is 60 minutes * 60 sec
   $days         = round($seconds / 86400);        // value 86400 is 24 hours * 60 minutes * 60 sec
@@ -326,6 +326,8 @@ function getNotifClass($status) {
                       <li>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="setting.php">Account Setting</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="backuprestore.php">System Back up & Restore</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" id="logoutLink">Logout</a>
                       </li>

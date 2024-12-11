@@ -23,7 +23,7 @@ try {
             SUM(CASE WHEN p.patient_patienttype = 'extension' AND t.transac_purpose = 'Medical Certificate Issuance' AND t.transac_status = 'Done' THEN 1 ELSE 0 END) AS medical_cert_extension
         FROM 
             transactions t
-        INNER JOIN 
+        INNER JOIN  
             patients p ON t.transac_patientid = p.patient_id
         WHERE 
             YEAR(t.transac_date) = :year
@@ -37,7 +37,7 @@ try {
     $stmt->execute([':year' => $year]);
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $finalData = [];
+    $finalData = []; 
     $totalRow = [
         'month' => 'Total',
         'dental_student' => 0, 'dental_faculty' => 0, 'dental_staff' => 0, 'dental_extension' => 0, 'dental_sum' => 0,
