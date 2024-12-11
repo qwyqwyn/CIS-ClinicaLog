@@ -241,14 +241,29 @@ $userData = $user->getUserData($user_idnum);
                     $("#backupProgress").hide();
                     Swal.fire({
                         icon: "success",
-                        title: "Backup Successful",
+                        title: "Backup Successful", 
                         text: "File saved: " + response.filePath,
                         confirmButtonText: "Download Backup",
                     }).then(() => {
-                        // Auto-download the file
-                        window.location.href = response.filePath;
+                        // Create a temporary link element
+                        const link = document.createElement('a');
+                        link.href = response.filePath;
+                        link.download = response.filePath.split('/').pop(); // Use the filename for download
+
+                        // Append the link to the body (it needs to be part of the document to trigger the download)
+                        document.body.appendChild(link);
+
+                        // Trigger the download by simulating a click
+                        link.click();
+
+                        // Remove the link from the document after the download starts
+                        document.body.removeChild(link);
+
+                        // After download, redirect to another page
+                        window.location.href = "backuprestore.php"; // Replace with the actual URL
                     });
                 }, 500);
+
             } else {
                 $("#backupProgress").hide();
                 Swal.fire("Error", response.message || "Backup failed.", "error");

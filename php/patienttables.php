@@ -228,7 +228,7 @@ class PatientTablesbyType {
     public function loadAllTable() {
         $stmt = $this->db->prepare("SELECT 
                             p.patient_id AS patient_id,
-                            p.patient_fname AS full_name, 
+                            get_patient_full_name(p.patient_fname) AS full_name, 
                             p.patient_email AS all_email,
                             p.patient_profile AS all_profile, 
                             p.patient_status AS all_status,
@@ -258,7 +258,7 @@ class PatientTablesbyType {
             $this->allpat->add($all);
         }
     }
-
+ 
     // Loads all student records and populates the students linked list
     public function loadStudentTable() {
         $stmt = $this->db->prepare("SELECT p.patient_id, 

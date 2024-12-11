@@ -31,7 +31,7 @@ function backDb($host, $user, $pass, $dbname, $tables = '*') {
             $values = implode("','", $values);
 
             $outsql .= "INSERT IGNORE INTO `$table` (`$columns`) VALUES ('$values');\n";
-        }
+        } 
         $outsql .= "\n";
     }
 
