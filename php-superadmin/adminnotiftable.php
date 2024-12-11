@@ -279,237 +279,149 @@ function getNotifIcon($status) {
     <script src="../assets/js/kaiadmin.min.js"></script>
     
     <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        // Initialize DataTable
+        $('#add-row').DataTable({
+            "ordering": false,
+            "searching": true
+        });
 
-        
-            $('#add-row').DataTable({
-                "ordering": false, // Enable overall ordering
-                "searching": true, // Enable search functionality
-                
-            });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-    // Loading Sidebar
-    $("#sidebar").load("sidebar.php", function(response, status, xhr) {
-        if (status == "error") {
-            console.log("Error loading sidebar: " + xhr.status + " " + xhr.statusText);
-            alert("Sidebar failed to load. Please check the console for errors.");
-        } else {
-            var currentPage = window.location.pathname.split('/').pop(); 
-
-            // Set active class on the current page's sidebar link
-            $('.nav-item').removeClass('active');
-            $('.nav-item').each(function() {
-                var href = $(this).find('a').attr('href');
-                if (href.indexOf(currentPage) !== -1) {
-                    $(this).addClass('active');
-                }
-            });
-        }
-    });
-
-    // Loading Header
-    $("#header").load("header.php", function(response, status, xhr) {
-        if (status == "error") {
-            console.log("Error loading header: " + xhr.status + " " + xhr.statusText);
-            alert("Header failed to load. Please check the console for errors.");
-        } else {
-            console.log("Header loaded successfully.");
-        }
-    });
-
-
-   
-
-});
-
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('readAll').addEventListener('click', function (e) {
-        e.preventDefault();
-
-        // Send AJAX request to mark all notifications as read
-        fetch('adminnotifcontrol.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=read_all'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('All notifications marked as read!');
-                // Optionally, update UI to reflect changes
-                location.reload();
+        // Load Sidebar
+        $("#sidebar").load("sidebar.php", function (response, status, xhr) {
+            if (status === "error") {
+                console.log("Error loading sidebar: " + xhr.status + " " + xhr.statusText);
+                alert("Sidebar failed to load. Please check the console for errors.");
             } else {
-                alert('Failed to mark notifications as read.');
+                let currentPage = window.location.pathname.split('/').pop();
+                $('.nav-item').removeClass('active');
+                $('.nav-item a').each(function () {
+                    if ($(this).attr('href').indexOf(currentPage) !== -1) {
+                        $(this).closest('.nav-item').addClass('active');
+                    }
+                });
             }
-        })
-        .catch(error => console.error('Error:', error));
-    });
+        });
 
-    // Handle "Clear History" action
-    document.getElementById('clearHistory').addEventListener('click', function (e) {
-        e.preventDefault();
+        // Load Header
+        $("#header").load("header.php", function (response, status, xhr) {
+            if (status === "error") {
+                console.log("Error loading header: " + xhr.status + " " + xhr.statusText);
+                alert("Header failed to load. Please check the console for errors.");
+            } else {
+                console.log("Header loaded successfully.");
+            }
+        });
 
-        if (confirm('Are you sure you want to clear all notifications?')) {
-            // Send AJAX request to delete all notifications
+        // Notification Actions
+        document.getElementById('readAll').addEventListener('click', function (e) {
+            e.preventDefault();
             fetch('adminnotifcontrol.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'action=clear_history'
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'action=read_all'
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('All notifications cleared!');
-                    // Optionally, update UI to reflect changes
+                    alert('All notifications marked as read!');
                     location.reload();
                 } else {
-                    alert('Failed to clear notifications.');
+                    alert('Failed to mark notifications as read.');
                 }
             })
             .catch(error => console.error('Error:', error));
-        }
-    });
-
-        // Mark as Read action
-        document.querySelectorAll('.mark-as-read').forEach(function(item) {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                var notifId = this.getAttribute('data-notif-id');
-                
-                // Create a form and submit it for Mark as Read
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'adminnotifcontrol.php';
-
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'mark_as_read';
-                input.value = notifId;
-                form.appendChild(input);
-
-                document.body.appendChild(form);
-                form.submit();
-            });
         });
 
-        // Delete action
-        document.querySelectorAll('.delete-notif').forEach(function(item) {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                var notifId = this.getAttribute('data-notif-id');
-                
-                // Create a form and submit it for Delete
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'adminnotifcontrol.php';
-
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'delete_notif';
-                input.value = notifId;
-                form.appendChild(input);
-
-                document.body.appendChild(form);
-                form.submit();
-            });
-        });
-    });
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const tableBody = document.querySelector("tbody"); // Target the table body for event delegation
-
-    tableBody.addEventListener("click", function (event) {
-        // Prevent triggering the row click when interacting with the dropdown or its children
-        if (event.target.closest(".dropdown") || event.target.closest(".dropdown-menu")) {
-            return;
-        }
-
-        const row = event.target.closest(".clickable-row"); // Identify the clicked row
-        if (row) {
-            // Extract data attributes
-            const notifId = row.getAttribute("data-id");
-            const patientId = row.getAttribute("data-patid");
-            const patientType = row.getAttribute("data-type");
-
-            // Validate required data attributes
-            if (!notifId || !patientId || !patientType) {
-                Swal.fire('Error', 'Invalid or missing notification or patient data.', 'error');
-                return;
-            }
-
-            // AJAX request to handle the notification and redirect
-            $.ajax({
-                url: "transacpatientview.php",
-                method: "POST",
-                data: { notif_id: notifId, patient_id: patientId, patient_type: patientType },
-                dataType: "json",
-                success: function (response) {
-                    if (response.status === 'success') {
-                        // Determine redirection based on patient type
-                        let redirectUrl;
-                        switch (patientType) {
-                            case 'Faculty':
-                                redirectUrl = "patient-facultyprofile.php";
-                                break;
-                            case 'Student':
-                                redirectUrl = "patient-studprofile.php";
-                                break;
-                            case 'Staff':
-                                redirectUrl = "patient-staffprofile.php";
-                                break;
-                            case 'Extension':
-                                redirectUrl = "patient-extensionprofile.php";
-                                break;
-                            default:
-                                Swal.fire('Error', 'Unknown patient type.', 'error');
-                                return;
-                        }
-                        // Redirect to the respective profile page
-                        window.location.href = redirectUrl;
+        document.getElementById('clearHistory').addEventListener('click', function (e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to clear all notifications?')) {
+                fetch('adminnotifcontrol.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'action=clear_history'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('All notifications cleared!');
+                        location.reload();
                     } else {
-                        // Show error message if response fails
-                        Swal.fire('Error', response.message || 'Unexpected error occurred.', 'error');
+                        alert('Failed to clear notifications.');
                     }
-                },
-                error: function (xhr) {
-                    let redirectUrl;
-                        switch (patientType) {
-                            case 'Faculty':
-                                redirectUrl = "patient-facultyprofile.php";
-                                break;
-                            case 'Student':
-                                redirectUrl = "patient-studprofile.php";
-                                break;
-                            case 'Staff':
-                                redirectUrl = "patient-staffprofile.php";
-                                break;
-                            case 'Extension':
-                                redirectUrl = "patient-extensionprofile.php";
-                                break;
-                            default:
-                                Swal.fire('Error', 'Unknown patient type.', 'error');
-                                return;
-                        }
-                        // Redirect to the respective profile page
-                        window.location.href = redirectUrl;
-                }
-            });
-        }
-    });
-});
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        });
 
+        document.querySelectorAll('.mark-as-read').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                const notifId = this.getAttribute('data-notif-id');
+                let form = new FormData();
+                form.append('mark_as_read', notifId);
+                fetch('adminnotifcontrol.php', {
+                    method: 'POST',
+                    body: form
+                }).then(() => location.reload());
+            });
+        });
+
+        document.querySelectorAll('.delete-notif').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                const notifId = this.getAttribute('data-notif-id');
+                let form = new FormData();
+                form.append('delete_notif', notifId);
+                fetch('adminnotifcontrol.php', {
+                    method: 'POST',
+                    body: form
+                }).then(() => location.reload());
+            });
+        });
+
+        // Table Row Click Handling
+        const tableBody = document.querySelector("tbody");
+        tableBody.addEventListener("click", function (event) {
+            if (event.target.closest(".dropdown")) return;
+
+            const row = event.target.closest(".clickable-row");
+            if (row) {
+                const notifId = row.getAttribute("data-id");
+                const patientId = row.getAttribute("data-patid");
+                const patientType = row.getAttribute("data-type");
+
+                if (!notifId || !patientId || !patientType) {
+                    Swal.fire('Error', 'Invalid or missing notification or patient data.', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    url: "transacpatientview.php",
+                    method: "POST",
+                    data: { notif_id: notifId, patient_id: patientId, patient_type: patientType },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            let redirectUrl;
+                            switch (patientType) {
+                                case 'Faculty': redirectUrl = "patient-facultyprofile.php"; break;
+                                case 'Student': redirectUrl = "patient-studprofile.php"; break;
+                                case 'Staff': redirectUrl = "patient-staffprofile.php"; break;
+                                case 'Extension': redirectUrl = "patient-extensionprofile.php"; break;
+                                default: Swal.fire('Error', 'Unknown patient type.', 'error'); return;
+                            }
+                            window.location.href = redirectUrl;
+                        } else {
+                            Swal.fire('Error', response.message || 'Unexpected error occurred.', 'error');
+                        }
+                    },
+                    error: function () {
+                        Swal.fire('Error', 'Failed to handle request.', 'error');
+                    }
+                });
+            }
+        });
+    });
 </script>
 
 </body>
