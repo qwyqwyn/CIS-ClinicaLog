@@ -1,9 +1,9 @@
 <?php
 class Database {
     private $host = "localhost";
-    private $username = "u753706103_cis";
-    private $password = "#Clinicalog@cis4";
-    private $dbname = "u753706103_clinicalog";
+    private $username = "root";
+    private $password = "";
+    private $dbname = "clinicalog";
     public $pdo;
 
     // Constructor to automatically connect when an instance is created

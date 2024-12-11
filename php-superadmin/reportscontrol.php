@@ -2,9 +2,9 @@
 header('Content-Type: application/json');
 
 $host = 'localhost';
-$dbname = 'u753706103_clinicalog';
-$username = 'u753706103_cis';
-$password = '#Clinicalog@cis4';
+$dbname = 'clinicalog';
+$username = 'root';
+$password = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

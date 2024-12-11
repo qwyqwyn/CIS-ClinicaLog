@@ -133,7 +133,7 @@ class MedicineManager {
         $medstock->end_balance = $end_balance;
 
         // Store the Medstock object for later retrieval.
-        $this->medstocks[] = $medstock;
+        $this->medstocks[] = $medstock; 
     }
 
     // Fetch medstock data from the database and populate the list. 
