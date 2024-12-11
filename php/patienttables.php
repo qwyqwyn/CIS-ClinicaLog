@@ -228,7 +228,7 @@ class PatientTablesbyType {
     public function loadAllTable() {
         $stmt = $this->db->prepare("SELECT 
                             p.patient_id AS patient_id,
-                            get_patient_full_name(p.patient_fname) AS full_name, 
+                            get_patient_full_name(p.patient_id) AS full_name, 
                             p.patient_email AS all_email,
                             p.patient_profile AS all_profile, 
                             p.patient_status AS all_status,
