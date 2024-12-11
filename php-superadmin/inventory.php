@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <form id="balanceForm">
                                     <div class="card-body" id="InputInfo">
                                         <div class="row">
-                                            <div class="col-md-3 mb-3"> 
+                                            <div class="col-md-4 mb-3"> 
                                                 <label for="quarter" class="form-label">Select a Quarter:</label>
                                                 <select id="quarter" class="form-control" required>
                                                     <option value="" disabled selected>Select Quarter</option>
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     <option value="4">4th Quarter</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-4 mb-3">
                                                 <label for="quarteryear" class="form-label">Select a Year for Selected Quarter</label>
                                                 <select id="quarteryear" class="form-control" required>
                                                     <option value="" disabled selected>Select Year</option>
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                     </script> 
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mb-3"> 
+                                            <div class="col-md-4 mb-3"> 
                                                 <label class="form-label">&nbsp;</label>
                                                 <button type="submit" class="btn btn-primary form-control">Filter</button>
                                             </div>
