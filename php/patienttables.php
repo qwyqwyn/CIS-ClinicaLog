@@ -228,14 +228,14 @@ class PatientTablesbyType {
     public function loadAllTable() {
         $stmt = $this->db->prepare("SELECT 
                             p.patient_id AS patient_id,
-                            get_patient_full_name(p.patient_id) AS full_name, 
+                            p.patient_fname AS full_name, 
                             p.patient_email AS all_email,
                             p.patient_profile AS all_profile, 
                             p.patient_status AS all_status,
                             p.patient_sex AS all_sex,
                             p.patient_patienttype AS patient_type,
                             COALESCE(patstudents.student_idnum, patfaculties.faculty_idnum, patstaffs.staff_idnum, patextensions.exten_idnum) AS all_idnum
-                        FROM patients p
+                        FROM patients p 
                         LEFT JOIN patstudents ON p.patient_id = patstudents.student_patientid
                         LEFT JOIN patfaculties ON p.patient_id = patfaculties.faculty_patientid
                         LEFT JOIN patstaffs ON p.patient_id = patstaffs.staff_patientid
