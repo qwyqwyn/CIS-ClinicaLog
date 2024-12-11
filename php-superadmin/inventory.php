@@ -16,10 +16,9 @@ $medicineManager = new MedicineManager($conn);
 $user_idnum = $_SESSION['user_idnum'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $monthYear = $_POST['monthYear'];
-    list($year, $month) = explode('-', $monthYear);
+    //$monthYear = $_POST['monthYear'];
+    //list($year, $month) = explode('-', $monthYear);
     
-    $firstDayOfMonth = date("Y-m-d", strtotime("$year-$month-01"));
     $quarterYear = $_POST['quarteryear']; 
     $quarter = $_POST['quarter'];
 
@@ -45,12 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $endOfQuarter = null;
     } 
 
-    $medicineManager->fetchAndStoreMedstocks($firstDayOfMonth, $startOfQuarter, $endOfQuarter);
+    $medicineManager->fetchAndStoreMedstocks( $startOfQuarter, $endOfQuarter);
 
     $response = [
         'status' => 'success',
         'message' => 'Data submitted successfully.',
-        'firstDayOfMonth' => $firstDayOfMonth,
         'quarterStart' => $startOfQuarter,
         'quarterEnd' => $endOfQuarter, 
         'medstocks' => $medicineManager->getAllMedstocksAsArray()
@@ -142,10 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <form id="balanceForm">
                                     <div class="card-body" id="InputInfo">
                                         <div class="row">
-                                            <div class="col-md-3 mb-3">
-                                                <label for="monthYear" class="form-label">Select Month & Year as Start Balance</label>
-                                                <input type="month" id="monthYear" class="form-control" required>
-                                            </div>
                                             <div class="col-md-3 mb-3"> 
                                                 <label for="quarter" class="form-label">Select a Quarter:</label>
                                                 <select id="quarter" class="form-control" required>
@@ -305,7 +299,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 event.preventDefault();
 
                 var formData = {
-                    monthYear: $("#monthYear").val(),
                     quarter: $("#quarter").val(),
                     quarteryear: $("#quarteryear").val(),
                 };
@@ -322,8 +315,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             let table = $("#add-row").DataTable();
                             table.clear();  
                             response.medstocks.forEach(function(medstock) {
-                                table.row.add([ 
-                                    medstock.medicine_balance_month,
+                                table.row.add([
+                                    medstock.medicine_balance_quarter,
                                     medstock.medstock_added,
                                     medstock.total_start_balance,
                                     medstock.unit,
@@ -374,12 +367,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 const wb = XLSX.utils.book_new();
                 const ws = XLSX.utils.aoa_to_sheet(data);
                 XLSX.utils.book_append_sheet(wb, ws, "Medstock Data");
-                
-                const monthYear = $("#monthYear").val();
+        
                 const quarter = $("#quarter").val();
                 const quarteryear = $("#quarteryear").val();
                 
-                const fileName = `MedicineReport_${monthYear}_Q${quarter}_of_${quarteryear}.xlsx`;
+                const fileName = `MedicineReport_Q${quarter}_of_${quarteryear}.xlsx`;
                 
                 XLSX.writeFile(wb, fileName);
             });
