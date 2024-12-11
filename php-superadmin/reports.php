@@ -105,7 +105,7 @@ $user_idnum = $_SESSION['user_idnum'];
                                     <div class="col-md-12">
                                         <div class="card card-round">
                                         <div class="card-header">
-                                            <div class="card-head-row">
+                                            <div class="card-head-row"> 
                                             <div class="card-title">Summary of All Services</div>
                                             <div class="card-tools">
                                                 <a href="#" class="btn btn-label-success btn-round btn-sm me-2" onclick="exportToExcel()">

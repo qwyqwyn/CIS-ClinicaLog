@@ -2,9 +2,9 @@
 header('Content-Type: application/json');
 
 $host = 'localhost';
-$dbname = 'clinicalog';
-$username = 'root';
-$password = '';
+$dbname = 'u753706103_clinicalog';
+$username = 'u753706103_cis';
+$password = '#Clinicalog@cis4';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -26,7 +26,7 @@ try {
             patients p ON t.transac_patientid = p.patient_id
         WHERE 
             YEAR(t.transac_date) = :year AND t.transac_status = 'Done'
-        GROUP BY 
+        GROUP BY  
             MONTH(t.transac_date)
         ORDER BY  
             month
