@@ -278,7 +278,7 @@ function printTable() {
     printWindow.document.write('</head><body>');
     
     // Add a title before the table
-    printWindow.document.write('<h1>System Logs</h1>'); // Title centered with specified size
+    printWindow.document.write('<h1>Clinicalog: Campus Clinic Management System Logs</h1>'); // Title centered with specified size
     
     // Append the table HTML
     printWindow.document.write(document.getElementById('admin-logs').outerHTML);
