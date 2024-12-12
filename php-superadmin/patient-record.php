@@ -263,11 +263,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           </tr>
                         </tfoot>
                         <tbody> 
-                        <?php
-// Assuming you have already established a database connection in $this->db
-
+             <?php
 // Prepare and execute the SQL query
-$stmt = $this->conn->prepare("
+$stmt = $conn->prepare("
     SELECT 
         p.patient_id AS id,
         COALESCE(patstudents.student_idnum, patfaculties.faculty_idnum, patstaffs.staff_idnum, patextensions.exten_idnum) AS idnum,
@@ -283,8 +281,8 @@ $stmt = $this->conn->prepare("
     LEFT JOIN patextensions ON p.patient_id = patextensions.exten_patientid;
 ");
 
-$stmt->execute();
-$nodes = $stmt->fetchAll(PDO::FETCH_OBJ);
+$stmt->execute(); // Execute the query
+$nodes = $stmt->fetchAll(PDO::FETCH_OBJ); // Fetch all results as objects
 
 $index = 0; // Initialize index for numbering rows
 
