@@ -154,7 +154,7 @@ class AdminNotif {
             }
             $current = $current->next; // Move to the next node
         }
-
+ 
         return $unreadCount; // Return the unread count
     }
 

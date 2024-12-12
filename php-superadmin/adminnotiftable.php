@@ -271,14 +271,7 @@ function getNotifIcon($status) {
                 console.log("Error loading sidebar: " + xhr.status + " " + xhr.statusText);
                 alert("Sidebar failed to load. Please check the console for errors.");
             } else {
-                let currentPage = window.location.pathname.split('/').pop();
-                $('.nav-item').removeClass('active');
-                    $('.nav-item').each(function() {
-                        var href = $(this).find('a').attr('href');
-                        if (href.indexOf(currentPage) !== -1) {
-                            $(this).addClass('active');
-                        }
-                    });
+                console.log("Sidebar loaded successfully.");
             }
         });
 
@@ -297,7 +290,6 @@ function getNotifIcon($status) {
             e.preventDefault();
             fetch('adminnotifcontrol.php', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'action=read_all'
             })
             .then(response => response.json())
@@ -317,7 +309,6 @@ function getNotifIcon($status) {
             if (confirm('Are you sure you want to clear all notifications?')) {
                 fetch('adminnotifcontrol.php', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: 'action=clear_history'
                 })
                 .then(response => response.json())
