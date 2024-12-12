@@ -199,9 +199,8 @@ $logData = $logs->getAllSystemLogs();
     <script>
     $(document).ready(function() {
         $("#admin-logs").DataTable({
-        
+        "paging": false // Disable pagination
     });
- 
        
         $("#sidebar").load("sidebar.php", function(response, status, xhr) {
             if (status == "error") {
@@ -232,12 +231,44 @@ $logData = $logs->getAllSystemLogs();
 <script>
 function printTable() {
     var printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>Print Table</title>');
+    printWindow.document.write('<html><head><title>System Logs</title>');
     
-    // Include your CSS files for styling
-    printWindow.document.write('<link rel="stylesheet" href="../css/bootstrap.min.css" />');
-    printWindow.document.write('<link rel="stylesheet" href="../css/plugins.min.css" />'); 
-    printWindow.document.write('<link rel="stylesheet" href="../css/kaiadmin.min.css" />');
+    // Add custom print styles
+    printWindow.document.write(`
+        <style>
+            @media print {
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    border: 1px solid #000;
+                    padding: 8px;
+                    text-align: left;
+                }
+                th {
+                    background-color: #f2f2f2;
+                    font-weight: bold;
+                }
+                tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    page-break-after: avoid;
+                }
+                button {
+                    display: none;
+                }
+                .dataTables_wrapper, .dataTables_paginate, .dataTables_length {
+                    display: none !important;
+                }
+            }
+        </style>
+    `);
     
     printWindow.document.write('</head><body>');
     
@@ -255,6 +286,7 @@ function printTable() {
         printWindow.close();
     };
 }
+
 </script>
 </body>
 </html>
