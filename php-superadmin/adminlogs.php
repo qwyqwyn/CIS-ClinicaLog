@@ -199,7 +199,7 @@ $logData = $logs->getAllSystemLogs();
     <script>
     $(document).ready(function() {
         $("#admin-logs").DataTable({
-        "paging": false // Disable pagination
+        //"paging": false // Disable pagination
     });
        
         $("#sidebar").load("sidebar.php", function(response, status, xhr) {
@@ -232,12 +232,7 @@ $logData = $logs->getAllSystemLogs();
 function printTable() {
     var printWindow = window.open('', '', 'height=600,width=800');
     printWindow.document.write('<html><head><title>System Logs</title>');
-    
-    // Include your CSS files for styling
-    printWindow.document.write('<link rel="stylesheet" href="../css/bootstrap.min.css" />');
-    printWindow.document.write('<link rel="stylesheet" href="../css/plugins.min.css" />'); 
-    printWindow.document.write('<link rel="stylesheet" href="../css/kaiadmin.min.css" />');
-    
+        
     // Add custom print styles
     printWindow.document.write(`
         <style>
