@@ -264,58 +264,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </tfoot>
                         <tbody> 
                         <?php
-                        $patientTables = new PatientTablesbyType($conn);
-                        $nodes = $patientTables->getAllTable();
-                        $index = 0; 
+// Assuming you have already established a database connection in $this->db
 
-                        foreach ($nodes as $node) {
-                            
-                            $disableStatus = isset($node->status) && $node->status == 'Inactive' ? 'Disabled' : 'Enabled';
-                            $statusColor = isset($node->status) && $node->status == 'Inactive' ? '#ff6961' : '#77dd77';
-                            //$node->name = "{$node->fname} " . (!empty($node->mname) ? "{$node->mname} " : "") . "{$node->lname}";
+// Prepare and execute the SQL query
+$stmt = $this->db->prepare("
+    SELECT 
+        p.patient_id AS id,
+        COALESCE(patstudents.student_idnum, patfaculties.faculty_idnum, patstaffs.staff_idnum, patextensions.exten_idnum) AS idnum,
+        get_patient_full_name(p.patient_id) AS full_name,
+        p.patient_email AS email,
+        p.patient_sex AS sex,
+        p.patient_patienttype AS type,
+        p.patient_status AS status
+    FROM patients p 
+    LEFT JOIN patstudents ON p.patient_id = patstudents.student_patientid
+    LEFT JOIN patfaculties ON p.patient_id = patfaculties.faculty_patientid
+    LEFT JOIN patstaffs ON p.patient_id = patstaffs.staff_patientid
+    LEFT JOIN patextensions ON p.patient_id = patextensions.exten_patientid;
+");
 
-                            $index++;
+$stmt->execute();
+$nodes = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-                            echo "<tr data-id='{$node->id}' 
-                                        data-name='{$node->full_name}' 
-                                        data-email='{$node->email}' 
-                                        data-sex='{$node->sex}' 
-                                        data-type='{$node->type}' 
-                                        data-status='{$node->status}' class='patient-row'>
-                                  <td>{$index}</td> <!-- For No. column -->
-                                  <td>{$node->idnum}</td>
-                                  <td>{$node->full_name}</td>
-                                  <td>{$node->email}</td> 
-                                  <td>{$node->sex}</td>
-                                  <td>{$node->type}</td>
-                                  <td>
-                                      <span style='
-                                          display: inline-block;
-                                          padding: 5px 10px;
-                                          border-radius: 50px;
-                                          background-color: {$statusColor}; /* Determine color based on status if needed */
-                                          color: white; 
-                                          text-align: center;
-                                          min-width: 60px;'>
-                                          {$node->status}
-                                      </span>
-                                  </td>
-                                  <td> 
-                                      <div class='form-button-action'>
-                                      
-                                          <button type='submit' class='btn btn-link btn-primary btn-lg viewButton' 
-                                                  data-id='{$node->id}' data-type='{$node->type}'>
-                                              <i class='fa fa-eye'></i>
-                                          </button>
-                                          <button type='submit' class='btn btn-link btn-primary btn-lg editButton'
-                                                  data-id='{$node->id}' data-type='{$node->type}'>
-                                                <i class='fa fa-edit'></i>
-                                          </button>
-                                      </div>
-                                  </td>
-                              </tr>";
-                        }
-                        ?>
+$index = 0; // Initialize index for numbering rows
+
+// Start generating the table rows
+foreach ($nodes as $node) {
+    // Determine the status and color for each node
+    $disableStatus = isset($node->status) && $node->status == 'Inactive' ? 'Disabled' : 'Enabled';
+    $statusColor = isset($node->status) && $node->status == 'Inactive' ? '#ff6961' : '#77dd77';
+
+    $index++; // Increment index for each row
+
+    // Output the row with data attributes for JavaScript interaction if needed
+    echo "<tr data-id='{$node->id}' 
+                data-name='{$node->full_name}' 
+                data-email='{$node->email}' 
+                data-sex='{$node->sex}' 
+                data-type='{$node->type}' 
+                data-status='{$node->status}' class='patient-row'>
+          <td>{$index}</td> <!-- For No. column -->
+          <td>{$node->idnum}</td>
+          <td>{$node->full_name}</td>
+          <td>{$node->email}</td> 
+          <td>{$node->sex}</td>
+          <td>{$node->type}</td>
+          <td>
+              <span style='
+                  display: inline-block;
+                  padding: 5px 10px;
+                  border-radius: 50px;
+                  background-color: {$statusColor}; /* Determine color based on status */
+                  color: white; 
+                  text-align: center;
+                  min-width: 60px;'>
+                  {$node->status}
+              </span>
+          </td>
+          <td> 
+              <div class='form-button-action'>
+                  <button type='button' class='btn btn-link btn-primary btn-lg viewButton' 
+                          data-id='{$node->id}' data-type='{$node->type}'>
+                      <i class='fa fa-eye'></i>
+                  </button>
+                  <button type='button' class='btn btn-link btn-primary btn-lg editButton'
+                          data-id='{$node->id}' data-type='{$node->type}'>
+                      <i class='fa fa-edit'></i>
+                  </button>
+              </div>
+          </td>
+      </tr>";
+}
+?>
+
                       </tbody>
                       </table>
                     </div>
