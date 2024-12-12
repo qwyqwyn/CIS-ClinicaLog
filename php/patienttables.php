@@ -234,14 +234,10 @@ class PatientTablesbyType {
             p.patient_profile AS all_profile, 
             p.patient_status AS all_status,
             p.patient_sex AS all_sex,
-            p.patient_patienttype AS patient_type,
-            COALESCE(patstudents.student_idnum, patfaculties.faculty_idnum, patstaffs.staff_idnum, patextensions.exten_idnum) AS all_idnum
+            p.patient_patienttype AS patient_type
         FROM patients p 
-        INNER JOIN patstudents ON p.patient_id = patstudents.student_patientid
-        INNER JOIN patfaculties ON p.patient_id = patfaculties.faculty_patientid
-        INNER JOIN patstaffs ON p.patient_id = patstaffs.staff_patientid
-        INNER JOIN patextensions ON p.patient_id = patextensions.exten_patientid;
     ");
+    
     
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
