@@ -357,6 +357,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['type'])) {
             $('#firstName').text(data.patient.patient_fname || '');
             $('#middleName').text(data.patient.patient_mname || '');
             $('#age').text(data.patient.patient_age);
+            $('#dob').text(dobFormatted);
             $('#sex').text(data.patient.patient_sex || 'Male');
             $('#studentID').text(data.student.student_idnum || '');
             $('#program').text(data.student.student_program || ''); 
