@@ -233,6 +233,11 @@ function printTable() {
     var printWindow = window.open('', '', 'height=600,width=800');
     printWindow.document.write('<html><head><title>System Logs</title>');
     
+    // Include your CSS files for styling
+    printWindow.document.write('<link rel="stylesheet" href="../css/bootstrap.min.css" />');
+    printWindow.document.write('<link rel="stylesheet" href="../css/plugins.min.css" />'); 
+    printWindow.document.write('<link rel="stylesheet" href="../css/kaiadmin.min.css" />');
+    
     // Add custom print styles
     printWindow.document.write(`
         <style>
@@ -240,6 +245,11 @@ function printTable() {
                 body {
                     font-family: Arial, sans-serif;
                     margin: 20px;
+                }
+                h1 {
+                    text-align: center; /* Center the title */
+                    font-size: 16px; /* Set the font size to 16px */
+                    margin-bottom: 20px; /* Add some space below the title */
                 }
                 table {
                     width: 100%;
@@ -257,20 +267,23 @@ function printTable() {
                 tr:nth-child(even) {
                     background-color: #f9f9f9;
                 }
-                h1, h2, h3, h4, h5, h6 {
+                h2, h3, h4, h5, h6 {
                     page-break-after: avoid;
                 }
                 button {
-                    display: none;
+                    display: none; /* Hide buttons */
                 }
                 .dataTables_wrapper, .dataTables_paginate, .dataTables_length {
-                    display: none !important;
+                    display: none !important; /* Hide DataTable controls */
                 }
             }
         </style>
     `);
     
     printWindow.document.write('</head><body>');
+    
+    // Add a title before the table
+    printWindow.document.write('<h1>System Logs</h1>'); // Title centered with specified size
     
     // Append the table HTML
     printWindow.document.write(document.getElementById('admin-logs').outerHTML);
@@ -286,6 +299,7 @@ function printTable() {
         printWindow.close();
     };
 }
+
 
 </script>
 </body>
