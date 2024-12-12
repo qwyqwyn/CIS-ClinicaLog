@@ -199,7 +199,7 @@ $logData = $logs->getAllSystemLogs();
     <script>
     $(document).ready(function() {
         $("#admin-logs").DataTable({
-        //"paging": false // Disable pagination
+        "paging": false // Disable pagination
     });
        
         $("#sidebar").load("sidebar.php", function(response, status, xhr) {
