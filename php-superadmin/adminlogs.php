@@ -102,9 +102,10 @@ $logData = $logs->getAllSystemLogs();
                                         class="btn btn-primary btn-round ms-auto"
                                         data-bs-toggle="modal"
                                         data-bs-target="#addRowModal"
+                                        onclick="printTable()"
                                     >
                                         <i class="fa fa-arrow"></i>
-                                        Refresh List
+                                        Print
                                     </button>
                                 </div>
                             </div>
@@ -149,7 +150,7 @@ $logData = $logs->getAllSystemLogs();
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
+                                </div> 
                             </div>
                         </div>
                     </div> <!-- End of Consultations List -->
@@ -228,6 +229,32 @@ $logData = $logs->getAllSystemLogs();
     });
 </script>
 
+<script>
+function printTable() {
+    var printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print Table</title>');
     
+    // Include your CSS files for styling
+    printWindow.document.write('<link rel="stylesheet" href="../css/bootstrap.min.css" />');
+    printWindow.document.write('<link rel="stylesheet" href="../css/plugins.min.css" />'); 
+    printWindow.document.write('<link rel="stylesheet" href="../css/kaiadmin.min.css" />');
+    
+    printWindow.document.write('</head><body>');
+    
+    // Append the table HTML
+    printWindow.document.write(document.getElementById('admin-logs').outerHTML);
+    
+    printWindow.document.write('</body></html>');
+    
+    // Close the document for writing
+    printWindow.document.close();
+    
+    // Wait for the content to load before printing
+    printWindow.onload = function() {
+        printWindow.print();
+        printWindow.close();
+    };
+}
+</script>
 </body>
 </html>
