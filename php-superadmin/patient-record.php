@@ -267,7 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Assuming you have already established a database connection in $this->db
 
 // Prepare and execute the SQL query
-$stmt = $this->db->prepare("
+$stmt = $this->conn->prepare("
     SELECT 
         p.patient_id AS id,
         COALESCE(patstudents.student_idnum, patfaculties.faculty_idnum, patstaffs.staff_idnum, patextensions.exten_idnum) AS idnum,
