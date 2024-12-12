@@ -25,7 +25,7 @@ try {
         INNER JOIN  
             patients p ON t.transac_patientid = p.patient_id
         WHERE 
-            YEAR(t.transac_date) = :year AND t.transac_status = 'Done'  
+            YEAR(t.transac_date) = :year AND t.transac_status = 'Done'
         GROUP BY  
             MONTH(t.transac_date)
         ORDER BY  

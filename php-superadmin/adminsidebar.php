@@ -32,8 +32,7 @@
     <link rel="stylesheet" href="../css/kaiadmin.min.css" />
 
     <!-- ICONS -->
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
+      
     <style>
       .sidebar {
           transition: background 0.3s ease;

@@ -27,10 +27,10 @@ if ($userData) {
     $_SESSION['user_idnum'] = $userData->user_idnum;  
     $_SESSION['user_status'] = $userData->user_status;
     $_SESSION['user_position'] = $userData->user_position;
-    $_SESSION['user_role'] = $userData->user_role;
+    $_SESSION['user_role'] = $userData->user_role; 
 
     if ($userData->user_status === 'Active') {  
-        if ($_SESSION['user_position'] === $defaultadmin) {
+        if ($_SESSION['user_position'] === $defaultadmin) { 
             header('Location: ../php-superadmin/index.php');  
             exit; 
         } elseif ($_SESSION['user_role'] === 'Super Admin') {

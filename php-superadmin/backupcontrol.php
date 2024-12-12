@@ -8,6 +8,7 @@ try {
     $user = 'u753706103_cis';
     $pass = '#Clinicalog@cis4'; // Use your database password
     $dbname = 'u753706103_clinicalog'; // Replace with your database name
+
     // Generate backup
     $backupFile = backDb($host, $user, $pass, $dbname);
 

@@ -68,8 +68,7 @@ $medicineId = isset($_GET['id']) ? $_GET['id'] : null;
     <link rel="stylesheet" href="../css/transaction.css" />
 
     <!-- ICONS -->
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
+      
     <style>
       .sidebar {
           transition: background 0.3s ease;

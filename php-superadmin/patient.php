@@ -33,13 +33,11 @@
     <link rel="stylesheet" href="../css/kaiadmin.min.css" />
 
     <!-- ICONS -->
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
+      
         <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="../css/demo.css" />
 
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
+      
     <style>
       .sidebar {
           transition: background 0.3s ease;

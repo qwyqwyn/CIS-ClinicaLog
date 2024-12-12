@@ -144,8 +144,7 @@ function getNotifClass($status) {
     <link rel="stylesheet" href="../css/kaiadmin.min.css" />
  
     <!-- ICONS -->
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
+      
     <style>
       .sidebar {
           transition: background 0.3s ease;
@@ -163,7 +162,7 @@ function getNotifClass($status) {
             <div class="logo-header" data-background-color="dark"> 
               <a href="index.php" class="logo">
                 <img
-                  src="../assets/img/kaiadmin/logo_light.svg"
+                   
                   alt="navbar brand"
                   class="navbar-brand"
                   height="20"

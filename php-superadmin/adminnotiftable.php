@@ -40,7 +40,6 @@ function getNotifIcon($status) {
     <title>CIS:Clinicalog</title> 
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" /> 
     <link rel="icon" href="../assets/img/ClinicaLog.ico" type="image/x-icon"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
@@ -278,11 +277,12 @@ function getNotifIcon($status) {
             } else {
                 let currentPage = window.location.pathname.split('/').pop();
                 $('.nav-item').removeClass('active');
-                $('.nav-item a').each(function () {
-                    if ($(this).attr('href').indexOf(currentPage) !== -1) {
-                        $(this).closest('.nav-item').addClass('active');
-                    }
-                });
+                    $('.nav-item').each(function() {
+                        var href = $(this).find('a').attr('href');
+                        if (href.indexOf(currentPage) !== -1) {
+                            $(this).addClass('active');
+                        }
+                    });
             }
         });
 
