@@ -1,5 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "clinicalog");
+$conn = mysqli_connect("localhost", "u753706103_cis", "#Clinicalog@cis4", "u753706103_clinicalog");
 if (! empty($_FILES)) {
     // Validating SQL file type by extensions
     if (! in_array(strtolower(pathinfo($_FILES["backup_file"]["name"], PATHINFO_EXTENSION)), array(
@@ -18,7 +18,7 @@ if (! empty($_FILES)) {
 }
 
 function restoreMysqlDB($filePath, $conn)
-{
+{ 
     $sql = '';
     $error = '';
     

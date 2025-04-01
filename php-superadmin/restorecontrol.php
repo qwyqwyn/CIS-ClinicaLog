@@ -21,7 +21,7 @@ if (!empty($_FILES)) {
                     "message" => "Failed to move uploaded file."
                 );
             }
-        } else {
+        } else {  
             $response = array(
                 "type" => "error",
                 "message" => "File upload error. Please try again."
